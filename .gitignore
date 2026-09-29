@@ -39,3 +39,7 @@ android/.idea/
 .vscode/
 .idea/
 android/app/libs/*.aar
+alerts_draft/
+
+# --- On-device test logs: may contain transcripts of real room speech. Keep local.
+device_test/
