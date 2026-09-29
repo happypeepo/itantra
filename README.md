@@ -66,14 +66,14 @@ No models are redistributed in this repo. Scripts download them from the origina
 |---|---|
 | T0 environment · T1 kit docs · T2 `models/` built · T3 all 10 languages pass `verify_models.py` | ✅ done |
 | T4 rasa style | measured; **waiting for a listening pick** (0 / 4 / 10) |
-| T5 INT8 vs INT4 | done: keep MatMul-only INT8; INT4 pending an on-phone check |
+| T5 INT8 vs INT4 | done, **checked on the phone**: keep MatMul-only INT8 (INT4 was ~50% slower on the phone, only ~50 MB less RAM) |
 | T6 real recordings | **waiting for recordings** in `real_audio/` |
-| T7 benchmark | done on laptop (Apple M4, 2 threads); phone numbers pending |
+| T7 benchmark | done on laptop (Apple M4) **and on a Nothing Phone (3a)** (Snapdragon 7s Gen 3): `phone_out/phone_results.json` |
 | T8 alerts | **waiting for native-speaker check** of `alerts.json` |
 | T9 end-to-end · T10 `docs/RESULTS.md` · T11 plan update | to do |
 
-Headline laptop numbers (Apple M4, 2 threads, **not phone numbers**):
-- **STT:** RTF ~0.03 for all 10 languages.
-- **TTS time to first audio:** Piper ~0.15 s, MMS 0.9–1.1 s, rasa 1.4–1.7 s (up to ~4 s for a long sentence).
-- **Idle VAD:** 0.46% of one core.
-- **Round-trip CER:** 0.00–0.13 across the 10 languages. Real-speech accuracy isn't measured yet.
+Headline **phone** numbers (Nothing Phone (3a), Snapdragon 7s Gen 3, 12 GB, Android 16, sherpa-onnx 1.13.8 / ONNX Runtime 1.28.2, 2 threads). This is a mid-range phone, so a low-end phone will be slower:
+- **STT:** RTF 0.09–0.22, so a 5 s message is recognized in under 0.5 s. RAM ~440–480 MB.
+- **TTS time to first audio:** Piper ~0.3 s · MMS ~1.8 s (RTF ~0.8) · **rasa ~2.4 s (RTF ~1.0)**. rasa gets to RTF 0.55 with 6 threads, and first audio drops to ~1.6 s if long messages are split at commas.
+- **Idle VAD:** 0.49% of one core.
+- **Round-trip CER on the phone:** 0.00–0.12. Real-speech accuracy isn't measured yet.

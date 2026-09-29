@@ -140,8 +140,11 @@ fun OfflineRecognizer.transcribe(samples: FloatArray, sampleRate: Int = 16000): 
 /**
  * Keeps at most [maxLoaded] TTS engines in memory and loads the others on
  * first use. rasa covers 6 languages, so it's usually the one that stays.
+ *
+ * [numThreads]: TTS is the latency bottleneck. Measured on a Snapdragon 7s Gen 3
+ * (5 s Tamil sentence, rasa): RTF 0.98 at 2 threads, 0.77 at 4, 0.55 at 6.
  */
-class TtsPool(private val m: Manifest, private val maxLoaded: Int = 2) {
+class TtsPool(private val m: Manifest, private val maxLoaded: Int = 2, private val numThreads: Int = 4) {
     private class Loaded(val tts: OfflineTts, val sanitizer: TextSanitizer)
     private val loaded = LinkedHashMap<String, Loaded>(4, 0.75f, true) // access order = LRU
 
@@ -173,7 +176,7 @@ class TtsPool(private val m: Manifest, private val maxLoaded: Int = 2) {
         val cfg = OfflineTtsConfig(
             model = OfflineTtsModelConfig(
                 vits = OfflineTtsVitsModelConfig(model = e.model, tokens = e.tokens, dataDir = e.dataDir),
-                numThreads = 2,
+                numThreads = numThreads,
             ),
             maxNumSentences = 1,
         )
