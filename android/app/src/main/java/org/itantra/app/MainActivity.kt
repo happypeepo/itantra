@@ -1,7 +1,18 @@
 package org.itantra.app
 
 import android.Manifest as Permissions
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textview.MaterialTextView
+import com.google.android.material.color.MaterialColors
+import android.content.res.ColorStateList
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.SystemClock
@@ -9,7 +20,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.view.WindowInsets
 import android.widget.*
 import com.k2fsa.sherpa.onnx.OfflineRecognizer
 import org.itantra.app.audio.*
@@ -22,12 +32,12 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
     private lateinit var status: TextView
     private lateinit var log: TextView
     private lateinit var ptt: Button
-    private lateinit var mode: Switch
-    private lateinit var picker: Spinner
+    private lateinit var mode: MaterialSwitch
+    private lateinit var picker: MaterialAutoCompleteTextView
     private lateinit var mic: MicRecorder
     private lateinit var player: Player
     private lateinit var link: LinkService
@@ -97,12 +107,10 @@ class MainActivity : Activity() {
                 })
             voices = TtsPool(manifest)
             val langs = manifest.languages.values.sortedBy { it.wireId }
-            picker.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, langs.map { it.name })
-            picker.setSelection(langs.indexOfFirst { it.code == "en" })
-            picker.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) { loadLanguage(langs[position].code) }
-            }
+            picker.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, langs.map { it.name }))
+            picker.setText(langs.first { it.code == "en" }.name, false)
+            picker.setOnItemClickListener { _, _, position, _ -> loadLanguage(langs[position].code) }
+            loadLanguage("en")
             message("Models: ${root.absolutePath}")
         } catch (e: Exception) { message("Setup failed: ${e.message}") }
         if (checkSelfPermission(Permissions.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
@@ -110,65 +118,97 @@ class MainActivity : Activity() {
     }
 
     private fun buildUi() {
-        val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(24, 32, 24, 24) }
-        setContentView(ScrollView(this).apply {
-            addView(body)
-            setOnApplyWindowInsetsListener { view, insets ->
-                view.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop,
-                    insets.systemWindowInsetRight, insets.systemWindowInsetBottom)
-                insets
-            }
-        })
-        fun label(text: String) = TextView(this).apply { this.text = text; textSize = 18f; body.addView(this) }
-        label("iTantra · Offline voice link").textSize = 26f
-        status = label("Disconnected · connect over a phone hotspot")
-        picker = Spinner(this).also { body.addView(it) }
-        val host = EditText(this).apply { hint = "Host IP address"; inputType = android.text.InputType.TYPE_CLASS_PHONE; body.addView(this) }
-        val controls = LinearLayout(this).also { body.addView(it) }
-        fun button(parent: LinearLayout, title: String, action: () -> Unit) = Button(this).apply {
-            text = title; parent.addView(this); setOnClickListener { action() }
+        fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
+        val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), dp(24), dp(20), dp(32)) }
+        val scroll = ScrollView(this).apply { addView(body); isFillViewport = true }
+        setContentView(scroll)
+        ViewCompat.setOnApplyWindowInsetsListener(scroll) { view, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
         }
+        var section = body
+        fun label(text: String, size: Float = 16f) = MaterialTextView(this).apply {
+            this.text = text; textSize = size
+            section.addView(this, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+        }
+        fun card(title: String, subtitle: String) {
+            val card = MaterialCardView(this).apply {
+                radius = dp(24).toFloat(); cardElevation = 0f; strokeWidth = 0
+                setCardBackgroundColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurfaceContainerLow))
+            }
+            body.addView(card, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(16) })
+            section = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), dp(20), dp(20), dp(16)) }
+            card.addView(section)
+            label(title, 22f); label(subtitle, 14f)
+        }
+        fun button(parent: LinearLayout, title: String, filled: Boolean = false, action: () -> Unit) = MaterialButton(this).apply {
+            text = title; isAllCaps = false; minHeight = dp(48)
+            if (!filled) {
+                backgroundTintList = ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
+                setTextColor(MaterialColors.getColor(this, androidx.appcompat.R.attr.colorPrimary))
+                strokeWidth = dp(1)
+                strokeColor = ColorStateList.valueOf(MaterialColors.getColor(this, com.google.android.material.R.attr.colorOutline))
+            }
+            parent.addView(this, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
+            setOnClickListener { action() }
+        }
+        label("iTantra", 34f)
+        label("Your voice. Across the distance.")
+        label("OFFLINE  ·  10 LANGUAGES", 12f)
+        card("Connect a phone", "Use the same Wi-Fi network or phone hotspot.")
+        status = label("Not connected", 16f).apply { accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE }
+        val hostField = TextInputLayout(this, null, com.google.android.material.R.attr.textInputOutlinedStyle).apply { hint = "Host IP address" }
+        val host = TextInputEditText(hostField.context).apply { inputType = android.text.InputType.TYPE_CLASS_PHONE; maxLines = 1 }
+        hostField.addView(host); section.addView(hostField)
+        val controls = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; section.addView(this) }
         button(controls, "Host") { hosting = true; pingSequence = null; link.connect(null) }
-        button(controls, "Join") { if (host.text.isNotBlank()) { hosting = false; pingSequence = null; link.connect(host.text.toString().trim()) } else message("Enter the host IP") }
+        button(controls, "Join", filled = true) { if (!host.text.isNullOrBlank()) { hostField.error = null; hosting = false; pingSequence = null; link.connect(host.text.toString().trim()) } else hostField.error = "Enter the other phone’s IP address" }
         button(controls, "Disconnect") { link.disconnect(); stopCapture(); status.text = "Disconnected" }
-        button(body, "Ping") {
+        button(section, "Check connection · Ping") {
             if (!link.connected) message("Connect first") else {
                 pingCounter = (pingCounter + 2) and 65534
                 pingSequence = pingCounter or (if (hosting) 0 else 1); pingStarted = now()
                 link.send(Frame(3, 0, pingSequence!!, byteArrayOf()))
             }
         }
-        mode = Switch(this).apply {
-            text = "Continuous listening"; body.addView(this)
-            setOnCheckedChangeListener { _, checked ->
-                stopCapture(); continuous = checked
-                ptt.isEnabled = !checked && ready
-                resumeContinuous()
-            }
-        }
-        ptt = Button(this).apply {
-            text = "HOLD TO TALK"; minHeight = 180; isEnabled = false; body.addView(this)
+        card("Talk", "Hold to record. Release to send your message.")
+        val languageField = TextInputLayout(this, null, com.google.android.material.R.attr.textInputOutlinedExposedDropdownMenuStyle).apply { hint = "Speech language" }
+        picker = MaterialAutoCompleteTextView(languageField.context).apply { inputType = 0 }
+        languageField.addView(picker); section.addView(languageField)
+        ptt = MaterialButton(this).apply {
+            text = "Hold to talk"; textSize = 22f; minHeight = dp(112); cornerRadius = dp(28); isEnabled = false; section.addView(this, LinearLayout.LayoutParams(-1, -2))
             setOnTouchListener { view, event ->
                 when (event.actionMasked) {
-                    MotionEvent.ACTION_DOWN -> { view.parent.requestDisallowInterceptTouchEvent(true); beginCapture(); true }
-                    MotionEvent.ACTION_UP -> { view.parent.requestDisallowInterceptTouchEvent(false); endPtt(true); view.performClick(); true }
-                    MotionEvent.ACTION_CANCEL -> { view.parent.requestDisallowInterceptTouchEvent(false); endPtt(false); true }
+                    MotionEvent.ACTION_DOWN -> { view.parent.requestDisallowInterceptTouchEvent(true); beginCapture(); isPressed = recording; if (recording) text = "Release to send"; true }
+                    MotionEvent.ACTION_UP -> { view.parent.requestDisallowInterceptTouchEvent(false); endPtt(true); isPressed = false; text = "Hold to talk"; view.performClick(); true }
+                    MotionEvent.ACTION_CANCEL -> { view.parent.requestDisallowInterceptTouchEvent(false); endPtt(false); isPressed = false; text = "Hold to talk"; true }
                     else -> true
                 }
             }
         }
-        button(body, "Reload selected language") { if (::manifest.isInitialized) loadLanguage(language) }
-        label("Alerts · receiver’s language")
+        mode = MaterialSwitch(this).apply {
+            text = "Continuous listening"; minHeight = dp(56); section.addView(this)
+            setOnCheckedChangeListener { _, checked ->
+                stopCapture(); continuous = checked
+                ptt.isEnabled = !checked && ready
+                ptt.text = if (checked) "Continuous mode" else "Hold to talk"
+                resumeContinuous()
+            }
+        }
+        button(section, "Reload language") { if (::manifest.isInitialized) loadLanguage(language) }
+        card("Priority alerts", "Plays in the receiving phone’s language at full alarm volume.")
         val alerts = JSONObject(assets.open("alerts.json").bufferedReader().use { it.readText() }).getJSONObject("alerts")
         alerts.keys().forEach { name -> alertNames[alerts.getJSONObject(name).getInt("id")] = name }
         alertNames.toSortedMap().forEach { (id, name) ->
-            button(body, name.replace('_', ' ')) {
+            button(section, name.replace('_', ' ').replaceFirstChar { it.titlecase() }) {
                 if (link.connected && ::manifest.isInitialized) link.send(Frame(2, manifest.languages.getValue(language).wireId, sequence.getAndIncrement(), byteArrayOf(id.toByte())))
                 else message("Connect first to send an alert")
             }
         }
-        button(body, "Test local emergency alert") { playAlert(alertNames.keys.minOrNull() ?: 1) }
-        log = label("Ready for setup. Logs include timings and model errors.").apply { textSize = 14f; setTextIsSelectable(true) }
+        button(section, "Test alert on this phone") { playAlert(alertNames.keys.minOrNull() ?: 1) }
+        card("Activity", "Messages, speech timings and connection details.")
+        log = label("Your activity will appear here.").apply { textSize = 14f; setTextIsSelectable(true) }
     }
 
     private fun loadLanguage(code: String) {

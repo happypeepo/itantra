@@ -1,5 +1,7 @@
 # Android app - Person 1
 
+Material 3 interface with a teal light/dark theme, grouped connection/talk/alert/activity cards, an exposed language dropdown, and a large push-to-talk control.
+
 Native Kotlin app, package **`org.itantra.app`**, Android 8+ (API 26), arm64.
 The implementation plan is [P1_PLAN.md](P1_PLAN.md).
 
