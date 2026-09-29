@@ -38,3 +38,4 @@ android/.idea/
 .DS_Store
 .vscode/
 .idea/
+android/app/libs/*.aar

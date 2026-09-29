@@ -1,47 +1,70 @@
-# android/: the iTantra app (owner: P1)
+# Android app - Person 1
 
-Native Kotlin Android app. The spec is in `plan.md` §6A. **Start from sherpa-onnx's own Android examples** (the VAD+ASR one and the TTS one) and change them, rather than writing audio handling from scratch.
+Native Kotlin app, package **`org.itantra.app`**, Android 8+ (API 26), arm64.
+The implementation plan is [P1_PLAN.md](P1_PLAN.md).
 
-Nothing is built here yet. Put the Android Studio project in this folder.
+## Build
 
-## Suggested layout
+Requires JDK 17, Android SDK platform 36 and a network connection for the initial dependency download. Runtime operation is offline.
 
-```
-android/
-  settings.gradle.kts, build.gradle.kts, gradle/ ...
-  app/
-    libs/sherpa-onnx-1.13.8.aar        same version the Python tests use (not committed; download it)
-    src/main/
-      AndroidManifest.xml              RECORD_AUDIO, INTERNET, ACCESS_WIFI_STATE, WAKE_LOCK
-      assets/alerts/<lang>/<name>.wav  pre-rendered alerts (~5 MB, from render_alerts.py)
-      assets/alerts/index.json         alert id -> name
-      java/org/itantra/app/
-        MainActivity.kt                UI: language picker, PTT button, mode switch, alert buttons, log, status
-        speech/SpeechFactory.kt        copy from p2-models/android/ (loads models from manifest.json)
-        speech/TextSanitizer.kt        copy from p2-models/android/ (cleans text before TTS)
-        audio/MicRecorder.kt           AudioRecord 16 kHz mono + 0.3 s pre-roll ring buffer
-        audio/VadSegmenter.kt          silero VAD -> sentences (continuous mode)
-        audio/Player.kt                playback queue; alerts jump the queue
-        audio/AlertPlayer.kt           STREAM_ALARM, max volume, AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE
-        link/Frame.kt                  from link/: must match p2-models/scripts/frame.py byte for byte
-        link/LinkService.kt            TCP host/join, ping
-        metrics/Metrics.kt             per-message timings, bytes, RTF
+```sh
+cd android
+./scripts/fetch-runtime.sh
+# Set ANDROID_HOME to your SDK, or sdk.dir in local.properties.
+./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
 ```
 
-The package name `org.itantra.app` is only a suggestion. Tell P2 and P3 the real one (it's in the `adb push` path).
+APK: `app/build/outputs/apk/debug/app-debug.apk`. The pinned sherpa-onnx 1.13.8 AAR is checksum-verified, ignored by Git, and must be downloaded on each new checkout. The Gradle wrapper is checked in. Models and WAVs are not bundled in the repository.
 
-## Must-knows from P2's testing
+## Install and provide P2 assets
 
-Details are in `p2-models/README.md` §10.
+```sh
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+adb shell am start -n org.itantra.app/.MainActivity
+# From the repository root, after P2 has prepared the model tree:
+adb push models/. /sdcard/Android/data/org.itantra.app/files/models/
+adb push p2-models/manifest.json /sdcard/Android/data/org.itantra.app/files/models/manifest.json
+# After P2 renders and checks the alerts:
+adb push alerts /sdcard/Android/data/org.itantra.app/files/
+```
 
-1. **Models live on phone storage, not in the APK.** `adb push models/. /sdcard/Android/data/<pkg>/files/models/`. That keeps the APK small, which is scored.
-2. **Play each TTS result at its own `sampleRate`.** rasa is **24,000 Hz**, Piper 22,050 Hz, MMS 16,000 Hz. Never hard-code a rate.
-3. **Continuous mode: prepend ~0.3 s of pre-roll** (real mic audio from before the VAD segment), or the first word gets clipped. **Never pad with zeros**: exact digital silence confuses several STT models.
-4. **Turn the mic off while the phone is speaking**, or it hears itself and loops.
-5. **Run STT and TTS on one background thread**, never the UI thread. Use one STT model at a time, and `release()` the old one when switching language.
-6. **Warm up after connecting:** `voices.preload(lang)` and speak one throwaway word, so the first timed message isn't slow.
-7. **TTS is the latency bottleneck. Measured on a Nothing Phone (3a)** (Snapdragon 7s Gen 3, 12 GB), `work/phone_bench.py`:
-   - At 2 threads, rasa has **RTF ~1.0** (2.2–2.6 s average to first audio, up to 5.7 s) and MMS has RTF ~0.8. Piper takes ~0.3 s. STT is fine (RTF 0.09–0.22, under 0.5 s for a 5 s message).
-   - **Use 4–6 TTS threads.** For rasa on a 5 s sentence, RTF is 0.98 at 2 threads, 0.77 at 4 and 0.55 at 6. `TtsPool` now defaults to 4 (`numThreads`). Try 6 on the demo phone.
-   - **Split long messages at commas** and play the parts one after another, making the next part while the current one plays. With 6 threads, first audio for that 5 s sentence dropped **from 3.0 s to 1.6 s**, with no gap between the parts.
-8. **RAM on the phone** (peak RSS of the command-line tools): an STT model is ~440–480 MB (English ~270 MB), a TTS voice ~240–350 MB. Budget ~800 MB with one of each loaded.
+Open the app once before pushing files so Android creates its external files directory. Grant microphone access, select a language, and tap **Reload selected language** after copying its models. The app uses the current P2 manifest bundled as a fallback; an external `models/manifest.json` takes precedence on launch.
+
+Alerts use `files/alerts/<language>/<name>.wav`, or the same `alerts/` tree in APK assets if provided at build time. Names and IDs come from P2's `alerts.json` (1-5). The WAV reader requires mono PCM16 and preserves the file's sample rate. Missing files are logged; there is no synthesized substitute for an alert. Native-speaker review and rendering are P2's outstanding work.
+
+## Use
+
+1. Connect both phones to one phone's hotspot with mobile data off.
+2. Tap **Host** on one phone; its local IPv4 addresses and port 26173 appear in the status/log. Enter the appropriate address on the other and tap **Join**.
+3. Wait for the selected language to be ready. Hold **HOLD TO TALK**, speak, release to transcribe and send. Cancelled touches discard the utterance; recordings are limited to 30 seconds.
+4. Enable **Continuous listening** for Silero VAD segmentation, with 300 ms of recorded pre-roll. Capture stops during audio playback and when the activity leaves the foreground.
+5. Incoming speech uses the sender's language. Alerts use the receiver's selected language. Alerts preempt normal speech and clear pending speech; another app message cannot interrupt an active alert. Alerts request exclusive focus, raise the alarm stream to maximum, and restore the prior volume afterward.
+6. **Ping** logs RTT. The message log shows STT duration/RTF, speech-end-to-STT, frame bytes, TTS duration/RTF and receive-to-first-playback timing.
+
+“First playback” uses the AudioTrack playback-head counter, not an acoustic measurement at the speaker. Continuous-mode end-to-STT starts when VAD emits a segment; it excludes the silence-detection interval. Combine matched TX/RX logs and half RTT for the end-to-end estimate; it is not transmitted in the speech frame.
+
+## Integration boundaries
+
+- `speech/`: adapted P2 loaders/sanitizer; one STT model and at most one TTS engine, one serialized inference executor. Warm-up generation is discarded, not played or measured.
+- `audio/`: AudioRecord capture and sherpa Silero VAD on a separate bounded executor, absolute-index pre-roll, sample-rate-aware playback and WAV alerts. Normal TTS is split at commas/semicolons so generation can overlap playback.
+- `link/`: minimal TCP integration for P3, CRC and packed text byte-compatible with `link/test_vectors.json`. Host-originated ping IDs are even; joiner IDs are odd, avoiding response echo loops without changing the wire format. P3 must preserve that convention or replace ping on both peers.
+- Models remain external to the APK. No training, model downloads in the app, cloud APIs, discovery, Bluetooth, background service, slides or model changes are included.
+- UI language is currently English; speech supports all ten manifest languages when their files are installed.
+
+## Validation
+
+Automated: build, Android lint, JVM tests for all Python wire vectors, every single-byte frame corruption, malformed lengths/types, Unicode fallback, real pre-roll wrap/reset, WAV format/rates, sanitizer, and real TCP fragmentation/CRC rejection/send/disconnect.
+
+Hardware acceptance is still required (no phone/emulator was attached during implementation):
+
+- English first, then all ten languages: hold/release/cancel; switch languages repeatedly; confirm native memory is released.
+- Continuous mode: first word preserved, long speech split, several utterances, no self-triggering during playback.
+- Two-phone offline exchange both ways; disconnect/reconnect; wrong IP; permission denial and later grant.
+- Test each of the 50 approved WAVs, including a Hindi sender/Tamil receiver. Set receiver silent and low volume, send an alert during speech, send another alert, verify maximum alarm output and subsequent volume restoration.
+- Check DND/device audio policy and another app's focus request on the actual phones. Android controls system-level interruptions; the app cannot guarantee suppression of calls, OS policy, power loss or force-stop.
+- Background/foreground and rotate while recording, generating speech and playing alerts; verify no lingering mic or crash. Destruction releases playback; no background service is provided.
+- Collect phone latency, RAM, idle CPU and perceptual clarity using P3's measurement plan. No device measurements are claimed by this implementation.
+
+## Upstream attribution
+
+The capture and AudioTrack API patterns follow the Apache-2.0 sherpa-onnx v1.13.8 [VAD+ASR example](https://github.com/k2-fsa/sherpa-onnx/blob/v1.13.8/android/SherpaOnnxVadAsr/app/src/main/java/com/k2fsa/sherpa/onnx/MainActivity.kt) and [TTS example](https://github.com/k2-fsa/sherpa-onnx/blob/v1.13.8/android/SherpaOnnxTts/app/src/main/java/com/k2fsa/sherpa/onnx/MainActivity.kt). Model licences and preparation remain documented in `p2-models/README.md`.
