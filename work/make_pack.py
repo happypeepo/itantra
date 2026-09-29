@@ -2,13 +2,16 @@
 """
 Build a per-phone language pack (docs/SIZE_REDUCTION.md change 1).
 
-A phone needs STT only for the language(s) its user speaks, but EVERY voice, because
-incoming speech is spoken in the sender's language (alerts are pre-rendered WAVs in
-the receiver's language). The app offers only the speech languages whose STT is present.
+Every phone ships with speech recognition (STT) for **Hindi + English + one Indic
+language** of your choice, plus EVERY voice: incoming speech is spoken in the sender's
+language (alerts are pre-rendered WAVs in the receiver's language). The app offers only
+the speech languages whose STT is present.
 
-    python work/make_pack.py --langs hi,en            -> packs/hi-en/models
-    python work/make_pack.py --langs ta --src models  (from the full-precision set)
-    adb push packs/hi-en/models/. /sdcard/Android/data/org.itantra.app/files/models/
+    python work/make_pack.py --indic ta       -> packs/hi-en-ta/models   (~612 MB)
+    python work/make_pack.py --indic mr       -> packs/hi-en-mr/models
+    adb push packs/hi-en-ta/models/. /sdcard/Android/data/org.itantra.app/files/models/
+
+--langs overrides the default set (e.g. --langs en for an English-only pack).
 
 Files are hard-linked from --src when possible, so packs cost no extra disk.
 """
@@ -43,13 +46,21 @@ def _link(s, d):
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--langs", required=True, help="speech languages for this phone, e.g. hi,en")
-    ap.add_argument("--src", default=str(ROOT / "models_v2"))
+    ap.add_argument("--indic", default="", help="the one extra Indic language: bn gu kn ml mr or ta te")
+    ap.add_argument("--langs", default="", help="override: exact speech languages, e.g. en")
+    ap.add_argument("--src", default=str(ROOT / "models"))
     ap.add_argument("--out", default="")
     a = ap.parse_args()
     src = Path(a.src)
     man = json.loads((src / "manifest.json").read_text(encoding="utf-8"))
-    langs = [l.strip() for l in a.langs.split(",") if l.strip()]
+    DEFAULT = ["hi", "en"]
+    if a.langs:
+        langs = [l.strip() for l in a.langs.split(",") if l.strip()]
+    else:
+        extra = a.indic.strip()
+        if extra not in man["languages"] or extra in DEFAULT:
+            sys.exit(f"--indic must be one of: {[l for l in man['languages'] if l not in DEFAULT]}")
+        langs = DEFAULT + [extra]
     bad = [l for l in langs if l not in man["languages"]]
     if bad:
         sys.exit(f"unknown language(s): {bad}; valid: {list(man['languages'])}")

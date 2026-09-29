@@ -72,6 +72,10 @@ If the list stays empty, open iTantra and tap **Host** on the other phone, confi
 
 Playback requests Android’s low-latency performance mode and logs the actual mode, which the device may downgrade. No latency reduction is claimed until the new build is measured. The APK excludes the standalone sherpa C/C++ API libraries; the JNI runtime and ONNX runtime remain packaged.
 
+## App size and usage badge
+
+The top-right badge shows the app's total size on the phone and live CPU and RAM (updated every 2 s while the app is in the foreground). Tap it for the breakdown: APK, speech recognition per installed language, each voice, pronunciation data, VAD, alert sounds, app data, plus CPU (whole phone and one core) and RAM (PSS, Java heap, native heap). The code is in `metrics/AppFootprint.kt`. Measuring runs on its own background thread, and each file is counted once.
+
 ## Integration boundaries
 
 - `speech/`: adapted P2 loaders/sanitizer; one STT model and up to two cached TTS engines. STT and TTS each have their own serialized executor, so synthesis cannot hold outgoing recognition in its queue. Language changes retain cached voices; cache eviction still releases the least recently used engine. Budget an additional ~240–350 MB for the second voice on the tested phones. Warm-up generation is discarded, not played or measured.

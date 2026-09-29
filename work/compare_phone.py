@@ -4,7 +4,9 @@ Before/after table for the size-reduction changes, from two phone_bench.py runs 
 same phone with the same clips and settings:
 
     phone_out_v1_rerun/phone_results.json   models/     (full-precision voices, INT8 STT)
-    phone_out_v2/phone_results.json         models_v2/  (FP16 storage, trimmed espeak)
+    phone_out/phone_results.json            models/     (FP16 storage, trimmed espeak; the shipped set)
+
+The full-size set (v1) was removed on 2026-09-30, so re-running needs it rebuilt at dl/models_v1_full.
 
 Accuracy of the phone-made speech is judged by the SAME laptop STT (models/ v1) for both,
 so only the voice differs. Writes docs/size/phone_v1_vs_v2.json and prints markdown.
@@ -24,8 +26,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "p2-models/scripts"))
 from common import cer, load_json, make_stt, transcribe, wer  # noqa: E402
 
-RUNS = {"v1": ROOT / "phone_out_v1_rerun", "v2": ROOT / "phone_out_v2"}
-MODELS = {"v1": ROOT / "models", "v2": ROOT / "models_v2"}
+RUNS = {"v1": ROOT / "phone_out_v1_rerun", "v2": ROOT / "phone_out"}
+MODELS = {"v1": ROOT / "dl/models_v1_full", "v2": ROOT / "models"}
 
 
 def mb(p: Path) -> float:

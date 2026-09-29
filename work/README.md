@@ -4,9 +4,9 @@ Scripts that produced the numbers quoted in `p2-models/README.md` §16 and the P
 
 | File | What |
 |---|---|
-| `t4_rasa.py` | T4: rasa bn/kn/ml/mr/ta/te × styles 0/4/10, vs MMS kn/mr/ta/te on the same machine. Results in `../t4_out/t4_results.json`, WAVs in `../t4_out/listen/` (not in git). |
+| `t4_rasa.py` | T4: rasa bn/kn/ml/mr/ta/te × styles 0/4/10, vs MMS kn/mr/ta/te on the same machine. Results in `../t4_out/t4_results.json`, the listening WAVs were removed after style 10 was chosen (re-run to regenerate). |
 | `t5_run.sh` | T5: IndicConformer hi+or as fp32 / MatMul-INT8 / Conv-INT8 / INT4 (+ betterflow hi). Results in `t5/bench/results_*.json`. |
-| `remake_stt.sh` | Re-makes bn gu kn ml mr ta te from OpenVoiceOS fp32 (MatMul-only INT8 → `models/`, INT4 → `work/int4/`, not in git). |
+| `remake_stt.sh` | Re-makes bn gu kn ml mr ta te from OpenVoiceOS fp32 (MatMul-only INT8 → `models/`, INT4 → `work/int4/`; the INT4 copies were removed after T5, and `p2-models/scripts/quantize_int4.py` regenerates them). |
 
 Main findings:
 - **Conv INT8 (betterflow) is ~3× slower than MatMul-only INT8**: RTF ~0.09 vs ~0.03, with the same accuracy. That's why all 9 Indic languages now use OpenVoiceOS + `patch_stt.py`.
@@ -31,7 +31,8 @@ adb push $ANDROID_HOME/ndk/<version>/toolchains/llvm/prebuilt/*/sysroot/usr/lib/
 adb shell chmod 755 $P/bin/*
 # 3. models, INT4 copies, and the laptop benchmark's test clips
 adb push models $P/
-for l in hi ta; do adb push work/int4/$l $P/int4/; done
+# INT4 comparison only: regenerate work/int4 first, push it, and drop --no-int4
+# for l in hi ta; do adb push work/int4/$l $P/int4/; done
 for d in bench_out/tts/*/; do adb shell mkdir -p $P/audio/$(basename $d); adb push $d*.wav $P/audio/$(basename $d)/; done
 ```
 

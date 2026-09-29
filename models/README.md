@@ -20,7 +20,7 @@ models/
 
 ## Sizes (measured 2026-09-30, after the size-reduction changes)
 
-Built by `work/build_models_v2.py`: every float32 weight is stored as float16 and cast back to float32 when ONNX Runtime loads the model (same speed and accuracy, see `docs/SIZE_REDUCTION.md`), and espeak-ng-data is trimmed to Hindi + English. The previous full-size set is kept outside git as `dl/models_v1_full/`.
+Built by `work/build_models_v2.py`: every float32 weight is stored as float16 and cast back to float32 when ONNX Runtime loads the model (same speed and accuracy, see `docs/SIZE_REDUCTION.md`), and espeak-ng-data is trimmed to Hindi + English. The previous full-size set was removed. To rebuild from scratch: download the originals (`p2-models/README.md` §4–5), build the full set, then run `python work/build_models_v2.py --src <full set> --out models`.
 
 | Part | Size |
 |---|---|
@@ -33,25 +33,26 @@ Built by `work/build_models_v2.py`: every float32 weight is stored as float16 an
 
 ## Per-phone language packs (recommended)
 
-A phone needs STT only for the language(s) its user speaks, but **every voice** (incoming speech is spoken in the sender's language). The app lists only the speech languages whose STT is installed.
+**Every phone ships with speech recognition for Hindi + English + one Indic language**, plus **every voice** (incoming speech is spoken in the sender's language). The app lists only the speech languages whose STT is installed.
 
 ```bash
-python work/make_pack.py --langs hi,en        # -> packs/hi-en/models (459 MB)
-python work/make_pack.py --langs ta           # -> packs/ta/models    (396 MB)
+python work/make_pack.py --indic mr     # -> packs/hi-en-mr/models (612 MB): the Nothing Phone (3a)
+python work/make_pack.py --indic ta     # -> packs/hi-en-ta/models (612 MB): the realme
+python work/make_pack.py --langs en     # override: English only (305 MB)
 ```
 
 | Pack | Size |
 |---|---|
-| one Indic language | 396 MB |
+| **Hindi + English + one Indic language (default)** | **612 MB** |
+| one Indic language only | 396 MB |
 | English only | 305 MB |
-| two languages (e.g. hi + en) | 459 MB |
 
 ## Putting them on a phone
 
 ```bash
 PKG=org.itantra.app
 adb shell mkdir -p /sdcard/Android/data/$PKG/files/models
-adb push packs/hi-en/models/. /sdcard/Android/data/$PKG/files/models/   # or models/. for all 10
+adb push packs/hi-en-ta/models/. /sdcard/Android/data/$PKG/files/models/   # or models/. for all 10
 ```
 
 Then check them with `python p2-models/scripts/verify_models.py --models models`. All 10 languages should PASS.

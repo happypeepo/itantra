@@ -431,7 +431,7 @@ Stores MatMul weights in 4 bits instead of 8 (ONNX Runtime's `MatMulNBits` opera
 
 ### `work/build_models_v2.py` and `work/make_pack.py`: smaller models, per-phone packs
 
-After `models/` is built as above, `python work/build_models_v2.py --src <full set> --out models` stores every float32 weight as float16 (cast back to float32 when ONNX Runtime loads the model, so it runs at the same speed with the same accuracy) and trims espeak-ng-data to Hindi + English: 2,238 → 1,685 MB. `python work/make_pack.py --langs hi,en` then builds a per-phone pack (STT for those languages + every voice, ~400–460 MB). Measurements: `docs/SIZE_REDUCTION.md`.
+After `models/` is built as above, `python work/build_models_v2.py --src <full set> --out models` stores every float32 weight as float16 (cast back to float32 when ONNX Runtime loads the model, so it runs at the same speed with the same accuracy) and trims espeak-ng-data to Hindi + English: 2,238 → 1,685 MB. `python work/make_pack.py --indic ta` then builds a per-phone pack: STT for **Hindi + English + that one Indic language**, plus every voice (612 MB). Measurements: `docs/SIZE_REDUCTION.md`.
 
 ### `test_sentences.json`
 

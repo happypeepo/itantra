@@ -8,7 +8,7 @@ Build the smaller model set (docs/SIZE_REDUCTION.md changes 2-4) from models/:
 
 Same file names and paths as models/, so manifest.json and the app need no changes.
 
-    python work/build_models_v2.py --src models --out models_v2
+    python work/build_models_v2.py --src models_full --out models
 """
 from __future__ import annotations
 
@@ -31,8 +31,8 @@ def fp16(src: Path, dst: Path) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--src", default=str(ROOT / "models"))
-    ap.add_argument("--out", default=str(ROOT / "models_v2"))
+    ap.add_argument("--src", required=True, help="the full-size models folder (built per p2-models/README.md)")
+    ap.add_argument("--out", default=str(ROOT / "models"))
     a = ap.parse_args()
     src, out = Path(a.src), Path(a.out)
     man = json.loads((src / "manifest.json").read_text(encoding="utf-8"))

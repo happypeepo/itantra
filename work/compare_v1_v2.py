@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Accuracy check, models/ (v1) vs models_v2/ (FP16 storage), all 10 languages, laptop.
+Accuracy check, full-size set (v1) vs FP16-storage set (v2, now models/), all 10 languages, laptop.
 
 A. STT: both versions transcribe the SAME clips (bench_out/tts/<lang>_<engine>/*.wav,
    6 per language). Reports how many transcripts are identical, CER/WER for both, RTF.
@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "p2-models/scripts"))
 from common import cer, load_json, make_stt, make_tts, read_char_vocab, sanitize, transcribe, tts_generate, wer  # noqa: E402
 
-V1, V2 = ROOT / "models", ROOT / "models_v2"
+V1, V2 = ROOT / "dl/models_v1_full", ROOT / "models"  # v1 (full size) was removed 2026-09-30; rebuild to re-run
 
 
 def main() -> int:

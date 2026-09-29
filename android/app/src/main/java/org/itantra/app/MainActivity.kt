@@ -34,6 +34,7 @@ import android.widget.*
 import com.k2fsa.sherpa.onnx.OfflineRecognizer
 import org.itantra.app.audio.*
 import org.itantra.app.link.*
+import org.itantra.app.metrics.AppFootprint
 import org.itantra.app.speech.*
 import org.json.JSONObject
 import java.io.File
@@ -100,6 +101,12 @@ class MainActivity : AppCompatActivity() {
     private var pingStarted = 0L
     private val alertNames = mutableMapOf<Int, String>()
     private val messages = ArrayDeque<String>()
+    // Top-right size/CPU/RAM badge and its breakdown dialog
+    private val footprint by lazy { AppFootprint(this) { if (::manifest.isInitialized) manifest else null } }
+    private lateinit var footprintBadge: MaterialButton
+    @Volatile private var footprintParts: List<AppFootprint.Part> = emptyList()
+    @Volatile private var footprintUsage: AppFootprint.Usage? = null
+    private var footprintRows: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -222,7 +229,16 @@ class MainActivity : AppCompatActivity() {
             parent.addView(this, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
             setOnClickListener { action() }
         }
-        label("iTantra", 34f)
+        val header = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL }
+        body.addView(header, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+        header.addView(MaterialTextView(this).apply { text = "iTantra"; textSize = 34f }, LinearLayout.LayoutParams(0, -2, 1f))
+        footprintBadge = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+            isAllCaps = false; textSize = 12f; maxLines = 2; minHeight = 0; minimumHeight = 0; minWidth = 0; minimumWidth = 0
+            insetTop = 0; insetBottom = 0; cornerRadius = dp(16); setPadding(dp(12), dp(6), dp(12), dp(6))
+            text = "App size …"; contentDescription = "App size and CPU/RAM usage. Tap for the breakdown."
+            setOnClickListener { showFootprint() }
+        }
+        header.addView(footprintBadge, LinearLayout.LayoutParams(-2, -2))
         label("Your voice. Across the distance.")
         label("OFFLINE  ·  10 LANGUAGES", 12f)
         card("Connect a phone", "Choose Wi-Fi on the same network, or Bluetooth nearby.")
@@ -587,6 +603,50 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    /** Badge: total size, CPU and RAM. Dialog (when open): every part and live usage. */
+    private fun renderFootprint() {
+        if (destroyed || !::footprintBadge.isInitialized) return
+        val parts = footprintParts; val u = footprintUsage
+        val total = parts.sumOf { it.bytes }
+        val usage = u?.let { "CPU %.0f%% · RAM %.0f MB".format(it.cpuOfPhone, it.pssMb) } ?: "CPU … · RAM …"
+        footprintBadge.text = "${if (total > 0) AppFootprint.mb(total) else "…"}\n$usage"
+        val rows = footprintRows ?: return
+        rows.removeAllViews()
+        fun row(label: String, value: String, bold: Boolean = false) {
+            val line = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; setPadding(0, 6, 0, 6) }
+            line.addView(MaterialTextView(this).apply { text = label; textSize = 14f; if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD) },
+                LinearLayout.LayoutParams(0, -2, 1f))
+            line.addView(MaterialTextView(this).apply { text = value; textSize = 14f; gravity = android.view.Gravity.END
+                if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD) }, LinearLayout.LayoutParams(-2, -2))
+            rows.addView(line)
+        }
+        fun heading(text: String) = rows.addView(MaterialTextView(this).apply { this.text = text; textSize = 16f
+            setTypeface(typeface, android.graphics.Typeface.BOLD); setPadding(0, 24, 0, 8) })
+        heading("Storage on this phone")
+        row("Total", if (total > 0) AppFootprint.mb(total) else "measuring…", bold = true)
+        parts.forEach { row(it.label, AppFootprint.mb(it.bytes)) }
+        heading("Live usage (updates every 2 s)")
+        if (u == null) row("CPU / RAM", "measuring…") else {
+            row("CPU, whole phone", "%.1f%%".format(u.cpuOfPhone))
+            row("CPU, one core (of ${u.cores})", "%.0f%%".format(u.cpuOfOneCore))
+            row("RAM (PSS)", "%.0f MB".format(u.pssMb), bold = true)
+            row("  Java heap", "%.0f MB".format(u.javaHeapMb))
+            row("  Native heap (models, audio)", "%.0f MB".format(u.nativeHeapMb))
+        }
+    }
+
+    private fun showFootprint() {
+        val rows = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(48, 8, 48, 8) }
+        footprintRows = rows
+        renderFootprint()
+        footprint.refresh { p -> footprintParts = p; runOnUiThread { renderFootprint() } }
+        MaterialAlertDialogBuilder(this).setTitle("App size and usage")
+            .setView(ScrollView(this).apply { addView(rows) })
+            .setPositiveButton("Close", null)
+            .setOnDismissListener { footprintRows = null }
+            .show()
+    }
+
     private fun submit(executor: ThreadPoolExecutor, block: () -> Unit) {
         if (executor.isShutdown) return
         try { executor.execute { try { block() } catch (e: Exception) { message(e.message ?: e.javaClass.simpleName) } } }
@@ -594,12 +654,13 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume(); active = true
+        footprint.start({ u -> footprintUsage = u; runOnUiThread { renderFootprint() } }, { p -> footprintParts = p; runOnUiThread { renderFootprint() } })
         if (::mic.isInitialized) resumeContinuous()
         if (::discovery.isInitialized && !useBluetooth && hosting && link.listening) discovery.advertise(LinkService.PORT)
     }
-    override fun onPause() { active = false; if (::discovery.isInitialized) discovery.pause(); if (::bluetoothDiscovery.isInitialized) bluetoothDiscovery.stop(); speechEpoch.incrementAndGet(); stopCapture(); if (::player.isInitialized) player.clearSpeech(); super.onPause() }
+    override fun onPause() { active = false; footprint.stop(); if (::discovery.isInitialized) discovery.pause(); if (::bluetoothDiscovery.isInitialized) bluetoothDiscovery.stop(); speechEpoch.incrementAndGet(); stopCapture(); if (::player.isInitialized) player.clearSpeech(); super.onPause() }
     override fun onDestroy() {
-        destroyed = true; active = false; loadEpoch.incrementAndGet(); speechEpoch.incrementAndGet(); stopCapture()
+        destroyed = true; active = false; footprint.stop(); loadEpoch.incrementAndGet(); speechEpoch.incrementAndGet(); stopCapture()
         discovery.close(); bluetoothDiscovery.stop(); wifiLink.close(); bluetoothLink.close(); player.close()
         capture.queue.clear()
         submit(capture) { vad?.release(); vad = null }; capture.shutdown()

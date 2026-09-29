@@ -77,5 +77,5 @@ Headline **phone** numbers (Nothing Phone (3a), Snapdragon 7s Gen 3; STT 2 threa
 - **STT:** RTF 0.10–0.20. A 4–5 s message is recognized in 0.2–0.5 s. RAM ~430–480 MB (English 270 MB).
 - **TTS time to first audio (avg):** Piper 0.25–0.31 s · MMS 1.1–1.5 s · rasa 1.5–1.9 s.
 - **Estimated end-to-end (push-to-talk, ~4–5 s sentence):** hi 0.83 s · en 0.71 s · gu 2.62 s · or 3.27 s · rasa languages 3.0–4.2 s. Splitting at commas brought Tamil's first audio down to ~1.6 s at 6 threads.
-- **Idle VAD:** ~0.45% of one core. **Size:** 435 MB per phone (one-language pack + APK), 1.72 GB with all 10 languages ([`docs/SIZE_REDUCTION.md`](docs/SIZE_REDUCTION.md)).
+- **Idle VAD:** ~0.45% of one core. **Size:** 646 MB per phone (Hindi + English + one Indic language + APK; the app's size badge shows 651 MB with alert sounds), 1.72 GB with all 10 languages ([`docs/SIZE_REDUCTION.md`](docs/SIZE_REDUCTION.md)).
 - **Round-trip CER:** 0.00–0.12. Real-speech accuracy isn't measured yet.

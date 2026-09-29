@@ -1,13 +1,13 @@
 # Reducing the app's total size
 
-**Before:** 2,238 MB of models + 38.7 MB APK = **~2.28 GB** for all 10 languages on every phone.
-**Done:** **435 MB per phone** with one speaking language and every voice (the target was ~430 MB), or **1.72 GB** with all 10 languages on every phone. Details below.
+**Before:** 2,238 MB of models + 38.5 MB APK = **~2.28 GB** for all 10 languages on every phone.
+**Done:** every phone now ships with **Hindi + English + one Indic language** and every voice: **646 MB per phone** including the APK (−72%). A single-language pack would be 430 MB; all 10 languages would be 1.72 GB. Details below.
 
 Everything below was measured (2026-09-30): sizes from the files, speed and accuracy on the Apple M4 laptop (2 threads, onnxruntime 1.30.0), and the key ones re-checked **on the Nothing Phone (3a)** (sherpa-onnx 1.13.8 CLI, ONNX Runtime 1.28.2). Raw numbers are in `docs/size/`.
 
 ## Done (2026-09-30): measured results
 
-All five changes are in. **Models:** `models/` is now the smaller set (built by `work/build_models_v2.py`); the old set is kept outside git as `dl/models_v1_full/`. **App:** the picker lists only installed speech languages (`MainActivity`), and the unused libraries are excluded (`app/build.gradle.kts`, already in P1's `e968ad4`). **Packs:** `work/make_pack.py`.
+All five changes are in. **Models:** `models/` is now the smaller set (built by `work/build_models_v2.py`); the old full-size set and the original downloads were removed on 2026-09-30. To rebuild them, download the originals (`p2-models/README.md` §4–5), then run `work/build_models_v2.py`. **App:** the picker lists only installed speech languages (`MainActivity`), and the unused libraries are excluded (`app/build.gradle.kts`, already in P1's `e968ad4`). **Packs:** `work/make_pack.py`.
 
 Before/after on the **same Nothing Phone (3a)**, same 6 clips per language, same settings (STT 2 threads, TTS 4 threads), official sherpa-onnx 1.13.8 CLI (`work/phone_bench.py`, compared by `work/compare_phone.py`). The laptop check is `work/compare_v1_v2.py`. Raw data is in `docs/size/`.
 
@@ -16,11 +16,13 @@ Before/after on the **same Nothing Phone (3a)**, same 6 clips per language, same
 | | Before | After |
 |---|---|---|
 | All 10 languages, models | 2,238 MB | **1,685 MB** (−25%) |
-| APK (same code, with and without the excluded libs) | 43.4 MB | **38.65 MB** (−4.8 MB) |
-| **Per phone: 1 Indic language pack + APK** | 2,281 MB (everything installed) | **435 MB** (−81%) |
-| Per phone: 2 languages (e.g. Hindi + English) + APK | 2,281 MB | **498 MB** (−78%) |
-| Per phone: English only + APK | 2,281 MB | **344 MB** (−85%) |
-| On the test phones' storage (app models folder) | 2.0 GB | **439 MB** |
+| APK, clean builds of the same code without / with the excluded libs | 38.53 MB | **33.62 MB** (−4.9 MB) |
+| **Per phone, default pack: Hindi + English + 1 Indic language, + APK** | 2,277 MB (everything installed) | **646 MB** (−72%) |
+| Per phone: 1 Indic language only + APK | 2,277 MB | 430 MB (−81%) |
+| Per phone: English only + APK | 2,277 MB | 339 MB (−85%) |
+| On the test phones (the app's own size badge) | 2.0 GB of models | **651 MB** in total (models 612 + APK 33.6 + alert sounds 5.9) |
+
+*APK sizes are from clean builds. Figures of 38.65–43.4 MB quoted earlier came from incremental debug builds, which leave unused space inside the APK.*
 
 ### Accuracy (no loss)
 
@@ -64,7 +66,7 @@ FP16 storage saves disk and download size, not RAM: the weights are float32 agai
 | STT, English | 68 MB | 3% |
 | TTS voices (rasa 123, Piper hi 63, Piper en 64, MMS gu 114, MMS or 114) | 478 MB | 21% |
 | espeak-ng-data (Piper support data) | 18 MB | 1% |
-| APK | 38.7 MB | 2% |
+| APK | 38.5 MB | 2% |
 
 ## What to do, in order of impact
 
@@ -75,17 +77,17 @@ FP16 storage saves disk and download size, not RAM: the weights are float32 agai
 | **3** | **FP16 storage for STT's fp32 Conv weights** (the INT8 MatMul weights are untouched) | **−33 MB per Indic language** (186 → 153); −297 MB for all 9 | **same** (phone: RTF 0.152 vs 0.156) | **identical transcripts** on the phone (Hindi, 6 clips) | P2: convert + `verify_models.py` for all 9 |
 | **4** | **Trim espeak-ng-data** to the Hindi + English dictionaries | −17 MB (18 → 1.0) | same | identical output (same durations, same CER) | P2: copy 8 files |
 | **5** | **APK: drop 2 unused native libs** (`libsherpa-onnx-c-api.so`, `-cxx-api.so`) | ≈ −4.9 MB | same | same | P1: `packaging.jniLibs.excludes` (check it still loads) |
-| 6 | APK: release build with R8 minify + shrinkResources (the APK grew 33.0 → 38.7 MB with the Material 3 commit) | not measured | same | same | P1 |
+| 6 | APK: release build with R8 minify + shrinkResources (a clean debug build is 33.6 MB today) | not measured | same | same | P1 |
 
 ### Resulting sizes (models + APK)
 
 | Scenario | Total |
 |---|---|
 | Today, all 10 languages | 2,277 MB |
-| All 10 languages, changes 2–5 | **1,724 MB** |
+| All 10 languages, changes 2–5 | **1,719 MB** |
 | **Per-phone pack, 1 Indic language (e.g. Hindi or Tamil), changes 1–5** | **430 MB** |
 | Per-phone pack, English only | 345 MB |
-| Per-phone pack, Hindi + English (bilingual user) | 498 MB |
+| **Per-phone default: Hindi + English + one Indic language** | **646 MB** |
 | Per-phone pack, 1 language, change 1 only (no model changes at all) | 721 MB |
 
 ## Tried and rejected (measured)

@@ -102,7 +102,7 @@ Latencies between the two phones can't be combined across devices, because their
 
 ## Build `e968ad4` (Wi-Fi discovery + Bluetooth) + language-pack picker, both phones (2026-09-30)
 
-**Build:** 13/13 unit tests pass and lint has 0 errors (31 warnings). **APK 38.65 MB**; the same code without P1's native-lib exclusion is 43.43 MB. **Models:** the new smaller set as per-phone packs: Nothing = Hindi + English, realme = Tamil + English (459 MB each, was 2.0 GB).
+**Build:** 13/13 unit tests pass and lint has 0 errors (31 warnings). APK: 33.6 MB from a clean build (38.53 MB without P1's native-lib exclusion). *The 38.65 / 43.43 MB figures first reported here, and the 38.7 MB above, came from incremental builds, which leave unused space inside the APK. Clean builds are the true size.* **Models:** the new smaller set as per-phone packs: Nothing = Hindi + English, realme = Tamil + English (459 MB each, was 2.0 GB).
 
 | Test | Result |
 |---|---|
@@ -120,6 +120,19 @@ Latencies between the two phones can't be combined across devices, because their
 **Low-latency playback was declined by Android** on the realme: every AudioTrack logged `requested low latency; actual mode=0` at 16, 22.05 and 24 kHz, and the "audio ready → playback starts" gap is still ~235–250 ms. Android's fast path usually needs the device's native rate (typically 48 kHz). Suggest resampling voice output to `AudioManager.getProperty(PROPERTY_OUTPUT_SAMPLE_RATE)`, or keeping one track open per rate.
 
 **Scan list privacy note:** the Bluetooth list shows the phone's already-paired devices first (car kits, earbuds, etc.). That's fine for a demo, but P1 could filter the list to devices advertising the iTantra service UUID.
+
+## Size badge + default 3-language packs, both phones (2026-09-30)
+
+**Build:** clean build, 13/13 unit tests, lint 0 errors (34 warnings; the 3 new ones are hard-coded strings, like the rest of the UI). **APK 33.6 MB.** **Packs:** Nothing = Hindi + English + Marathi, realme = Hindi + English + Tamil (612 MB each).
+
+| Test | Result |
+|---|---|
+| Picker lists exactly the installed speech languages | ✅ Nothing: Hindi, English, Marathi · realme: Hindi, English, Tamil ("3/10 installed") |
+| Top-right badge | ✅ "651 MB · CPU 1% · RAM 306 MB" (Nothing), "651 MB · CPU 4% · RAM 292 MB" (realme), updating every 2 s |
+| Tap → breakdown dialog | ✅ total 651 MB = APK 33.6 + STT hi 153 / en 62.2 / mr 153 + voices 31.7 / 32.3 / 62.4 / 57.6 / 57.6 + pronunciation data 1.0 + VAD 0.6 + alert sounds 5.9 + small files; live CPU (phone and one core) and RAM (PSS, Java heap, native heap) |
+| Dialog open for 25 s | ✅ stays open and keeps updating. RAM levels off (~350 MB while the dialog is drawn) and returns to ~307 MB after closing: no leak |
+
+The badge's CPU/RAM figures agree with `adb shell dumpsys meminfo` (PSS 303–313 MB idle with English loaded).
 
 ## Not verified yet
 
