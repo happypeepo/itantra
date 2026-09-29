@@ -4,63 +4,63 @@
  "model_mb": 123.3,
  "total_mb": 123.3,
  "data_dir_mb": 0.0,
- "load_s": 0.49,
- "ram_model_mb": 271.1,
- "peak_rss_mb": 514.6,
+ "load_s": 0.43,
+ "ram_model_mb": 271.3,
+ "peak_rss_mb": 515.9,
  "rows": [
   {
    "name": "emergency",
    "text": "അടിയന്തര മുന്നറിയിപ്പ്",
    "wav": "bench_out/tts/ml_rasa/00_emergency.wav",
-   "dur_s": 1.237,
-   "gen_s": 0.766,
-   "first_audio_s": 0.766,
-   "rtf": 0.619
+   "dur_s": 1.259,
+   "gen_s": 0.729,
+   "first_audio_s": 0.729,
+   "rtf": 0.579
   },
   {
    "name": "evacuate",
    "text": "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴിയുക",
    "wav": "bench_out/tts/ml_rasa/01_evacuate.wav",
-   "dur_s": 2.187,
-   "gen_s": 1.417,
-   "first_audio_s": 1.417,
-   "rtf": 0.648
+   "dur_s": 2.091,
+   "gen_s": 1.196,
+   "first_audio_s": 1.196,
+   "rtf": 0.572
   },
   {
    "name": "medical",
    "text": "വൈദ്യസഹായം ആവശ്യമാണ്",
    "wav": "bench_out/tts/ml_rasa/02_medical.wav",
-   "dur_s": 1.685,
-   "gen_s": 0.983,
-   "first_audio_s": 0.983,
-   "rtf": 0.583
+   "dur_s": 1.781,
+   "gen_s": 1.0,
+   "first_audio_s": 1.0,
+   "rtf": 0.562
   },
   {
    "name": "all_clear",
    "text": "എല്ലാം സുരക്ഷിതമാണ്, അപകടം ഒഴിഞ്ഞു",
    "wav": "bench_out/tts/ml_rasa/03_all_clear.wav",
-   "dur_s": 2.508,
-   "gen_s": 1.62,
-   "first_audio_s": 1.62,
-   "rtf": 0.646
+   "dur_s": 2.359,
+   "gen_s": 1.478,
+   "first_audio_s": 1.478,
+   "rtf": 0.626
   },
   {
    "name": "return_to_base",
    "text": "ഉടൻ താവളത്തിലേക്ക് മടങ്ങുക",
    "wav": "bench_out/tts/ml_rasa/04_return_to_base.wav",
-   "dur_s": 2.112,
-   "gen_s": 1.323,
-   "first_audio_s": 1.323,
-   "rtf": 0.626
+   "dur_s": 2.016,
+   "gen_s": 1.125,
+   "first_audio_s": 1.125,
+   "rtf": 0.558
   },
   {
    "name": "road_blocked",
    "text": "പാലത്തിനടുത്തുള്ള റോഡ് അടഞ്ഞിരിക്കുന്നു, ദയവായി സ്കൂളിലേക്ക് രക്ഷാസംഘത്തെ അയയ്ക്കുക",
    "wav": "bench_out/tts/ml_rasa/05_road_blocked.wav",
-   "dur_s": 5.3,
-   "gen_s": 3.94,
-   "first_audio_s": 3.94,
-   "rtf": 0.743
+   "dur_s": 5.438,
+   "gen_s": 3.413,
+   "first_audio_s": 3.413,
+   "rtf": 0.628
   }
  ]
 }

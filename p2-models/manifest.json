@@ -69,7 +69,7 @@
       "name": "Bengali", "script": "Bengali", "wire_id": 2,
       "stt": { "type": "nemo_ctc", "model": "stt/bn/model.int8.onnx", "tokens": "stt/bn/tokens.txt",
                "source": "OpenVoiceOS/ai4bharat-indicconformer-bn-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/bn (Conv INT8, ~3x slower)" },
-      "tts": { "engine": "rasa", "sid": 2, "emotion_id": 0, "speed": 1.0, "_voice": "BEN_F" }
+      "tts": { "engine": "rasa", "sid": 2, "emotion_id": 10, "speed": 1.0, "_voice": "BEN_F" }
     },
     "gu": {
       "name": "Gujarati", "script": "Gujarati", "wire_id": 3,
@@ -81,19 +81,19 @@
       "name": "Kannada", "script": "Kannada", "wire_id": 4,
       "stt": { "type": "nemo_ctc", "model": "stt/kn/model.int8.onnx", "tokens": "stt/kn/tokens.txt",
                "source": "OpenVoiceOS/ai4bharat-indicconformer-kn-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/kn (Conv INT8, ~3x slower)" },
-      "tts": { "engine": "rasa", "sid": 8, "emotion_id": 0, "speed": 1.0, "_voice": "KAN_F" }
+      "tts": { "engine": "rasa", "sid": 8, "emotion_id": 10, "speed": 1.0, "_voice": "KAN_F" }
     },
     "ml": {
       "name": "Malayalam", "script": "Malayalam", "wire_id": 5,
       "stt": { "type": "nemo_ctc", "model": "stt/ml/model.int8.onnx", "tokens": "stt/ml/tokens.txt",
                "source": "OpenVoiceOS/ai4bharat-indicconformer-ml-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/ml (Conv INT8, ~3x slower)" },
-      "tts": { "engine": "rasa", "sid": 11, "emotion_id": 0, "speed": 1.0, "_voice": "MAL_F" }
+      "tts": { "engine": "rasa", "sid": 11, "emotion_id": 10, "speed": 1.0, "_voice": "MAL_F" }
     },
     "mr": {
       "name": "Marathi", "script": "Devanagari", "wire_id": 6,
       "stt": { "type": "nemo_ctc", "model": "stt/mr/model.int8.onnx", "tokens": "stt/mr/tokens.txt",
                "source": "OpenVoiceOS/ai4bharat-indicconformer-mr-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/mr (Conv INT8, ~3x slower)" },
-      "tts": { "engine": "rasa", "sid": 12, "emotion_id": 0, "speed": 1.0, "_voice": "MAR_F" }
+      "tts": { "engine": "rasa", "sid": 12, "emotion_id": 10, "speed": 1.0, "_voice": "MAR_F" }
     },
     "or": {
       "name": "Odia", "script": "Oriya", "wire_id": 7,
@@ -105,13 +105,13 @@
       "name": "Tamil", "script": "Tamil", "wire_id": 8,
       "stt": { "type": "nemo_ctc", "model": "stt/ta/model.int8.onnx", "tokens": "stt/ta/tokens.txt",
                "source": "OpenVoiceOS/ai4bharat-indicconformer-ta-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/ta (Conv INT8, ~3x slower)" },
-      "tts": { "engine": "rasa", "sid": 18, "emotion_id": 0, "speed": 1.0, "_voice": "TAM_F" }
+      "tts": { "engine": "rasa", "sid": 18, "emotion_id": 10, "speed": 1.0, "_voice": "TAM_F" }
     },
     "te": {
       "name": "Telugu", "script": "Telugu", "wire_id": 9,
       "stt": { "type": "nemo_ctc", "model": "stt/te/model.int8.onnx", "tokens": "stt/te/tokens.txt",
                "source": "OpenVoiceOS/ai4bharat-indicconformer-te-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/te (Conv INT8, ~3x slower)" },
-      "tts": { "engine": "rasa", "sid": 19, "emotion_id": 0, "speed": 1.0, "_voice": "TEL_F" }
+      "tts": { "engine": "rasa", "sid": 19, "emotion_id": 10, "speed": 1.0, "_voice": "TEL_F" }
     }
   }
 }

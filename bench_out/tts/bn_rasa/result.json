@@ -4,63 +4,63 @@
  "model_mb": 123.3,
  "total_mb": 123.3,
  "data_dir_mb": 0.0,
- "load_s": 0.43,
- "ram_model_mb": 271.2,
- "peak_rss_mb": 484.8,
+ "load_s": 0.45,
+ "ram_model_mb": 271.0,
+ "peak_rss_mb": 441.7,
  "rows": [
   {
    "name": "emergency",
    "text": "জরুরি সতর্কতা",
    "wav": "bench_out/tts/bn_rasa/00_emergency.wav",
-   "dur_s": 1.248,
-   "gen_s": 0.721,
-   "first_audio_s": 0.721,
-   "rtf": 0.578
+   "dur_s": 1.205,
+   "gen_s": 0.711,
+   "first_audio_s": 0.711,
+   "rtf": 0.59
   },
   {
    "name": "evacuate",
    "text": "এখনই এলাকা খালি করুন",
    "wav": "bench_out/tts/bn_rasa/01_evacuate.wav",
-   "dur_s": 1.707,
-   "gen_s": 0.994,
-   "first_audio_s": 0.994,
-   "rtf": 0.583
+   "dur_s": 1.355,
+   "gen_s": 0.761,
+   "first_audio_s": 0.761,
+   "rtf": 0.562
   },
   {
    "name": "medical",
    "text": "চিকিৎসা সহায়তা প্রয়োজন",
    "wav": "bench_out/tts/bn_rasa/02_medical.wav",
-   "dur_s": 1.6,
-   "gen_s": 0.93,
-   "first_audio_s": 0.93,
-   "rtf": 0.581
+   "dur_s": 1.515,
+   "gen_s": 0.85,
+   "first_audio_s": 0.85,
+   "rtf": 0.561
   },
   {
    "name": "all_clear",
    "text": "সব ঠিক আছে, বিপদ কেটে গেছে",
    "wav": "bench_out/tts/bn_rasa/03_all_clear.wav",
-   "dur_s": 2.312,
-   "gen_s": 1.616,
-   "first_audio_s": 1.616,
-   "rtf": 0.699
+   "dur_s": 1.846,
+   "gen_s": 1.192,
+   "first_audio_s": 1.192,
+   "rtf": 0.646
   },
   {
    "name": "return_to_base",
    "text": "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
    "wav": "bench_out/tts/bn_rasa/04_return_to_base.wav",
-   "dur_s": 1.984,
-   "gen_s": 1.16,
-   "first_audio_s": 1.16,
-   "rtf": 0.585
+   "dur_s": 1.579,
+   "gen_s": 0.891,
+   "first_audio_s": 0.891,
+   "rtf": 0.564
   },
   {
    "name": "road_blocked",
    "text": "সেতুর কাছে রাস্তা বন্ধ, দয়া করে স্কুলে উদ্ধারকারী দল পাঠান",
    "wav": "bench_out/tts/bn_rasa/05_road_blocked.wav",
-   "dur_s": 4.993,
-   "gen_s": 3.117,
-   "first_audio_s": 3.117,
-   "rtf": 0.624
+   "dur_s": 3.709,
+   "gen_s": 2.175,
+   "first_audio_s": 2.175,
+   "rtf": 0.586
   }
  ]
 }

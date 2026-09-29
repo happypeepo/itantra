@@ -75,7 +75,8 @@ def stt_run(model: str, tokens: str, wavs: list[str], threads: int) -> dict:
         raise RuntimeError(f"STT failed for {model}:\n{out[-1500:]}")
     t = timev(out)
     return {"threads": threads, "decode_s": float(el.group(1)), "audio_s": float(rtf.group(2)), "rtf": float(rtf.group(3)),
-            "load_s_approx": round(t["real_s"] - float(el.group(1)), 2), "max_rss_mb": t["max_rss_mb"], "texts": texts}
+            "load_s_approx": round(t["real_s"] - float(el.group(1)), 2), "max_rss_mb": t["max_rss_mb"],
+            "cpu_s": round(t["user_s"] + t["sys_s"], 2), "wall_s": t["real_s"], "texts": texts}
 
 
 def tts_run(eng: dict, text: str, sid: int, emotion_id, threads: int, out_wav: str) -> dict:
@@ -91,13 +92,15 @@ def tts_run(eng: dict, text: str, sid: int, emotion_id, threads: int, out_wav: s
         raise RuntimeError(f"TTS failed:\n{out[-1500:]}")
     t = timev(out)
     return {"gen_s": float(m.group(1)), "audio_s": float(m.group(2)), "rtf": float(m.group(3)),
-            "load_s_approx": round(t["real_s"] - float(m.group(1)), 2), "max_rss_mb": t["max_rss_mb"]}
+            "load_s_approx": round(t["real_s"] - float(m.group(1)), 2), "max_rss_mb": t["max_rss_mb"],
+            "cpu_s": round(t["user_s"] + t["sys_s"], 2)}
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--threads", type=int, default=2)
     ap.add_argument("--only", default="")
+    ap.add_argument("--tts-threads", default="2,4", help="comma-separated thread counts for TTS")
     ap.add_argument("--out", default=str(ROOT / "phone_out"))
     a = ap.parse_args()
     out = Path(a.out)
@@ -152,22 +155,24 @@ def main() -> int:
 
         vocab = read_char_vocab(ROOT / "models" / eng["tokens"]) if eng["frontend"] == "characters" else None
         emo = L["tts"].get("emotion_id") if eng_name == "rasa" else None
-        trows = []
-        for i, (r, ref) in enumerate(zip(rows, refs)):
-            name = Path(r["wav"]).stem
-            pw = f"out/tts_{lang}_{name}.wav"
-            t = tts_run(eng, sanitize(ref, vocab), L["tts"].get("sid", 0), emo, a.threads, pw)
-            subprocess.run([ADB, "pull", f"{P}/{pw}", str(out / "tts_wav" / f"{lang}_{name}.wav")], capture_output=True)
-            trows.append({"name": name, "text": ref, **t})
-        entry["tts"] = {"engine": eng_name, "threads": a.threads, "rows": trows,
-                        "rtf_avg": round(float(np.mean([x["rtf"] for x in trows])), 3),
-                        "first_audio_avg_s": round(float(np.mean([x["gen_s"] for x in trows])), 3),
-                        "first_audio_max_s": round(float(np.max([x["gen_s"] for x in trows])), 3),
-                        "max_rss_mb": max(x["max_rss_mb"] for x in trows),
-                        "load_s_approx": round(float(np.median([x["load_s_approx"] for x in trows])), 2)}
-        tt = entry["tts"]
-        print(f"{lang} TTS {eng_name}: RTF {tt['rtf_avg']:.3f}  first audio avg {tt['first_audio_avg_s']:.2f}s "
-              f"max {tt['first_audio_max_s']:.2f}s  RSS {tt['max_rss_mb']:.0f} MB  load ~{tt['load_s_approx']:.1f}s", flush=True)
+        entry["tts"] = {"engine": eng_name, "emotion_id": emo}
+        for th in [int(x) for x in a.tts_threads.split(",")]:
+            trows = []
+            for r, ref in zip(rows, refs):
+                name = Path(r["wav"]).stem
+                pw = f"out/tts_{lang}_{name}_t{th}.wav"
+                t = tts_run(eng, sanitize(ref, vocab), L["tts"].get("sid", 0), emo, th, pw)
+                subprocess.run([ADB, "pull", f"{P}/{pw}", str(out / "tts_wav" / f"{lang}_{name}_t{th}.wav")], capture_output=True)
+                trows.append({"name": name, "text": ref, **t})
+            tt = {"threads": th, "rows": trows,
+                  "rtf_avg": round(float(np.mean([x["rtf"] for x in trows])), 3),
+                  "first_audio_avg_s": round(float(np.mean([x["gen_s"] for x in trows])), 3),
+                  "first_audio_max_s": round(float(np.max([x["gen_s"] for x in trows])), 3),
+                  "max_rss_mb": max(x["max_rss_mb"] for x in trows),
+                  "load_s_approx": round(float(np.median([x["load_s_approx"] for x in trows])), 2)}
+            entry["tts"][f"t{th}"] = tt
+            print(f"{lang} TTS {eng_name} t{th}: RTF {tt['rtf_avg']:.3f}  first audio avg {tt['first_audio_avg_s']:.2f}s "
+                  f"max {tt['first_audio_max_s']:.2f}s  RSS {tt['max_rss_mb']:.0f} MB  load ~{tt['load_s_approx']:.1f}s", flush=True)
         res["languages"][lang] = entry
         (out / "phone_results.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
 
