@@ -24,7 +24,7 @@ itantra/
   android/             P1: the Android app (Kotlin, sherpa-onnx 1.13.8)
   link/                P3: link frame spec + test vectors for the Kotlin implementation
   docs/                results, licences, slides, demo script
-  models/              built model folder, NOT in git (~2.1 GB; see models/README.md)
+  models/              built model folder, NOT in git (1.7 GB for all 10; per-phone packs ~400-460 MB; see models/README.md)
   real_audio/          real recordings for accuracy (WAVs stay local; see its README)
   work/                P2 measurement scripts (T4 rasa, T5 INT8 vs INT4, STT re-make)
   verify_out*/ bench_out/ t4_out/   result JSONs (audio not in git)
@@ -76,6 +76,6 @@ No models are redistributed in this repo. Scripts download them from the origina
 Headline **phone** numbers (Nothing Phone (3a), Snapdragon 7s Gen 3; STT 2 threads, TTS 4 threads). **Per-language details are in [`docs/RESULTS.md`](docs/RESULTS.md).**
 - **STT:** RTF 0.10–0.20. A 4–5 s message is recognized in 0.2–0.5 s. RAM ~430–480 MB (English 270 MB).
 - **TTS time to first audio (avg):** Piper 0.25–0.31 s · MMS 1.1–1.5 s · rasa 1.5–1.9 s.
-- **Estimated end-to-end (push-to-talk, ~4–5 s sentence):** hi 0.95 s · en 0.61 s · gu/or ~2.8 s · rasa languages 3.4–4.4 s. Splitting at commas brought Tamil's first audio down to ~1.6 s at 6 threads.
-- **Idle VAD:** 0.44% of one core. **All models:** 2.24 GB.
+- **Estimated end-to-end (push-to-talk, ~4–5 s sentence):** hi 0.83 s · en 0.71 s · gu 2.62 s · or 3.27 s · rasa languages 3.0–4.2 s. Splitting at commas brought Tamil's first audio down to ~1.6 s at 6 threads.
+- **Idle VAD:** ~0.45% of one core. **Size:** 435 MB per phone (one-language pack + APK), 1.72 GB with all 10 languages ([`docs/SIZE_REDUCTION.md`](docs/SIZE_REDUCTION.md)).
 - **Round-trip CER:** 0.00–0.12. Real-speech accuracy isn't measured yet.

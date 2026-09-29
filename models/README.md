@@ -18,23 +18,40 @@ models/
   tts/mms-or/model.onnx, tokens.txt        or (16,000 Hz)
 ```
 
-## Sizes (measured 2026-09-29)
+## Sizes (measured 2026-09-30, after the size-reduction changes)
+
+Built by `work/build_models_v2.py`: every float32 weight is stored as float16 and cast back to float32 when ONNX Runtime loads the model (same speed and accuracy, see `docs/SIZE_REDUCTION.md`), and espeak-ng-data is trimmed to Hindi + English. The previous full-size set is kept outside git as `dl/models_v1_full/`.
 
 | Part | Size |
 |---|---|
-| STT, 9 Indic languages (OpenVoiceOS IndicConformer, MatMul-only INT8) | 186 MB each |
-| STT, English (NeMo conformer medium INT8) | 68 MB |
-| TTS rasa / Piper hi / Piper en / MMS gu / MMS or | 123 / 63 / 64 / 114 / 114 MB |
-| espeak-ng-data | 18 MB |
+| STT, 9 Indic languages (IndicConformer, MatMul-only INT8 + FP16 storage) | 153 MB each |
+| STT, English (NeMo conformer medium INT8 + FP16 storage) | 62 MB |
+| TTS rasa / Piper hi / Piper en / MMS gu / MMS or | 62 / 32 / 32 / 58 / 58 MB |
+| espeak-ng-data (hi + en only) | 1 MB |
 | VAD (silero) | 0.6 MB |
-| **Total** | **~2.1 GB** |
+| **All 10 languages** | **1,685 MB** (was 2,238) |
+
+## Per-phone language packs (recommended)
+
+A phone needs STT only for the language(s) its user speaks, but **every voice** (incoming speech is spoken in the sender's language). The app lists only the speech languages whose STT is installed.
+
+```bash
+python work/make_pack.py --langs hi,en        # -> packs/hi-en/models (459 MB)
+python work/make_pack.py --langs ta           # -> packs/ta/models    (396 MB)
+```
+
+| Pack | Size |
+|---|---|
+| one Indic language | 396 MB |
+| English only | 305 MB |
+| two languages (e.g. hi + en) | 459 MB |
 
 ## Putting them on a phone
 
 ```bash
-PKG=com.your.app.package        # from P1
+PKG=org.itantra.app
 adb shell mkdir -p /sdcard/Android/data/$PKG/files/models
-adb push models/. /sdcard/Android/data/$PKG/files/models/
+adb push packs/hi-en/models/. /sdcard/Android/data/$PKG/files/models/   # or models/. for all 10
 ```
 
 Then check them with `python p2-models/scripts/verify_models.py --models models`. All 10 languages should PASS.

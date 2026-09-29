@@ -100,10 +100,32 @@ Latencies between the two phones can't be combined across devices, because their
 - The language dropdown opens in a popup that the plain `uiautomator dump` can't see. `work/devui.py` uses `uiautomator dump --windows` (Android 14+) or the keyboard (older Android).
 - A scroll gesture that crosses the "Continuous listening" switch toggles it. `devui.scroll` now swipes along the page margin.
 
+## Build `e968ad4` (Wi-Fi discovery + Bluetooth) + language-pack picker, both phones (2026-09-30)
+
+**Build:** 13/13 unit tests pass and lint has 0 errors (31 warnings). **APK 38.65 MB**; the same code without P1's native-lib exclusion is 43.43 MB. **Models:** the new smaller set as per-phone packs: Nothing = Hindi + English, realme = Tamil + English (459 MB each, was 2.0 GB).
+
+| Test | Result |
+|---|---|
+| Picker shows only installed speech languages | ✅ "speech languages installed: 2/10"; the dropdown offers only English + Tamil (realme) / English + Hindi (Nothing) |
+| **A pack phone still speaks all 10 incoming languages** (laptop peer sent one message per language to the ta+en phone) | ✅ all 10 spoken |
+| **Wi-Fi discovery**: realme Host, Nothing Scan for devices | ✅ "iTantra RMX3031 · dc16" listed within ~4 s; one tap → Connected over Wi-Fi; ping 11–111 ms. No IP typed |
+| **Bluetooth**: Nearby-devices permission, enable-Bluetooth prompt, 120 s discoverable prompt, scan, pair on both phones | ✅ every prompt appeared as the README describes; pairing accepted on both → Connected over Bluetooth |
+| Ping over Bluetooth | ✅ 43–278 ms (Wi-Fi: 8–111 ms) |
+| Cross-language alert over Bluetooth (Hindi phone → Tamil phone) | ✅ "Alert: evacuate [ta]" |
+| **Speech both ways over Bluetooth, over the air** | ✅ A→B: STT 207 ms, receiver first playback 521 ms. B→A: STT 214 ms, first playback 363 ms |
+| Bluetooth disconnect → reconnect | ✅ the paired phone is listed within ~7 s; reconnect with **no pairing prompt** |
+| App memory right after start, English only | 303 MB (Nothing) / 274 MB (realme): same as before the model changes (307 / 277) |
+| App memory after two voices have been used | 476 MB / 551 MB, from the new two-voice cache (by design) |
+
+**Low-latency playback was declined by Android** on the realme: every AudioTrack logged `requested low latency; actual mode=0` at 16, 22.05 and 24 kHz, and the "audio ready → playback starts" gap is still ~235–250 ms. Android's fast path usually needs the device's native rate (typically 48 kHz). Suggest resampling voice output to `AudioManager.getProperty(PROPERTY_OUTPUT_SAMPLE_RATE)`, or keeping one track open per rate.
+
+**Scan list privacy note:** the Bluetooth list shows the phone's already-paired devices first (car kits, earbuds, etc.). That's fine for a demo, but P1 could filter the list to devices advertising the iTantra service UUID.
+
 ## Not verified yet
 
 - **PTT in all 10 languages over the air:** the first attempt played the test sentences into the Mac's Bluetooth earbuds instead of its speakers, so the phone heard silence. Re-run `work/ptt_langs_test.py` with the Mac's built-in speakers selected. (English PTT on the realme was already exact.)
-- Two phones over a **phone hotspot** (only home Wi-Fi was tested; the demo plan uses a hotspot).
+- Two phones over a **phone hotspot** (home Wi-Fi and Bluetooth were tested; the demo plan uses a hotspot).
+- PTT in all 10 languages over the air: needs the laptop speakers (they were set to Bluetooth earbuds).
 - Rotation while recording, speaking, or playing an alert (not attempted).
 - Alerts with native-checked text (the WAVs used here are drafts).
 

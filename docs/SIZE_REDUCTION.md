@@ -1,9 +1,60 @@
 # Reducing the app's total size
 
-**Today:** 2,238 MB of models + 38.7 MB APK = **~2.28 GB** for all 10 languages on every phone.
-**Measured target:** **~430 MB per phone** (one speaking language + every voice), or **~1.72 GB** if every phone keeps all 10.
+**Before:** 2,238 MB of models + 38.7 MB APK = **~2.28 GB** for all 10 languages on every phone.
+**Done:** **435 MB per phone** with one speaking language and every voice (the target was ~430 MB), or **1.72 GB** with all 10 languages on every phone. Details below.
 
 Everything below was measured (2026-09-30): sizes from the files, speed and accuracy on the Apple M4 laptop (2 threads, onnxruntime 1.30.0), and the key ones re-checked **on the Nothing Phone (3a)** (sherpa-onnx 1.13.8 CLI, ONNX Runtime 1.28.2). Raw numbers are in `docs/size/`.
+
+## Done (2026-09-30): measured results
+
+All five changes are in. **Models:** `models/` is now the smaller set (built by `work/build_models_v2.py`); the old set is kept outside git as `dl/models_v1_full/`. **App:** the picker lists only installed speech languages (`MainActivity`), and the unused libraries are excluded (`app/build.gradle.kts`, already in P1's `e968ad4`). **Packs:** `work/make_pack.py`.
+
+Before/after on the **same Nothing Phone (3a)**, same 6 clips per language, same settings (STT 2 threads, TTS 4 threads), official sherpa-onnx 1.13.8 CLI (`work/phone_bench.py`, compared by `work/compare_phone.py`). The laptop check is `work/compare_v1_v2.py`. Raw data is in `docs/size/`.
+
+### Size
+
+| | Before | After |
+|---|---|---|
+| All 10 languages, models | 2,238 MB | **1,685 MB** (−25%) |
+| APK (same code, with and without the excluded libs) | 43.4 MB | **38.65 MB** (−4.8 MB) |
+| **Per phone: 1 Indic language pack + APK** | 2,281 MB (everything installed) | **435 MB** (−81%) |
+| Per phone: 2 languages (e.g. Hindi + English) + APK | 2,281 MB | **498 MB** (−78%) |
+| Per phone: English only + APK | 2,281 MB | **344 MB** (−85%) |
+| On the test phones' storage (app models folder) | 2.0 GB | **439 MB** |
+
+### Accuracy (no loss)
+
+| | Before | After |
+|---|---|---|
+| STT transcripts identical, phone | | **56/60** |
+| STT transcripts identical, laptop | | **56/60** |
+| STT CER / WER, phone, mean of 10 languages | 0.043 / 0.190 | 0.041 / 0.183 |
+| Voice round trip CER, laptop (18 generations per language) | 0.041 | 0.042 |
+| Voice round trip CER, phone-made speech (6 per language) | 0.055 | 0.031 |
+
+The small differences go both ways across languages and are within run-to-run noise (VITS voices are random each time). There was no systematic loss anywhere.
+
+### Latency (unchanged)
+
+| Phone, mean of 10 languages | Before | After |
+|---|---|---|
+| STT RTF (2 threads) | 0.151 | 0.151 |
+| Voice RTF (4 threads) | 0.582 | 0.563 |
+| Time to first audio, avg / max (4 threads) | 1.27 / 2.59 s | 1.26 / 2.55 s |
+| Model load, STT / voice | 1.63 / 1.27 s | 1.61 / 1.32 s |
+
+### Efficiency (RAM and CPU unchanged)
+
+| | Before | After |
+|---|---|---|
+| STT peak RAM (phone, mean) | 433 MB | 436 MB |
+| Voice peak RAM (phone, mean) | 299 MB | 308 MB |
+| Idle-listening CPU (VAD) | 0.48% of one core | 0.45% |
+| App memory right after start, English only (Nothing / realme) | 307 / 277 MB | 303 / 274 MB |
+
+FP16 storage saves disk and download size, not RAM: the weights are float32 again once loaded. P1's `e968ad4` keeps **two** voices cached (for faster language switches), so after both voices have been used the app holds ~476–551 MB. That's a latency-for-RAM trade from that commit, not from these changes.
+
+**Still to do:** listen to the FP16 voices next to the originals (the numbers say they're equivalent; a person should confirm), and choose each demo phone's pack.
 
 ## Where the 2.28 GB goes
 

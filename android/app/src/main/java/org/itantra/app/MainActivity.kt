@@ -147,12 +147,19 @@ class MainActivity : AppCompatActivity() {
                     writeText(assets.open("manifest.json").bufferedReader().use { it.readText() })
                 })
             voices = TtsPool(manifest)
-            val langs = manifest.languages.values.sortedBy { it.wireId }
+            // Language packs: a phone only needs STT for the languages its user speaks, but every
+            // voice (incoming speech is spoken in the sender's language). Offer only installed STT.
+            val all = manifest.languages.values.sortedBy { it.wireId }
+            val installed = all.filter { l ->
+                listOf(l.stt.model, l.stt.tokens, l.stt.encoder, l.stt.decoder).filter { it.isNotEmpty() }.all { File(it).isFile }
+            }
+            val langs = installed.ifEmpty { all } // Nothing installed yet: show all, and loading explains what to push.
+            val first = langs.firstOrNull { it.code == "en" } ?: langs.first()
             picker.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, langs.map { it.name }))
-            picker.setText(langs.first { it.code == "en" }.name, false)
+            picker.setText(first.name, false)
             picker.setOnItemClickListener { _, _, position, _ -> loadLanguage(langs[position].code) }
-            loadLanguage("en")
-            message("Models: ${root.absolutePath}")
+            loadLanguage(first.code)
+            message("Models: ${root.absolutePath} · speech languages installed: ${installed.size}/${all.size}")
         } catch (e: Exception) { message("Setup failed: ${e.message}") }
     }
 

@@ -429,6 +429,10 @@ python scripts/quantize_int4.py --model dl/ovos-hi/model.sherpa.onnx --out model
 
 Stores MatMul weights in 4 bits instead of 8 (ONNX Runtime's `MatMulNBits` operator, which the Android ONNX Runtime also runs). Conv layers are left alone. **The input must be the full-size model with metadata** (the `.sherpa.onnx` file from `patch_stt.py`), not an INT8 one. The sherpa-onnx metadata is copied across. Always compare it against INT8 with `benchmark.py` before switching: it's smaller, but can be slower and less accurate (see §16).
 
+### `work/build_models_v2.py` and `work/make_pack.py`: smaller models, per-phone packs
+
+After `models/` is built as above, `python work/build_models_v2.py --src <full set> --out models` stores every float32 weight as float16 (cast back to float32 when ONNX Runtime loads the model, so it runs at the same speed with the same accuracy) and trims espeak-ng-data to Hindi + English: 2,238 → 1,685 MB. `python work/make_pack.py --langs hi,en` then builds a per-phone pack (STT for those languages + every voice, ~400–460 MB). Measurements: `docs/SIZE_REDUCTION.md`.
+
 ### `test_sentences.json`
 
 One longer sentence per language ("the road near the bridge is blocked…"), used by `benchmark.py` next to the short alert phrases, so TTS and STT are also tested on a realistic, longer message. **Draft translations, testing only, never shipped.**

@@ -1,6 +1,7 @@
 {
   "_readme": "One file that says which model every language uses. P2 owns it. The app (P1) and the scripts both read it. Paths are relative to the models/ folder on the laptop and on the phone. wire_id is the language byte in P3's message frame.",
   "sherpa_onnx_min_version": "1.13.5",
+  "_storage": "Model files are built by work/build_models_v2.py: float32 weights stored as float16 and cast back to float32 when ONNX Runtime loads them (same speed and accuracy, about half the size); espeak-ng-data trimmed to hi + en. Per-phone packs: work/make_pack.py.",
 
   "vad": { "model": "vad/silero_vad.onnx" },
 

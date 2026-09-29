@@ -1,0 +1,2167 @@
+{
+ "device": {
+  "brand": "Nothing",
+  "model": "A059",
+  "soc": "QTI SM7635",
+  "android": "16",
+  "abi": "arm64-v8a",
+  "ram_gb": 11.2,
+  "sherpa_onnx": "sherpa-onnx version : 1.13.8 | sherpa-onnx Git SHA1: 11afbd00 | sherpa-onnx Git date: Thu Sep 10 13:52:45 2026 | onnxruntime version : 1.28.2"
+ },
+ "threads": 2,
+ "phone_models": "models_v2",
+ "started": "2026-09-30 03:48:50",
+ "battery_temp_c_start": 30.0,
+ "languages": {
+  "hi": {
+   "name": "Hindi",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 1.846,
+     "audio_s": 12.249,
+     "rtf": 0.151,
+     "load_s_approx": 1.54,
+     "max_rss_mb": 438.6,
+     "cpu_s": 5.18,
+     "wall_s": 3.383339,
+     "texts": [
+      "आपातकालीन चेतावनी",
+      "तुरंत इलाका खाली करें",
+      "चिकित्सा सहायता चाहिए",
+      "सब ठीक है खतरा टल गया है",
+      "तुरंत बेस पर लौटें",
+      "पुल के पास सड़क बंद है कृपया स्कूल में बचाव दल भेजें"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.0,
+     "single_longest": {
+      "decode_s": 0.336,
+      "audio_s": 3.93,
+      "rtf": 0.085
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.48,
+     "audio_s": 12.249,
+     "rtf": 0.121,
+     "load_s_approx": 1.64,
+     "max_rss_mb": 439.3,
+     "cpu_s": 6.77,
+     "wall_s": 3.122001,
+     "texts": [
+      "आपातकालीन चेतावनी",
+      "तुरंत इलाका खाली करें",
+      "चिकित्सा सहायता चाहिए",
+      "सब ठीक है खतरा टल गया है",
+      "तुरंत बेस पर लौटें",
+      "पुल के पास सड़क बंद है कृपया स्कूल में बचाव दल भेजें"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.0,
+     "single_longest": {
+      "decode_s": 0.284,
+      "audio_s": 3.93,
+      "rtf": 0.072
+     }
+    }
+   },
+   "tts": {
+    "engine": "piper_hi",
+    "emotion_id": null,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "आपातकालीन चेतावनी",
+       "gen_s": 0.311,
+       "audio_s": 1.867,
+       "rtf": 0.167,
+       "load_s_approx": 1.16,
+       "max_rss_mb": 190.3,
+       "cpu_s": 1.7
+      },
+      {
+       "name": "01_evacuate",
+       "text": "तुरंत इलाका खाली करें",
+       "gen_s": 0.273,
+       "audio_s": 1.577,
+       "rtf": 0.173,
+       "load_s_approx": 1.13,
+       "max_rss_mb": 189.0,
+       "cpu_s": 1.67
+      },
+      {
+       "name": "02_medical",
+       "text": "चिकित्सा सहायता चाहिए",
+       "gen_s": 0.263,
+       "audio_s": 1.566,
+       "rtf": 0.168,
+       "load_s_approx": 1.13,
+       "max_rss_mb": 191.0,
+       "cpu_s": 1.67
+      },
+      {
+       "name": "03_all_clear",
+       "text": "सब ठीक है, खतरा टल गया है",
+       "gen_s": 0.351,
+       "audio_s": 1.929,
+       "rtf": 0.182,
+       "load_s_approx": 1.45,
+       "max_rss_mb": 189.6,
+       "cpu_s": 1.92
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "तुरंत बेस पर लौटें",
+       "gen_s": 0.255,
+       "audio_s": 1.473,
+       "rtf": 0.173,
+       "load_s_approx": 1.18,
+       "max_rss_mb": 189.8,
+       "cpu_s": 1.69
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "पुल के पास सड़क बंद है, कृपया स्कूल में बचाव दल भेजें",
+       "gen_s": 0.637,
+       "audio_s": 3.938,
+       "rtf": 0.162,
+       "load_s_approx": 1.11,
+       "max_rss_mb": 242.3,
+       "cpu_s": 2.37
+      }
+     ],
+     "rtf_avg": 0.171,
+     "first_audio_avg_s": 0.348,
+     "first_audio_max_s": 0.637,
+     "max_rss_mb": 242.3,
+     "load_s_approx": 1.15
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "आपातकालीन चेतावनी",
+       "gen_s": 0.216,
+       "audio_s": 1.747,
+       "rtf": 0.124,
+       "load_s_approx": 1.1,
+       "max_rss_mb": 191.3,
+       "cpu_s": 2.05
+      },
+      {
+       "name": "01_evacuate",
+       "text": "तुरंत इलाका खाली करें",
+       "gen_s": 0.227,
+       "audio_s": 1.563,
+       "rtf": 0.145,
+       "load_s_approx": 1.1,
+       "max_rss_mb": 189.5,
+       "cpu_s": 2.1
+      },
+      {
+       "name": "02_medical",
+       "text": "चिकित्सा सहायता चाहिए",
+       "gen_s": 0.201,
+       "audio_s": 1.594,
+       "rtf": 0.126,
+       "load_s_approx": 1.1,
+       "max_rss_mb": 189.2,
+       "cpu_s": 1.97
+      },
+      {
+       "name": "03_all_clear",
+       "text": "सब ठीक है, खतरा टल गया है",
+       "gen_s": 0.294,
+       "audio_s": 1.965,
+       "rtf": 0.15,
+       "load_s_approx": 1.1,
+       "max_rss_mb": 200.8,
+       "cpu_s": 2.33
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "तुरंत बेस पर लौटें",
+       "gen_s": 0.223,
+       "audio_s": 1.417,
+       "rtf": 0.157,
+       "load_s_approx": 1.1,
+       "max_rss_mb": 190.0,
+       "cpu_s": 2.08
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "पुल के पास सड़क बंद है, कृपया स्कूल में बचाव दल भेजें",
+       "gen_s": 0.494,
+       "audio_s": 3.858,
+       "rtf": 0.128,
+       "load_s_approx": 1.12,
+       "max_rss_mb": 239.9,
+       "cpu_s": 3.06
+      }
+     ],
+     "rtf_avg": 0.138,
+     "first_audio_avg_s": 0.276,
+     "first_audio_max_s": 0.494,
+     "max_rss_mb": 239.9,
+     "load_s_approx": 1.1
+    }
+   }
+  },
+  "en": {
+   "name": "English",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 1.148,
+     "audio_s": 13.079,
+     "rtf": 0.088,
+     "load_s_approx": 1.46,
+     "max_rss_mb": 270.4,
+     "cpu_s": 3.48,
+     "wall_s": 2.608859,
+     "texts": [
+      "emergency alert",
+      "evacuate the area now",
+      "medical help needed",
+      "all clear a danger has passed",
+      "return to base immediately",
+      "the road near the bridge is blocked please send a rescue team to the school"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.0,
+      0.097,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.016,
+     "single_longest": {
+      "decode_s": 0.199,
+      "audio_s": 4.325,
+      "rtf": 0.046
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.027,
+     "audio_s": 13.079,
+     "rtf": 0.079,
+     "load_s_approx": 1.47,
+     "max_rss_mb": 270.0,
+     "cpu_s": 4.94,
+     "wall_s": 2.493764,
+     "texts": [
+      "emergency alert",
+      "evacuate the area now",
+      "medical help needed",
+      "all clear a danger has passed",
+      "return to base immediately",
+      "the road near the bridge is blocked please send a rescue team to the school"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.0,
+      0.097,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.016,
+     "single_longest": {
+      "decode_s": 0.198,
+      "audio_s": 4.325,
+      "rtf": 0.046
+     }
+    }
+   },
+   "tts": {
+    "engine": "piper_en",
+    "emotion_id": null,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "Emergency alert",
+       "gen_s": 0.192,
+       "audio_s": 1.37,
+       "rtf": 0.14,
+       "load_s_approx": 1.85,
+       "max_rss_mb": 180.6,
+       "cpu_s": 2.22
+      },
+      {
+       "name": "01_evacuate",
+       "text": "Evacuate the area now",
+       "gen_s": 0.246,
+       "audio_s": 1.753,
+       "rtf": 0.14,
+       "load_s_approx": 1.82,
+       "max_rss_mb": 188.2,
+       "cpu_s": 2.34
+      },
+      {
+       "name": "02_medical",
+       "text": "Medical help needed",
+       "gen_s": 0.191,
+       "audio_s": 1.347,
+       "rtf": 0.142,
+       "load_s_approx": 1.82,
+       "max_rss_mb": 180.6,
+       "cpu_s": 2.22
+      },
+      {
+       "name": "03_all_clear",
+       "text": "All clear, the danger has passed",
+       "gen_s": 0.315,
+       "audio_s": 2.299,
+       "rtf": 0.137,
+       "load_s_approx": 1.86,
+       "max_rss_mb": 195.3,
+       "cpu_s": 2.49
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "Return to base immediately",
+       "gen_s": 0.251,
+       "audio_s": 1.776,
+       "rtf": 0.141,
+       "load_s_approx": 1.88,
+       "max_rss_mb": 188.8,
+       "cpu_s": 2.39
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "The road near the bridge is blocked, please send a rescue team to the school",
+       "gen_s": 0.623,
+       "audio_s": 4.429,
+       "rtf": 0.141,
+       "load_s_approx": 1.84,
+       "max_rss_mb": 241.9,
+       "cpu_s": 3.05
+      }
+     ],
+     "rtf_avg": 0.14,
+     "first_audio_avg_s": 0.303,
+     "first_audio_max_s": 0.623,
+     "max_rss_mb": 241.9,
+     "load_s_approx": 1.85
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "Emergency alert",
+       "gen_s": 0.148,
+       "audio_s": 1.312,
+       "rtf": 0.113,
+       "load_s_approx": 1.85,
+       "max_rss_mb": 180.9,
+       "cpu_s": 2.56
+      },
+      {
+       "name": "01_evacuate",
+       "text": "Evacuate the area now",
+       "gen_s": 0.193,
+       "audio_s": 1.765,
+       "rtf": 0.109,
+       "load_s_approx": 1.85,
+       "max_rss_mb": 189.0,
+       "cpu_s": 2.72
+      },
+      {
+       "name": "02_medical",
+       "text": "Medical help needed",
+       "gen_s": 0.144,
+       "audio_s": 1.277,
+       "rtf": 0.113,
+       "load_s_approx": 1.85,
+       "max_rss_mb": 180.3,
+       "cpu_s": 2.54
+      },
+      {
+       "name": "03_all_clear",
+       "text": "All clear, the danger has passed",
+       "gen_s": 0.297,
+       "audio_s": 2.425,
+       "rtf": 0.122,
+       "load_s_approx": 1.86,
+       "max_rss_mb": 202.6,
+       "cpu_s": 3.13
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "Return to base immediately",
+       "gen_s": 0.25,
+       "audio_s": 1.788,
+       "rtf": 0.14,
+       "load_s_approx": 1.9,
+       "max_rss_mb": 189.4,
+       "cpu_s": 2.81
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "The road near the bridge is blocked, please send a rescue team to the school",
+       "gen_s": 0.507,
+       "audio_s": 4.456,
+       "rtf": 0.114,
+       "load_s_approx": 1.83,
+       "max_rss_mb": 245.2,
+       "cpu_s": 3.87
+      }
+     ],
+     "rtf_avg": 0.118,
+     "first_audio_avg_s": 0.257,
+     "first_audio_max_s": 0.507,
+     "max_rss_mb": 245.2,
+     "load_s_approx": 1.85
+    }
+   }
+  },
+  "bn": {
+   "name": "Bengali",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 1.722,
+     "audio_s": 11.208,
+     "rtf": 0.154,
+     "load_s_approx": 1.63,
+     "max_rss_mb": 427.8,
+     "cpu_s": 4.94,
+     "wall_s": 3.348505,
+     "texts": [
+      "জরুরি সতর্কতা",
+      "এখন এলাকা খালি করুন",
+      "চিকিৎসা সহায়তা প্রয়োজন",
+      "সব ঠিক আছে বিপদ কেটে গেছে",
+      "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+      "সেতুর কাছে রাস্তা বন্ধদয়া করে স্কুলে উদ্ধারকারী দল পাঠান"
+     ],
+     "cer_each": [
+      0.0,
+      0.05,
+      0.0,
+      0.0,
+      0.0,
+      0.017
+     ],
+     "cer_avg": 0.011,
+     "single_longest": {
+      "decode_s": 0.311,
+      "audio_s": 3.709,
+      "rtf": 0.084
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.479,
+     "audio_s": 11.208,
+     "rtf": 0.132,
+     "load_s_approx": 1.47,
+     "max_rss_mb": 427.8,
+     "cpu_s": 6.75,
+     "wall_s": 2.949223,
+     "texts": [
+      "জরুরি সতর্কতা",
+      "এখন এলাকা খালি করুন",
+      "চিকিৎসা সহায়তা প্রয়োজন",
+      "সব ঠিক আছে বিপদ কেটে গেছে",
+      "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+      "সেতুর কাছে রাস্তা বন্ধদয়া করে স্কুলে উদ্ধারকারী দল পাঠান"
+     ],
+     "cer_each": [
+      0.0,
+      0.05,
+      0.0,
+      0.0,
+      0.0,
+      0.017
+     ],
+     "cer_avg": 0.011,
+     "single_longest": {
+      "decode_s": 0.33,
+      "audio_s": 3.709,
+      "rtf": 0.089
+     }
+    }
+   },
+   "tts": {
+    "engine": "rasa",
+    "emotion_id": 10,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "জরুরি সতর্কতা",
+       "gen_s": 1.1,
+       "audio_s": 1.099,
+       "rtf": 1.001,
+       "load_s_approx": 1.36,
+       "max_rss_mb": 270.3,
+       "cpu_s": 3.54
+      },
+      {
+       "name": "01_evacuate",
+       "text": "এখনই এলাকা খালি করুন",
+       "gen_s": 1.457,
+       "audio_s": 1.461,
+       "rtf": 0.997,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.2,
+       "cpu_s": 4.22
+      },
+      {
+       "name": "02_medical",
+       "text": "চিকিৎসা সহায়তা প্রয়োজন",
+       "gen_s": 1.435,
+       "audio_s": 1.44,
+       "rtf": 0.997,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 270.1,
+       "cpu_s": 4.16
+      },
+      {
+       "name": "03_all_clear",
+       "text": "সব ঠিক আছে, বিপদ কেটে গেছে",
+       "gen_s": 2.192,
+       "audio_s": 1.978,
+       "rtf": 1.108,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 270.3,
+       "cpu_s": 5.68
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+       "gen_s": 1.624,
+       "audio_s": 1.632,
+       "rtf": 0.995,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.3,
+       "cpu_s": 4.55
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "সেতুর কাছে রাস্তা বন্ধ, দয়া করে স্কুলে উদ্ধারকারী দল পাঠান",
+       "gen_s": 4.383,
+       "audio_s": 3.95,
+       "rtf": 1.109,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 324.9,
+       "cpu_s": 9.99
+      }
+     ],
+     "rtf_avg": 1.034,
+     "first_audio_avg_s": 2.032,
+     "first_audio_max_s": 4.383,
+     "max_rss_mb": 324.9,
+     "load_s_approx": 1.31
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "জরুরি সতর্কতা",
+       "gen_s": 0.804,
+       "audio_s": 1.067,
+       "rtf": 0.754,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 269.7,
+       "cpu_s": 4.61
+      },
+      {
+       "name": "01_evacuate",
+       "text": "এখনই এলাকা খালি করুন",
+       "gen_s": 1.121,
+       "audio_s": 1.579,
+       "rtf": 0.71,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.3,
+       "cpu_s": 5.85
+      },
+      {
+       "name": "02_medical",
+       "text": "চিকিৎসা সহায়তা প্রয়োজন",
+       "gen_s": 0.899,
+       "audio_s": 1.408,
+       "rtf": 0.638,
+       "load_s_approx": 1.28,
+       "max_rss_mb": 270.4,
+       "cpu_s": 4.93
+      },
+      {
+       "name": "03_all_clear",
+       "text": "সব ঠিক আছে, বিপদ কেটে গেছে",
+       "gen_s": 1.338,
+       "audio_s": 1.85,
+       "rtf": 0.723,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 273.6,
+       "cpu_s": 6.68
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+       "gen_s": 1.178,
+       "audio_s": 1.675,
+       "rtf": 0.703,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 270.1,
+       "cpu_s": 6.05
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "সেতুর কাছে রাস্তা বন্ধ, দয়া করে স্কুলে উদ্ধারকারী দল পাঠান",
+       "gen_s": 2.705,
+       "audio_s": 3.594,
+       "rtf": 0.753,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 304.9,
+       "cpu_s": 11.95
+      }
+     ],
+     "rtf_avg": 0.713,
+     "first_audio_avg_s": 1.341,
+     "first_audio_max_s": 2.705,
+     "max_rss_mb": 304.9,
+     "load_s_approx": 1.3
+    }
+   }
+  },
+  "gu": {
+   "name": "Gujarati",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 1.923,
+     "audio_s": 13.086,
+     "rtf": 0.147,
+     "load_s_approx": 1.63,
+     "max_rss_mb": 444.1,
+     "cpu_s": 5.35,
+     "wall_s": 3.551816,
+     "texts": [
+      "કખા ટોકતી છે તવની",
+      "તરત જ વિસ્તાર ખાલી કરો",
+      "તબીબી મદદની જરૂર છે",
+      "તો બદ્ધું સુરક્ષિત છે જોખમ તળી ગયું છે",
+      "તરત જ બેઝ પર પાછા ફરો",
+      "પુલ પાસેનો રસ્તો બંધ છે કૃપા કરીને શાળામાં બચાવ ટીમ મોકલો"
+     ],
+     "cer_each": [
+      0.538,
+      0.0,
+      0.0,
+      0.182,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.12,
+     "single_longest": {
+      "decode_s": 0.341,
+      "audio_s": 4.101,
+      "rtf": 0.083
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.645,
+     "audio_s": 13.086,
+     "rtf": 0.126,
+     "load_s_approx": 1.46,
+     "max_rss_mb": 444.2,
+     "cpu_s": 7.65,
+     "wall_s": 3.104702,
+     "texts": [
+      "કખા ટોકતી છે તવની",
+      "તરત જ વિસ્તાર ખાલી કરો",
+      "તબીબી મદદની જરૂર છે",
+      "તો બદ્ધું સુરક્ષિત છે જોખમ તળી ગયું છે",
+      "તરત જ બેઝ પર પાછા ફરો",
+      "પુલ પાસેનો રસ્તો બંધ છે કૃપા કરીને શાળામાં બચાવ ટીમ મોકલો"
+     ],
+     "cer_each": [
+      0.538,
+      0.0,
+      0.0,
+      0.182,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.12,
+     "single_longest": {
+      "decode_s": 0.282,
+      "audio_s": 4.101,
+      "rtf": 0.069
+     }
+    }
+   },
+   "tts": {
+    "engine": "mms_gu",
+    "emotion_id": null,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "કટોકટી ચેતવણી",
+       "gen_s": 0.874,
+       "audio_s": 1.28,
+       "rtf": 0.683,
+       "load_s_approx": 1.25,
+       "max_rss_mb": 256.0,
+       "cpu_s": 2.99
+      },
+      {
+       "name": "01_evacuate",
+       "text": "તરત જ વિસ્તાર ખાલી કરો",
+       "gen_s": 1.1,
+       "audio_s": 1.632,
+       "rtf": 0.674,
+       "load_s_approx": 1.2,
+       "max_rss_mb": 256.2,
+       "cpu_s": 3.42
+      },
+      {
+       "name": "02_medical",
+       "text": "તબીબી મદદની જરૂર છે",
+       "gen_s": 1.022,
+       "audio_s": 1.504,
+       "rtf": 0.68,
+       "load_s_approx": 1.2,
+       "max_rss_mb": 256.1,
+       "cpu_s": 3.25
+      },
+      {
+       "name": "03_all_clear",
+       "text": "બધું સુરક્ષિત છે, જોખમ ટળી ગયું છે",
+       "gen_s": 1.881,
+       "audio_s": 2.46,
+       "rtf": 0.765,
+       "load_s_approx": 1.19,
+       "max_rss_mb": 256.1,
+       "cpu_s": 4.94
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "તરત જ બેઝ પર પાછા ફરો",
+       "gen_s": 1.185,
+       "audio_s": 1.76,
+       "rtf": 0.673,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 255.8,
+       "cpu_s": 3.58
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "પુલ પાસેનો રસ્તો બંધ છે, કૃપા કરીને શાળામાં બચાવ ટીમ મોકલો",
+       "gen_s": 3.322,
+       "audio_s": 4.333,
+       "rtf": 0.767,
+       "load_s_approx": 1.18,
+       "max_rss_mb": 279.1,
+       "cpu_s": 7.78
+      }
+     ],
+     "rtf_avg": 0.707,
+     "first_audio_avg_s": 1.564,
+     "first_audio_max_s": 3.322,
+     "max_rss_mb": 279.1,
+     "load_s_approx": 1.2
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "કટોકટી ચેતવણી",
+       "gen_s": 0.695,
+       "audio_s": 1.36,
+       "rtf": 0.511,
+       "load_s_approx": 1.25,
+       "max_rss_mb": 255.6,
+       "cpu_s": 4.0
+      },
+      {
+       "name": "01_evacuate",
+       "text": "તરત જ વિસ્તાર ખાલી કરો",
+       "gen_s": 0.818,
+       "audio_s": 1.6,
+       "rtf": 0.511,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 256.7,
+       "cpu_s": 4.52
+      },
+      {
+       "name": "02_medical",
+       "text": "તબીબી મદદની જરૂર છે",
+       "gen_s": 0.813,
+       "audio_s": 1.6,
+       "rtf": 0.508,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 256.5,
+       "cpu_s": 4.57
+      },
+      {
+       "name": "03_all_clear",
+       "text": "બધું સુરક્ષિત છે, જોખમ ટળી ગયું છે",
+       "gen_s": 1.391,
+       "audio_s": 2.526,
+       "rtf": 0.551,
+       "load_s_approx": 1.23,
+       "max_rss_mb": 256.7,
+       "cpu_s": 6.89
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "તરત જ બેઝ પર પાછા ફરો",
+       "gen_s": 0.861,
+       "audio_s": 1.76,
+       "rtf": 0.489,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 256.6,
+       "cpu_s": 4.75
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "પુલ પાસેનો રસ્તો બંધ છે, કૃપા કરીને શાળામાં બચાવ ટીમ મોકલો",
+       "gen_s": 2.275,
+       "audio_s": 4.212,
+       "rtf": 0.54,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 276.4,
+       "cpu_s": 10.26
+      }
+     ],
+     "rtf_avg": 0.518,
+     "first_audio_avg_s": 1.142,
+     "first_audio_max_s": 2.275,
+     "max_rss_mb": 276.4,
+     "load_s_approx": 1.21
+    }
+   }
+  },
+  "kn": {
+   "name": "Kannada",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 2.361,
+     "audio_s": 14.632,
+     "rtf": 0.161,
+     "load_s_approx": 1.64,
+     "max_rss_mb": 471.3,
+     "cpu_s": 6.22,
+     "wall_s": 3.999176,
+     "texts": [
+      "ದುರ್ತೂರೆಚ್ಚರಿಕೆ",
+      "ತಕ್ಷಣಾರಿ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+      "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+      "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ ಅಪಾಯ ತಪ್ಪಿದೆ",
+      "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+      "ಸೇತುವೆಯ ಬಳಿ ರಸ್ತೆ ಮುಚ್ಚಿದೆ ದಯವಿಟ್ಟು ಶಾಲೆಗೆ ರಕ್ಷಣಾ ತಂಡವನ್ನು ಕಳುಹಿಸಿ"
+     ],
+     "cer_each": [
+      0.267,
+      0.103,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.062,
+     "single_longest": {
+      "decode_s": 0.415,
+      "audio_s": 4.96,
+      "rtf": 0.084
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.898,
+     "audio_s": 14.632,
+     "rtf": 0.13,
+     "load_s_approx": 1.5,
+     "max_rss_mb": 470.6,
+     "cpu_s": 8.56,
+     "wall_s": 3.398891,
+     "texts": [
+      "ದುರ್ತೂರೆಚ್ಚರಿಕೆ",
+      "ತಕ್ಷಣಾರಿ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+      "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+      "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ ಅಪಾಯ ತಪ್ಪಿದೆ",
+      "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+      "ಸೇತುವೆಯ ಬಳಿ ರಸ್ತೆ ಮುಚ್ಚಿದೆ ದಯವಿಟ್ಟು ಶಾಲೆಗೆ ರಕ್ಷಣಾ ತಂಡವನ್ನು ಕಳುಹಿಸಿ"
+     ],
+     "cer_each": [
+      0.267,
+      0.103,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.062,
+     "single_longest": {
+      "decode_s": 0.333,
+      "audio_s": 4.96,
+      "rtf": 0.067
+     }
+    }
+   },
+   "tts": {
+    "engine": "rasa",
+    "emotion_id": 10,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "ತುರ್ತು ಎಚ್ಚರಿಕೆ",
+       "gen_s": 1.232,
+       "audio_s": 1.227,
+       "rtf": 1.004,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 270.2,
+       "cpu_s": 3.76
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ತಕ್ಷಣ ಈ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+       "gen_s": 2.385,
+       "audio_s": 2.411,
+       "rtf": 0.989,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 273.3,
+       "cpu_s": 6.05
+      },
+      {
+       "name": "02_medical",
+       "text": "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+       "gen_s": 1.709,
+       "audio_s": 1.717,
+       "rtf": 0.995,
+       "load_s_approx": 1.32,
+       "max_rss_mb": 270.0,
+       "cpu_s": 4.74
+      },
+      {
+       "name": "03_all_clear",
+       "text": "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ, ಅಪಾಯ ತಪ್ಪಿದೆ",
+       "gen_s": 2.549,
+       "audio_s": 2.581,
+       "rtf": 0.987,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 275.8,
+       "cpu_s": 6.38
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+       "gen_s": 1.693,
+       "audio_s": 1.696,
+       "rtf": 0.998,
+       "load_s_approx": 1.28,
+       "max_rss_mb": 269.8,
+       "cpu_s": 4.66
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "ಸೇತುವೆಯ ಬಳಿ ರಸ್ತೆ ಮುಚ್ಚಿದೆ, ದಯವಿಟ್ಟು ಶಾಲೆಗೆ ರಕ್ಷಣಾ ತಂಡವನ್ನು ಕಳುಹಿಸಿ",
+       "gen_s": 5.218,
+       "audio_s": 5.131,
+       "rtf": 1.017,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 343.3,
+       "cpu_s": 11.61
+      }
+     ],
+     "rtf_avg": 0.998,
+     "first_audio_avg_s": 2.464,
+     "first_audio_max_s": 5.218,
+     "max_rss_mb": 343.3,
+     "load_s_approx": 1.29
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "ತುರ್ತು ಎಚ್ಚರಿಕೆ",
+       "gen_s": 0.927,
+       "audio_s": 1.301,
+       "rtf": 0.712,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 270.7,
+       "cpu_s": 5.07
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ತಕ್ಷಣ ಈ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+       "gen_s": 1.814,
+       "audio_s": 2.549,
+       "rtf": 0.712,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 275.4,
+       "cpu_s": 8.47
+      },
+      {
+       "name": "02_medical",
+       "text": "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+       "gen_s": 1.327,
+       "audio_s": 1.813,
+       "rtf": 0.732,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.1,
+       "cpu_s": 6.65
+      },
+      {
+       "name": "03_all_clear",
+       "text": "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ, ಅಪಾಯ ತಪ್ಪಿದೆ",
+       "gen_s": 1.477,
+       "audio_s": 2.389,
+       "rtf": 0.618,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 272.5,
+       "cpu_s": 7.22
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+       "gen_s": 1.214,
+       "audio_s": 1.813,
+       "rtf": 0.669,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.1,
+       "cpu_s": 6.18
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "ಸೇತುವೆಯ ಬಳಿ ರಸ್ತೆ ಮುಚ್ಚಿದೆ, ದಯವಿಟ್ಟು ಶಾಲೆಗೆ ರಕ್ಷಣಾ ತಂಡವನ್ನು ಕಳುಹಿಸಿ",
+       "gen_s": 3.808,
+       "audio_s": 5.264,
+       "rtf": 0.723,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 346.4,
+       "cpu_s": 16.13
+      }
+     ],
+     "rtf_avg": 0.694,
+     "first_audio_avg_s": 1.761,
+     "first_audio_max_s": 3.808,
+     "max_rss_mb": 346.4,
+     "load_s_approx": 1.3
+    }
+   }
+  },
+  "ml": {
+   "name": "Malayalam",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 2.581,
+     "audio_s": 14.944,
+     "rtf": 0.173,
+     "load_s_approx": 1.64,
+     "max_rss_mb": 484.5,
+     "cpu_s": 6.67,
+     "wall_s": 4.224066,
+     "texts": [
+      "അടിയന്തര മുന്നറിയിപ്പ്",
+      "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴിയുക",
+      "വൈദ്യ സഹായം ആവശ്യമാണ്",
+      "എല്ലാം സുരക്ഷിതമാണ് അപകടം ഒഴിഞ്ഞു",
+      "ഉടൻ താവളത്തിലേക്ക് മടങ്ങുക",
+      "പാലത്തിനടുത്തുള്ള റോഡ് അടഞ്ഞിരിക്കുന്നു ദയവായി സ്കൂളിലേക്ക് രക്ഷാസംഘത്തെ അയയ്ക്കുക"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.05,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.008,
+     "single_longest": {
+      "decode_s": 0.453,
+      "audio_s": 5.438,
+      "rtf": 0.083
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 2.189,
+     "audio_s": 14.944,
+     "rtf": 0.146,
+     "load_s_approx": 1.5,
+     "max_rss_mb": 485.0,
+     "cpu_s": 9.68,
+     "wall_s": 3.692246,
+     "texts": [
+      "അടിയന്തര മുന്നറിയിപ്പ്",
+      "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴിയുക",
+      "വൈദ്യ സഹായം ആവശ്യമാണ്",
+      "എല്ലാം സുരക്ഷിതമാണ് അപകടം ഒഴിഞ്ഞു",
+      "ഉടൻ താവളത്തിലേക്ക് മടങ്ങുക",
+      "പാലത്തിനടുത്തുള്ള റോഡ് അടഞ്ഞിരിക്കുന്നു ദയവായി സ്കൂളിലേക്ക് രക്ഷാസംഘത്തെ അയയ്ക്കുക"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.05,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.008,
+     "single_longest": {
+      "decode_s": 0.367,
+      "audio_s": 5.438,
+      "rtf": 0.067
+     }
+    }
+   },
+   "tts": {
+    "engine": "rasa",
+    "emotion_id": 10,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "അടിയന്തര മുന്നറിയിപ്പ്",
+       "gen_s": 1.435,
+       "audio_s": 1.44,
+       "rtf": 0.997,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 269.6,
+       "cpu_s": 4.18
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴിയുക",
+       "gen_s": 2.008,
+       "audio_s": 1.847,
+       "rtf": 1.087,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 272.2,
+       "cpu_s": 5.31
+      },
+      {
+       "name": "02_medical",
+       "text": "വൈദ്യസഹായം ആവശ്യമാണ്",
+       "gen_s": 1.66,
+       "audio_s": 1.664,
+       "rtf": 0.998,
+       "load_s_approx": 1.32,
+       "max_rss_mb": 269.6,
+       "cpu_s": 4.64
+      },
+      {
+       "name": "03_all_clear",
+       "text": "എല്ലാം സുരക്ഷിതമാണ്, അപകടം ഒഴിഞ്ഞു",
+       "gen_s": 2.72,
+       "audio_s": 2.355,
+       "rtf": 1.155,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 278.7,
+       "cpu_s": 6.72
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ഉടൻ താവളത്തിലേക്ക് മടങ്ങുക",
+       "gen_s": 2.03,
+       "audio_s": 1.863,
+       "rtf": 1.089,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 272.7,
+       "cpu_s": 5.35
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "പാലത്തിനടുത്തുള്ള റോഡ് അടഞ്ഞിരിക്കുന്നു, ദയവായി സ്കൂളിലേക്ക് രക്ഷാസംഘത്തെ അയയ്ക്കുക",
+       "gen_s": 5.241,
+       "audio_s": 5.079,
+       "rtf": 1.032,
+       "load_s_approx": 1.32,
+       "max_rss_mb": 342.9,
+       "cpu_s": 11.69
+      }
+     ],
+     "rtf_avg": 1.06,
+     "first_audio_avg_s": 2.516,
+     "first_audio_max_s": 5.241,
+     "max_rss_mb": 342.9,
+     "load_s_approx": 1.31
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "അടിയന്തര മുന്നറിയിപ്പ്",
+       "gen_s": 1.038,
+       "audio_s": 1.419,
+       "rtf": 0.732,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 270.5,
+       "cpu_s": 5.54
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴിയുക",
+       "gen_s": 1.604,
+       "audio_s": 2.261,
+       "rtf": 0.709,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 271.2,
+       "cpu_s": 7.71
+      },
+      {
+       "name": "02_medical",
+       "text": "വൈദ്യസഹായം ആവശ്യമാണ്",
+       "gen_s": 1.285,
+       "audio_s": 1.771,
+       "rtf": 0.726,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 269.9,
+       "cpu_s": 6.51
+      },
+      {
+       "name": "03_all_clear",
+       "text": "എല്ലാം സുരക്ഷിതമാണ്, അപകടം ഒഴിഞ്ഞു",
+       "gen_s": 1.65,
+       "audio_s": 2.194,
+       "rtf": 0.752,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 273.5,
+       "cpu_s": 7.96
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ഉടൻ താവളത്തിലേക്ക് മടങ്ങുക",
+       "gen_s": 1.265,
+       "audio_s": 1.749,
+       "rtf": 0.723,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 269.7,
+       "cpu_s": 6.42
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "പാലത്തിനടുത്തുള്ള റോഡ് അടഞ്ഞിരിക്കുന്നു, ദയവായി സ്കൂളിലേക്ക് രക്ഷാസംഘത്തെ അയയ്ക്കുക",
+       "gen_s": 3.756,
+       "audio_s": 5.059,
+       "rtf": 0.742,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 346.2,
+       "cpu_s": 15.79
+      }
+     ],
+     "rtf_avg": 0.731,
+     "first_audio_avg_s": 1.766,
+     "first_audio_max_s": 3.756,
+     "max_rss_mb": 346.2,
+     "load_s_approx": 1.31
+    }
+   }
+  },
+  "mr": {
+   "name": "Marathi",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 1.812,
+     "audio_s": 12.576,
+     "rtf": 0.144,
+     "load_s_approx": 1.63,
+     "max_rss_mb": 429.6,
+     "cpu_s": 5.13,
+     "wall_s": 3.440593,
+     "texts": [
+      "आपत्कालीन इशारा",
+      "ताबडतोब परिसर रिकामा करा",
+      "वैद्यकीय मदत आहे",
+      "सर्व सुरक्षित आहे धोका टळला आहे",
+      "ताबडतोब तळावर परत या",
+      "पुलाजवळचा रस्ता बंद आहे कृपया शाळेत बचाव पथक पाठवा"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.2,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.033,
+     "single_longest": {
+      "decode_s": 0.324,
+      "audio_s": 3.846,
+      "rtf": 0.084
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.451,
+     "audio_s": 12.576,
+     "rtf": 0.115,
+     "load_s_approx": 1.48,
+     "max_rss_mb": 430.0,
+     "cpu_s": 6.88,
+     "wall_s": 2.93059,
+     "texts": [
+      "आपत्कालीन इशारा",
+      "ताबडतोब परिसर रिकामा करा",
+      "वैद्यकीय मदत आहे",
+      "सर्व सुरक्षित आहे धोका टळला आहे",
+      "ताबडतोब तळावर परत या",
+      "पुलाजवळचा रस्ता बंद आहे कृपया शाळेत बचाव पथक पाठवा"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.2,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.033,
+     "single_longest": {
+      "decode_s": 0.378,
+      "audio_s": 3.846,
+      "rtf": 0.098
+     }
+    }
+   },
+   "tts": {
+    "engine": "rasa",
+    "emotion_id": 10,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "आपत्कालीन इशारा",
+       "gen_s": 1.113,
+       "audio_s": 1.109,
+       "rtf": 1.003,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 270.1,
+       "cpu_s": 3.55
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ताबडतोब परिसर रिकामा करा",
+       "gen_s": 2.079,
+       "audio_s": 1.927,
+       "rtf": 1.079,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 274.4,
+       "cpu_s": 5.46
+      },
+      {
+       "name": "02_medical",
+       "text": "वैद्यकीय मदत हवी आहे",
+       "gen_s": 1.446,
+       "audio_s": 1.451,
+       "rtf": 0.997,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 269.7,
+       "cpu_s": 4.2
+      },
+      {
+       "name": "03_all_clear",
+       "text": "सर्व सुरक्षित आहे, धोका टळला आहे",
+       "gen_s": 2.41,
+       "audio_s": 2.443,
+       "rtf": 0.987,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 273.4,
+       "cpu_s": 6.09
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ताबडतोब तळावर परत या",
+       "gen_s": 1.546,
+       "audio_s": 1.547,
+       "rtf": 1.0,
+       "load_s_approx": 1.27,
+       "max_rss_mb": 270.1,
+       "cpu_s": 4.37
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "पुलाजवळचा रस्ता बंद आहे, कृपया शाळेत बचाव पथक पाठवा",
+       "gen_s": 4.367,
+       "audio_s": 3.944,
+       "rtf": 1.107,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 323.4,
+       "cpu_s": 9.95
+      }
+     ],
+     "rtf_avg": 1.029,
+     "first_audio_avg_s": 2.16,
+     "first_audio_max_s": 4.367,
+     "max_rss_mb": 323.4,
+     "load_s_approx": 1.3
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "आपत्कालीन इशारा",
+       "gen_s": 0.721,
+       "audio_s": 1.163,
+       "rtf": 0.62,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 270.2,
+       "cpu_s": 4.18
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ताबडतोब परिसर रिकामा करा",
+       "gen_s": 1.302,
+       "audio_s": 1.792,
+       "rtf": 0.727,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 270.2,
+       "cpu_s": 6.57
+      },
+      {
+       "name": "02_medical",
+       "text": "वैद्यकीय मदत हवी आहे",
+       "gen_s": 1.173,
+       "audio_s": 1.621,
+       "rtf": 0.723,
+       "load_s_approx": 1.33,
+       "max_rss_mb": 270.4,
+       "cpu_s": 6.06
+      },
+      {
+       "name": "03_all_clear",
+       "text": "सर्व सुरक्षित आहे, धोका टळला आहे",
+       "gen_s": 2.009,
+       "audio_s": 2.501,
+       "rtf": 0.803,
+       "load_s_approx": 1.28,
+       "max_rss_mb": 281.6,
+       "cpu_s": 9.26
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ताबडतोब तळावर परत या",
+       "gen_s": 1.584,
+       "audio_s": 1.887,
+       "rtf": 0.84,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.0,
+       "cpu_s": 7.64
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "पुलाजवळचा रस्ता बंद आहे, कृपया शाळेत बचाव पथक पाठवा",
+       "gen_s": 2.827,
+       "audio_s": 3.885,
+       "rtf": 0.728,
+       "load_s_approx": 1.33,
+       "max_rss_mb": 308.4,
+       "cpu_s": 12.37
+      }
+     ],
+     "rtf_avg": 0.74,
+     "first_audio_avg_s": 1.603,
+     "first_audio_max_s": 2.827,
+     "max_rss_mb": 308.4,
+     "load_s_approx": 1.31
+    }
+   }
+  },
+  "or": {
+   "name": "Odia",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 2.192,
+     "audio_s": 13.49,
+     "rtf": 0.162,
+     "load_s_approx": 1.61,
+     "max_rss_mb": 465.0,
+     "cpu_s": 5.88,
+     "wall_s": 3.80491,
+     "texts": [
+      "ଜରୁରୀକାଳୀନ ସରକତା",
+      "ସତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କହନ୍ତୁ",
+      "କି କି ଚା ସହାୟତା ଦଉକାର",
+      "ସବୁ ସୁରକ୍ଷିତ ବିପଦ ଟୋଇଗଲା",
+      "ଅତୁରନ୍ତ ଧାଟିକୁ ଫେରନ୍ତୁ",
+      "ପୋଲ ପାଖରେ ରାସ୍ତା ବନ୍ଦ ଅଛି ଦଳାକରି ସ୍କୁଲକୁ ଉଦ୍ଧାରକାଲି ଦଳ ପଠାନ୍ତୁ"
+     ],
+     "cer_each": [
+      0.111,
+      0.071,
+      0.286,
+      0.083,
+      0.095,
+      0.048
+     ],
+     "cer_avg": 0.116,
+     "single_longest": {
+      "decode_s": 0.383,
+      "audio_s": 4.605,
+      "rtf": 0.083
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.742,
+     "audio_s": 13.49,
+     "rtf": 0.129,
+     "load_s_approx": 1.47,
+     "max_rss_mb": 464.4,
+     "cpu_s": 7.86,
+     "wall_s": 3.213934,
+     "texts": [
+      "ଜରୁରୀକାଳୀନ ସରକତା",
+      "ସତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କହନ୍ତୁ",
+      "କି କି ଚା ସହାୟତା ଦଉକାର",
+      "ସବୁ ସୁରକ୍ଷିତ ବିପଦ ଟୋଇଗଲା",
+      "ଅତୁରନ୍ତ ଧାଟିକୁ ଫେରନ୍ତୁ",
+      "ପୋଲ ପାଖରେ ରାସ୍ତା ବନ୍ଦ ଅଛି ଦଳାକରି ସ୍କୁଲକୁ ଉଦ୍ଧାରକାଲି ଦଳ ପଠାନ୍ତୁ"
+     ],
+     "cer_each": [
+      0.111,
+      0.071,
+      0.286,
+      0.083,
+      0.095,
+      0.048
+     ],
+     "cer_avg": 0.116,
+     "single_longest": {
+      "decode_s": 0.408,
+      "audio_s": 4.605,
+      "rtf": 0.089
+     }
+    }
+   },
+   "tts": {
+    "engine": "mms_or",
+    "emotion_id": null,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "ଜରୁରୀକାଳୀନ ସତର୍କତା",
+       "gen_s": 1.048,
+       "audio_s": 1.291,
+       "rtf": 0.812,
+       "load_s_approx": 1.24,
+       "max_rss_mb": 256.0,
+       "cpu_s": 3.3
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କରନ୍ତୁ",
+       "gen_s": 1.805,
+       "audio_s": 2.469,
+       "rtf": 0.731,
+       "load_s_approx": 1.19,
+       "max_rss_mb": 256.1,
+       "cpu_s": 4.8
+      },
+      {
+       "name": "02_medical",
+       "text": "ଚିକିତ୍ସା ସହାୟତା ଦରକାର",
+       "gen_s": 1.411,
+       "audio_s": 1.522,
+       "rtf": 0.927,
+       "load_s_approx": 1.18,
+       "max_rss_mb": 255.6,
+       "cpu_s": 4.02
+      },
+      {
+       "name": "03_all_clear",
+       "text": "ସବୁ ସୁରକ୍ଷିତ, ବିପଦ ଟଳିଗଲା",
+       "gen_s": 1.457,
+       "audio_s": 1.917,
+       "rtf": 0.76,
+       "load_s_approx": 1.19,
+       "max_rss_mb": 255.9,
+       "cpu_s": 4.11
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ତୁରନ୍ତ ଘାଟିକୁ ଫେରନ୍ତୁ",
+       "gen_s": 1.424,
+       "audio_s": 1.565,
+       "rtf": 0.91,
+       "load_s_approx": 1.23,
+       "max_rss_mb": 256.2,
+       "cpu_s": 4.09
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "ପୋଲ ପାଖରେ ରାସ୍ତା ବନ୍ଦ ଅଛି, ଦୟାକରି ସ୍କୁଲକୁ ଉଦ୍ଧାରକାରୀ ଦଳ ପଠାନ୍ତୁ",
+       "gen_s": 4.021,
+       "audio_s": 4.796,
+       "rtf": 0.838,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 292.1,
+       "cpu_s": 9.18
+      }
+     ],
+     "rtf_avg": 0.83,
+     "first_audio_avg_s": 1.861,
+     "first_audio_max_s": 4.021,
+     "max_rss_mb": 292.1,
+     "load_s_approx": 1.2
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "ଜରୁରୀକାଳୀନ ସତର୍କତା",
+       "gen_s": 0.811,
+       "audio_s": 1.357,
+       "rtf": 0.598,
+       "load_s_approx": 1.19,
+       "max_rss_mb": 256.2,
+       "cpu_s": 4.42
+      },
+      {
+       "name": "01_evacuate",
+       "text": "ତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କରନ୍ତୁ",
+       "gen_s": 1.302,
+       "audio_s": 2.469,
+       "rtf": 0.527,
+       "load_s_approx": 1.21,
+       "max_rss_mb": 256.2,
+       "cpu_s": 6.49
+      },
+      {
+       "name": "02_medical",
+       "text": "ଚିକିତ୍ସା ସହାୟତା ଦରକାର",
+       "gen_s": 1.032,
+       "audio_s": 1.454,
+       "rtf": 0.71,
+       "load_s_approx": 1.2,
+       "max_rss_mb": 256.4,
+       "cpu_s": 5.34
+      },
+      {
+       "name": "03_all_clear",
+       "text": "ସବୁ ସୁରକ୍ଷିତ, ବିପଦ ଟଳିଗଲା",
+       "gen_s": 1.279,
+       "audio_s": 2.052,
+       "rtf": 0.623,
+       "load_s_approx": 1.17,
+       "max_rss_mb": 256.2,
+       "cpu_s": 6.32
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "ତୁରନ୍ତ ଘାଟିକୁ ଫେରନ୍ତୁ",
+       "gen_s": 1.04,
+       "audio_s": 1.512,
+       "rtf": 0.688,
+       "load_s_approx": 1.2,
+       "max_rss_mb": 256.2,
+       "cpu_s": 5.46
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "ପୋଲ ପାଖରେ ରାସ୍ତା ବନ୍ଦ ଅଛି, ଦୟାକରି ସ୍କୁଲକୁ ଉଦ୍ଧାରକାରୀ ଦଳ ପଠାନ୍ତୁ",
+       "gen_s": 2.884,
+       "audio_s": 4.688,
+       "rtf": 0.615,
+       "load_s_approx": 1.19,
+       "max_rss_mb": 291.7,
+       "cpu_s": 12.46
+      }
+     ],
+     "rtf_avg": 0.627,
+     "first_audio_avg_s": 1.391,
+     "first_audio_max_s": 2.884,
+     "max_rss_mb": 291.7,
+     "load_s_approx": 1.19
+    }
+   }
+  },
+  "ta": {
+   "name": "Tamil",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 2.253,
+     "audio_s": 14.02,
+     "rtf": 0.161,
+     "load_s_approx": 1.63,
+     "max_rss_mb": 463.3,
+     "cpu_s": 6.01,
+     "wall_s": 3.887865,
+     "texts": [
+      "அவசர எச்சரிக்கை",
+      "உடனடியாக இந்தப் பகுதியை விட்டு வெளியேறுங்கள்",
+      "மருத்துவ உதவி தே வே",
+      "எல்லாம் பாதுகாப்பாக உள்ளது ஆபத்து நீங்கி விட்டது",
+      "உடனடியாக தளத்திற்கு திரும்புங்கள்",
+      "பாலத்தின் அருகே சாலை மூட பட்டுள்ளது தயவு செய்து பள்ளிக்கு மீட்பு குழுவை அனுப்புங்கள்"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.111,
+      0.021,
+      0.057,
+      0.058
+     ],
+     "cer_avg": 0.041,
+     "single_longest": {
+      "decode_s": 0.401,
+      "audio_s": 4.74,
+      "rtf": 0.085
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.807,
+     "audio_s": 14.02,
+     "rtf": 0.129,
+     "load_s_approx": 1.47,
+     "max_rss_mb": 463.8,
+     "cpu_s": 8.23,
+     "wall_s": 3.280288,
+     "texts": [
+      "அவசர எச்சரிக்கை",
+      "உடனடியாக இந்தப் பகுதியை விட்டு வெளியேறுங்கள்",
+      "மருத்துவ உதவி தே வே",
+      "எல்லாம் பாதுகாப்பாக உள்ளது ஆபத்து நீங்கி விட்டது",
+      "உடனடியாக தளத்திற்கு திரும்புங்கள்",
+      "பாலத்தின் அருகே சாலை மூட பட்டுள்ளது தயவு செய்து பள்ளிக்கு மீட்பு குழுவை அனுப்புங்கள்"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.111,
+      0.021,
+      0.057,
+      0.058
+     ],
+     "cer_avg": 0.041,
+     "single_longest": {
+      "decode_s": 0.406,
+      "audio_s": 4.74,
+      "rtf": 0.086
+     }
+    }
+   },
+   "tts": {
+    "engine": "rasa",
+    "emotion_id": 10,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "அவசர எச்சரிக்கை",
+       "gen_s": 0.853,
+       "audio_s": 0.832,
+       "rtf": 1.025,
+       "load_s_approx": 1.28,
+       "max_rss_mb": 269.9,
+       "cpu_s": 3.02
+      },
+      {
+       "name": "01_evacuate",
+       "text": "உடனடியாக இந்தப் பகுதியை விட்டு வெளியேறுங்கள்",
+       "gen_s": 2.733,
+       "audio_s": 2.752,
+       "rtf": 0.993,
+       "load_s_approx": 1.27,
+       "max_rss_mb": 281.7,
+       "cpu_s": 6.72
+      },
+      {
+       "name": "02_medical",
+       "text": "மருத்துவ உதவி தேவை",
+       "gen_s": 1.089,
+       "audio_s": 1.077,
+       "rtf": 1.011,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 269.8,
+       "cpu_s": 3.49
+      },
+      {
+       "name": "03_all_clear",
+       "text": "எல்லாம் பாதுகாப்பாக உள்ளது, ஆபத்து நீங்கிவிட்டது",
+       "gen_s": 2.761,
+       "audio_s": 2.536,
+       "rtf": 1.089,
+       "load_s_approx": 1.27,
+       "max_rss_mb": 282.3,
+       "cpu_s": 6.77
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "உடனடியாக தளத்திற்குத் திரும்புங்கள்",
+       "gen_s": 1.84,
+       "audio_s": 1.845,
+       "rtf": 0.997,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 269.9,
+       "cpu_s": 4.99
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "பாலத்தின் அருகே சாலை மூடப்பட்டுள்ளது, தயவுசெய்து பள்ளிக்கு மீட்புக் குழுவை அனுப்புங்கள்",
+       "gen_s": 5.03,
+       "audio_s": 4.701,
+       "rtf": 1.07,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 337.1,
+       "cpu_s": 11.26
+      }
+     ],
+     "rtf_avg": 1.031,
+     "first_audio_avg_s": 2.384,
+     "first_audio_max_s": 5.03,
+     "max_rss_mb": 337.1,
+     "load_s_approx": 1.29
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "அவசர எச்சரிக்கை",
+       "gen_s": 0.871,
+       "audio_s": 1.195,
+       "rtf": 0.729,
+       "load_s_approx": 1.32,
+       "max_rss_mb": 270.1,
+       "cpu_s": 4.87
+      },
+      {
+       "name": "01_evacuate",
+       "text": "உடனடியாக இந்தப் பகுதியை விட்டு வெளியேறுங்கள்",
+       "gen_s": 1.599,
+       "audio_s": 2.24,
+       "rtf": 0.714,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 271.5,
+       "cpu_s": 7.69
+      },
+      {
+       "name": "02_medical",
+       "text": "மருத்துவ உதவி தேவை",
+       "gen_s": 0.649,
+       "audio_s": 1.099,
+       "rtf": 0.591,
+       "load_s_approx": 1.5,
+       "max_rss_mb": 270.1,
+       "cpu_s": 4.07
+      },
+      {
+       "name": "03_all_clear",
+       "text": "எல்லாம் பாதுகாப்பாக உள்ளது, ஆபத்து நீங்கிவிட்டது",
+       "gen_s": 1.898,
+       "audio_s": 3.014,
+       "rtf": 0.63,
+       "load_s_approx": 1.42,
+       "max_rss_mb": 292.8,
+       "cpu_s": 8.85
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "உடனடியாக தளத்திற்குத் திரும்புங்கள்",
+       "gen_s": 1.147,
+       "audio_s": 1.792,
+       "rtf": 0.64,
+       "load_s_approx": 1.39,
+       "max_rss_mb": 270.3,
+       "cpu_s": 5.99
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "பாலத்தின் அருகே சாலை மூடப்பட்டுள்ளது, தயவுசெய்து பள்ளிக்கு மீட்புக் குழுவை அனுப்புங்கள்",
+       "gen_s": 3.025,
+       "audio_s": 4.972,
+       "rtf": 0.608,
+       "load_s_approx": 1.33,
+       "max_rss_mb": 343.1,
+       "cpu_s": 13.11
+      }
+     ],
+     "rtf_avg": 0.652,
+     "first_audio_avg_s": 1.532,
+     "first_audio_max_s": 3.025,
+     "max_rss_mb": 343.1,
+     "load_s_approx": 1.36
+    }
+   }
+  },
+  "te": {
+   "name": "Telugu",
+   "stt": {
+    "int8_t2": {
+     "threads": 2,
+     "decode_s": 2.219,
+     "audio_s": 12.999,
+     "rtf": 0.171,
+     "load_s_approx": 1.65,
+     "max_rss_mb": 460.5,
+     "cpu_s": 5.95,
+     "wall_s": 3.864701,
+     "texts": [
+      "అత్యవసర హెచ్చరిక",
+      "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+      "వైద్య సహాయం కావాలి",
+      "అంతా సురక్షితం ప్రమాదం తప్పింది",
+      "వెంటనే స్థావరానికి తిరిగి రండి",
+      "వంతెన దగ్గర రోడ్డు మూసుకుపోయింది దయచేసి పాఠశాలకు సహాయక బృందాన్ని పంపండి"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.0,
+     "single_longest": {
+      "decode_s": 0.396,
+      "audio_s": 4.704,
+      "rtf": 0.084
+     }
+    },
+    "int8_t4": {
+     "threads": 4,
+     "decode_s": 1.772,
+     "audio_s": 12.999,
+     "rtf": 0.136,
+     "load_s_approx": 1.48,
+     "max_rss_mb": 461.9,
+     "cpu_s": 8.09,
+     "wall_s": 3.247444,
+     "texts": [
+      "అత్యవసర హెచ్చరిక",
+      "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+      "వైద్య సహాయం కావాలి",
+      "అంతా సురక్షితం ప్రమాదం తప్పింది",
+      "వెంటనే స్థావరానికి తిరిగి రండి",
+      "వంతెన దగ్గర రోడ్డు మూసుకుపోయింది దయచేసి పాఠశాలకు సహాయక బృందాన్ని పంపండి"
+     ],
+     "cer_each": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "cer_avg": 0.0,
+     "single_longest": {
+      "decode_s": 0.405,
+      "audio_s": 4.704,
+      "rtf": 0.086
+     }
+    }
+   },
+   "tts": {
+    "engine": "rasa",
+    "emotion_id": 10,
+    "t2": {
+     "threads": 2,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "అత్యవసర హెచ్చరిక",
+       "gen_s": 1.23,
+       "audio_s": 1.216,
+       "rtf": 1.012,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 269.7,
+       "cpu_s": 3.78
+      },
+      {
+       "name": "01_evacuate",
+       "text": "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+       "gen_s": 2.022,
+       "audio_s": 2.027,
+       "rtf": 0.998,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 272.6,
+       "cpu_s": 5.34
+      },
+      {
+       "name": "02_medical",
+       "text": "వైద్య సహాయం కావాలి",
+       "gen_s": 1.393,
+       "audio_s": 1.387,
+       "rtf": 1.005,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 270.1,
+       "cpu_s": 4.08
+      },
+      {
+       "name": "03_all_clear",
+       "text": "అంతా సురక్షితం, ప్రమాదం తప్పింది",
+       "gen_s": 2.192,
+       "audio_s": 1.945,
+       "rtf": 1.127,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.1,
+       "cpu_s": 5.68
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "వెంటనే స్థావరానికి తిరిగి రండి",
+       "gen_s": 1.899,
+       "audio_s": 1.899,
+       "rtf": 1.0,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 269.8,
+       "cpu_s": 5.1
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "వంతెన దగ్గర రోడ్డు మూసుకుపోయింది, దయచేసి పాఠశాలకు సహాయక బృందాన్ని పంపండి",
+       "gen_s": 4.802,
+       "audio_s": 4.638,
+       "rtf": 1.035,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 333.2,
+       "cpu_s": 10.79
+      }
+     ],
+     "rtf_avg": 1.029,
+     "first_audio_avg_s": 2.256,
+     "first_audio_max_s": 4.802,
+     "max_rss_mb": 333.2,
+     "load_s_approx": 1.3
+    },
+    "t4": {
+     "threads": 4,
+     "rows": [
+      {
+       "name": "00_emergency",
+       "text": "అత్యవసర హెచ్చరిక",
+       "gen_s": 0.879,
+       "audio_s": 1.195,
+       "rtf": 0.736,
+       "load_s_approx": 1.31,
+       "max_rss_mb": 270.1,
+       "cpu_s": 4.89
+      },
+      {
+       "name": "01_evacuate",
+       "text": "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+       "gen_s": 1.566,
+       "audio_s": 2.208,
+       "rtf": 0.709,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 270.9,
+       "cpu_s": 7.6
+      },
+      {
+       "name": "02_medical",
+       "text": "వైద్య సహాయం కావాలి",
+       "gen_s": 0.912,
+       "audio_s": 1.397,
+       "rtf": 0.653,
+       "load_s_approx": 1.27,
+       "max_rss_mb": 270.5,
+       "cpu_s": 5.0
+      },
+      {
+       "name": "03_all_clear",
+       "text": "అంతా సురక్షితం, ప్రమాదం తప్పింది",
+       "gen_s": 1.224,
+       "audio_s": 1.913,
+       "rtf": 0.64,
+       "load_s_approx": 1.29,
+       "max_rss_mb": 275.6,
+       "cpu_s": 6.22
+      },
+      {
+       "name": "04_return_to_base",
+       "text": "వెంటనే స్థావరానికి తిరిగి రండి",
+       "gen_s": 1.326,
+       "audio_s": 1.749,
+       "rtf": 0.758,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 270.5,
+       "cpu_s": 6.53
+      },
+      {
+       "name": "05_road_blocked",
+       "text": "వంతెన దగ్గర రోడ్డు మూసుకుపోయింది, దయచేసి పాఠశాలకు సహాయక బృందాన్ని పంపండి",
+       "gen_s": 3.189,
+       "audio_s": 4.629,
+       "rtf": 0.689,
+       "load_s_approx": 1.3,
+       "max_rss_mb": 328.3,
+       "cpu_s": 13.81
+      }
+     ],
+     "rtf_avg": 0.697,
+     "first_audio_avg_s": 1.516,
+     "first_audio_max_s": 3.189,
+     "max_rss_mb": 328.3,
+     "load_s_approx": 1.29
+    }
+   }
+  }
+ },
+ "vad": {
+  "cpu_s_per_60s": 0.272,
+  "idle_cpu_percent_one_core": 0.45,
+  "note": "file processed faster than real time; CPU per second of audio is what a live mic would cost"
+ },
+ "battery_temp_c_end": 35.0,
+ "finished": "2026-09-30 03:56:46",
+ "roundtrip_phone_tts_laptop_stt_cer": {
+  "hi": 0.0,
+  "en": 0.0,
+  "bn": 0.0,
+  "gu": 0.164,
+  "kn": 0.0,
+  "ml": 0.023,
+  "mr": 0.0,
+  "or": 0.092,
+  "ta": 0.034,
+  "te": 0.0
+ },
+ "roundtrip_phone_tts_note": "phone TTS output at 4 threads, transcribed by the INT8 STT on the laptop (work/compare_phone.py)"
+}

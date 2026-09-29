@@ -21,8 +21,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -35,13 +37,14 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "p2-models/scripts"))
 from common import cer, load_json, read_char_vocab, sanitize  # noqa: E402
 
-ADB = "/Users/bhoumiksangle/Downloads/platform-tools/adb"
+ADB = [os.environ.get("ADB") or shutil.which("adb") or "/Users/bhoumiksangle/Downloads/platform-tools/adb"] + (
+    ["-s", os.environ["SERIAL"]] if os.environ.get("SERIAL") else [])
 P = "/data/local/tmp/itantra"
 
 
 def sh(cmd: str, timeout: int = 900) -> str:
     full = f"cd {P} && export LD_LIBRARY_PATH={P}/bin && {cmd}"
-    r = subprocess.run([ADB, "shell", full], capture_output=True, text=True, timeout=timeout)
+    r = subprocess.run([*ADB, "shell", full], capture_output=True, text=True, timeout=timeout)
     return r.stdout + r.stderr
 
 
@@ -52,14 +55,14 @@ def timev(out: str) -> dict:
 
 
 def battery_temp_c() -> float:
-    r = subprocess.run([ADB, "shell", "dumpsys battery"], capture_output=True, text=True).stdout
+    r = subprocess.run([*ADB, "shell", "dumpsys battery"], capture_output=True, text=True).stdout
     m = re.search(r"temperature:\s*(\d+)", r)
     return int(m.group(1)) / 10 if m else float("nan")
 
 
 def device_info() -> dict:
-    q = lambda p: subprocess.run([ADB, "shell", f"getprop {p}"], capture_output=True, text=True).stdout.strip()  # noqa: E731
-    mem = subprocess.run([ADB, "shell", "grep MemTotal /proc/meminfo"], capture_output=True, text=True).stdout.split()
+    q = lambda p: subprocess.run([*ADB, "shell", f"getprop {p}"], capture_output=True, text=True).stdout.strip()  # noqa: E731
+    mem = subprocess.run([*ADB, "shell", "grep MemTotal /proc/meminfo"], capture_output=True, text=True).stdout.split()
     return {"brand": q("ro.product.brand"), "model": q("ro.product.model"), "soc": f"{q('ro.soc.manufacturer')} {q('ro.soc.model')}",
             "android": q("ro.build.version.release"), "abi": q("ro.product.cpu.abi"),
             "ram_gb": round(int(mem[1]) / 1024 / 1024, 1), "sherpa_onnx": sh("./bin/sherpa-onnx-version").strip().replace("\n", " | ")}
@@ -79,11 +82,11 @@ def stt_run(model: str, tokens: str, wavs: list[str], threads: int) -> dict:
             "cpu_s": round(t["user_s"] + t["sys_s"], 2), "wall_s": t["real_s"], "texts": texts}
 
 
-def tts_run(eng: dict, text: str, sid: int, emotion_id, threads: int, out_wav: str) -> dict:
-    args = [f"--vits-model=models/{eng['model']}", f"--vits-tokens=models/{eng['tokens']}", f"--sid={sid}",
+def tts_run(eng: dict, text: str, sid: int, emotion_id, threads: int, out_wav: str, mdir: str = "models") -> dict:
+    args = [f"--vits-model={mdir}/{eng['model']}", f"--vits-tokens={mdir}/{eng['tokens']}", f"--sid={sid}",
             f"--num-threads={threads}", f"--output-filename={out_wav}"]
     if eng.get("data_dir"):
-        args.append(f"--vits-data-dir=models/{eng['data_dir']}")
+        args.append(f"--vits-data-dir={mdir}/{eng['data_dir']}")
     if emotion_id is not None:
         args.append(f"--emotion-id={int(emotion_id)}")
     out = sh(f"toybox time -v ./bin/sherpa-onnx-offline-tts {' '.join(args)} {shlex.quote(text)} 2>&1")
@@ -102,11 +105,13 @@ def main() -> int:
     ap.add_argument("--only", default="")
     ap.add_argument("--tts-threads", default="2,4", help="comma-separated thread counts for TTS")
     ap.add_argument("--out", default=str(ROOT / "phone_out"))
+    ap.add_argument("--phone-models", default="models", help="model folder on the phone, relative to /data/local/tmp/itantra")
+    ap.add_argument("--no-int4", action="store_true", help="skip the INT4 STT variant")
     a = ap.parse_args()
     out = Path(a.out)
     (out / "tts_wav").mkdir(parents=True, exist_ok=True)
     man = load_json(ROOT / "models/manifest.json")
-    res = {"device": device_info(), "threads": a.threads, "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+    res = {"device": device_info(), "threads": a.threads, "phone_models": a.phone_models, "started": time.strftime("%Y-%m-%d %H:%M:%S"),
            "battery_temp_c_start": battery_temp_c(), "languages": {}}
     print(json.dumps(res["device"], ensure_ascii=False), flush=True)
 
@@ -115,10 +120,10 @@ def main() -> int:
     for secs in (5, 65):
         p = out / f"noise_{secs}s.wav"
         sf.write(p, (rng.standard_normal(16000 * secs) * 0.003).astype(np.float32), 16000)
-        subprocess.run([ADB, "push", str(p), f"{P}/audio/"], capture_output=True)
+        subprocess.run([*ADB, "push", str(p), f"{P}/audio/"], capture_output=True)
     cpu = {}
     for secs in (5, 65):
-        t = timev(sh(f"toybox time -v ./bin/sherpa-onnx-vad --silero-vad-model=models/vad/silero_vad.onnx "
+        t = timev(sh(f"toybox time -v ./bin/sherpa-onnx-vad --silero-vad-model={a.phone_models}/vad/silero_vad.onnx "
                      f"audio/noise_{secs}s.wav out/vad_{secs}.wav 2>&1"))
         cpu[secs] = t["user_s"] + t["sys_s"]
     res["vad"] = {"cpu_s_per_60s": round(cpu[65] - cpu[5], 3),
@@ -139,14 +144,14 @@ def main() -> int:
         entry: dict = {"name": L["name"], "stt": {}, "tts": {}}
 
         variants = {"int8": (L["stt"]["model"], L["stt"]["tokens"])}
-        if lang in ("hi", "ta"):
+        if lang in ("hi", "ta") and not a.no_int4:
             variants["int4"] = (f"../int4/{lang}/model.int4.onnx", f"../int4/{lang}/tokens.txt")
         for vname, (mo, to) in variants.items():
             for th in sorted({a.threads, 4}):
-                r = stt_run(f"models/{mo}", f"models/{to}", wavs, th)
+                r = stt_run(f"{a.phone_models}/{mo}", f"{a.phone_models}/{to}", wavs, th)
                 r["cer_each"] = [round(cer(ref, hyp), 3) for ref, hyp in zip(refs, r["texts"])]
                 r["cer_avg"] = round(float(np.mean(r["cer_each"])), 3)
-                single = stt_run(f"models/{mo}", f"models/{to}", [longest], th)
+                single = stt_run(f"{a.phone_models}/{mo}", f"{a.phone_models}/{to}", [longest], th)
                 r["single_longest"] = {k: single[k] for k in ("decode_s", "audio_s", "rtf")}
                 entry["stt"][f"{vname}_t{th}"] = r
                 print(f"{lang} STT {vname} t{th}: RTF {r['rtf']:.3f}  longest {single['audio_s']:.1f}s -> "
@@ -161,8 +166,8 @@ def main() -> int:
             for r, ref in zip(rows, refs):
                 name = Path(r["wav"]).stem
                 pw = f"out/tts_{lang}_{name}_t{th}.wav"
-                t = tts_run(eng, sanitize(ref, vocab), L["tts"].get("sid", 0), emo, th, pw)
-                subprocess.run([ADB, "pull", f"{P}/{pw}", str(out / "tts_wav" / f"{lang}_{name}_t{th}.wav")], capture_output=True)
+                t = tts_run(eng, sanitize(ref, vocab), L["tts"].get("sid", 0), emo, th, pw, a.phone_models)
+                subprocess.run([*ADB, "pull", f"{P}/{pw}", str(out / "tts_wav" / f"{lang}_{name}_t{th}.wav")], capture_output=True)
                 trows.append({"name": name, "text": ref, **t})
             tt = {"threads": th, "rows": trows,
                   "rtf_avg": round(float(np.mean([x["rtf"] for x in trows])), 3),
