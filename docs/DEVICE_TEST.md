@@ -51,11 +51,31 @@ On this phone rasa runs at RTF ~0.55 (4 threads), vs ~0.8 on the Nothing Phone (
 3. **STT waits behind TTS** (one serialized inference executor). In continuous mode, an outgoing message was delayed by 1.0–1.7 s ("end→STT") while an incoming message was being spoken. Acceptable for a walkie-talkie, but worth knowing for the latency slide.
 4. **APK: drop unused native libs.** `libsherpa-onnx-c-api.so` and `libsherpa-onnx-cxx-api.so` (~4.9 MB) aren't used by the Kotlin/JNI path. Exclude them with `packaging { jniLibs { excludes += ... } }`, then re-check that it still loads.
 
+## Second phone: Nothing Phone (3a), over wireless debugging (same build `303ed26`)
+
+**Phone:** Nothing A059, Snapdragon 7s Gen 3, 12 GB, Android 16, connected with `adb pair` / `adb connect` over Wi-Fi. The laptop peer used `adb forward` over that wireless link.
+
+| Test | Result |
+|---|---|
+| **Language switching**, all 10 languages × 2 rounds (`work/lang_switch_test.py`) | ✅ **Memory is released:** PSS stays flat (Indic 460–484 MB, Hindi 428 MB, English 307 MB) and doesn't grow in round 2. Ready 2.9–3.9 s after each switch |
+| **Mic permission denied** | ✅ "Microphone permission is required for sending speech", no crash |
+| **Permission granted later** (as the user would in Settings) | ✅ mic opens (16 kHz mono) without restarting the app |
+| **Background / foreground** during continuous listening and during a PTT hold | ✅ mic released on Home both times, restarted on return, connection kept, 0 crashes |
+| **Alert cuts off ongoing speech** (Android audio-focus log) | ✅ speech focus abandoned and the alarm's **exclusive** focus taken **30 ms** later. The rest of the interrupted message was dropped |
+| **Speech arriving during an alert** | ✅ waited, then played **3 ms** after the alert ended |
+| **Self-triggering in continuous mode** (4 messages with distinct words; frames checked for those words) | ✅ **0 frames** back. The mic paused during each of the 4 playbacks and resumed afterwards |
+
+### Issues found (for P1)
+
+5. **No second permission request.** After "Don't allow", pressing HOLD TO TALK only logs a message. It never re-asks, so the user must find the Settings page. Suggest calling `requestPermissions` again on the next PTT/continuous press (Android allows one more request), then pointing to Settings with a button.
+6. **The Continuous listening switch turns on with the mic denied**, with no warning. Suggest keeping it off and showing the permission message.
+7. **Recording needs a connection** ("Wait for models and connection"). That's reasonable, but it means you can't test the mic alone. Consider a local "mic test" meter.
+
 ## Not verified yet
 
-- **Self-triggering in continuous mode.** The test room wasn't quiet: people were talking, so the stray segments can't be told apart from the phone hearing itself. Re-test in a quiet room: continuous mode on, send 5 messages, expect 0 frames back.
-- **Alert cutting off ongoing speech.** The log shows the alert arriving 1.5 s into a long message, but whether the speech actually stopped needs a human to listen.
-- Two real phones over a hotspot, disconnect/reconnect, and PTT in the 9 Indic languages (needs speakers or recordings).
+- **PTT in all 10 languages over the air:** the first attempt played the test sentences into the Mac's Bluetooth earbuds instead of its speakers, so the phone heard silence. Re-run `work/ptt_langs_test.py` with the Mac's built-in speakers selected. (English PTT on the realme was already exact.)
+- **Two real phones over Wi-Fi/hotspot** (host/join, both directions, ping over Wi-Fi, disconnect/reconnect, wrong IP): the realme's Wi-Fi was off.
+- Rotation while recording, speaking, or playing an alert (not attempted).
 - Alerts with native-checked text (the WAVs used here are drafts).
 
 ## Reproduce
@@ -68,6 +88,10 @@ adb forward tcp:26173 tcp:26173
 python work/fake_peer.py rx-test              # pings, 10 languages, bad CRC, alerts
 python work/fake_peer.py speech --langs en,en,hi,hi,ta,ta
 python work/fake_peer.py listen --secs 15     # print what the phone sends (PTT)
+SERIAL=<device> python work/lang_switch_test.py   # 10 languages x2, memory after each switch
+SERIAL=<device> python work/ptt_langs_test.py     # PTT per language, laptop speaker -> phone mic
 ```
+
+`SERIAL` picks the phone when more than one is connected (`adb devices`).
 
 Phone timings are in `adb logcat -s iTantra:I`. **Keep those logs out of git:** in continuous mode they contain transcripts of whatever the phone heard (`device_test/` is gitignored).
