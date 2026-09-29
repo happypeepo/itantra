@@ -57,7 +57,7 @@ On this phone rasa runs at RTF ~0.55 (4 threads), vs ~0.8 on the Nothing Phone (
 
 | Test | Result |
 |---|---|
-| **Language switching**, all 10 languages × 2 rounds (`work/lang_switch_test.py`) | ✅ **Memory is released:** PSS stays flat (Indic 460–484 MB, Hindi 428 MB, English 307 MB) and doesn't grow in round 2. Ready 2.9–3.9 s after each switch |
+| **Language switching**, all 10 languages × 2 rounds (a language-switch script, now in git history) | ✅ **Memory is released:** PSS stays flat (Indic 460–484 MB, Hindi 428 MB, English 307 MB) and doesn't grow in round 2. Ready 2.9–3.9 s after each switch |
 | **Mic permission denied** | ✅ "Microphone permission is required for sending speech", no crash |
 | **Permission granted later** (as the user would in Settings) | ✅ mic opens (16 kHz mono) without restarting the app |
 | **Background / foreground** during continuous listening and during a PTT hold | ✅ mic released on Home both times, restarted on return, connection kept, 0 crashes |
@@ -97,8 +97,8 @@ Latencies between the two phones can't be combined across devices, because their
 **Small UX issues:** a normal disconnect shows "Disconnected: null", and a wrong IP shows the raw Java error (`EHOSTUNREACH (No route to host)…`). Suggest friendly text.
 
 **Test-harness notes** (not app bugs, but they cost time):
-- The language dropdown opens in a popup that the plain `uiautomator dump` can't see. `work/devui.py` uses `uiautomator dump --windows` (Android 14+) or the keyboard (older Android).
-- A scroll gesture that crosses the "Continuous listening" switch toggles it. `devui.scroll` now swipes along the page margin.
+- The language dropdown opens in a popup that the plain `uiautomator dump` can't see. The test helper (now in git history) used `uiautomator dump --windows` (Android 14+) or the keyboard (older Android).
+- A scroll gesture that crosses the "Continuous listening" switch toggles it. The helper swiped along the page margin instead.
 
 ## Build `e968ad4` (Wi-Fi discovery + Bluetooth) + language-pack picker, both phones (2026-09-30)
 
@@ -134,9 +134,22 @@ Latencies between the two phones can't be combined across devices, because their
 
 The badge's CPU/RAM figures agree with `adb shell dumpsys meminfo` (PSS 303–313 MB idle with English loaded).
 
+## All-languages dropdown + on-demand model download (2026-09-30)
+
+**Build:** 18/18 unit tests (5 new in `ModelDownloaderTest`: good download, wrong checksum rejected, truncated file rejected, not-downloadable detected, cancel leaves nothing), lint 0 errors, APK 33.7 MB. **Models:** 9 Indic STT models + tokens on the public GitHub release `models-v2` (1.38 GB, MIT licence notice included). The manifest's `downloads` section lists each file's size and SHA-256.
+
+| Test (Nothing Phone (3a), pack Hindi + English + Marathi) | Result |
+|---|---|
+| Dropdown lists all 10 languages | ✅ Hindi, English, Marathi plain; the other 7 as "· download 153 MB" |
+| Pick Tamil → confirm dialog | ✅ "Download Tamil? … (153 MB). Internet is needed once; after that it works offline." |
+| Download | ✅ progress "27.5 MB of 153 MB · 4.6 MB/s" with Cancel; finished in **26 s**, "size and checksum verified", then "Tamil ready" |
+| File on the phone | ✅ SHA-256 identical to the release; the picker now shows "Tamil" as installed; the size badge went 651 → 805 MB |
+
+The downloaded file is byte-identical to the Tamil model benchmarked on this phone (round-trip CER 0.041), so its accuracy is already measured. An over-the-air Tamil recognition test on the downloaded copy was not run.
+
 ## Not verified yet
 
-- **PTT in all 10 languages over the air:** the first attempt played the test sentences into the Mac's Bluetooth earbuds instead of its speakers, so the phone heard silence. Re-run `work/ptt_langs_test.py` with the Mac's built-in speakers selected. (English PTT on the realme was already exact.)
+- **PTT in all 10 languages over the air:** the first attempt played the test sentences into the Mac's Bluetooth earbuds instead of its speakers, so the phone heard silence. Re-run with the Mac's built-in speakers selected (the script is in git history). (English PTT on the realme was already exact.)
 - Two phones over a **phone hotspot** (home Wi-Fi and Bluetooth were tested; the demo plan uses a hotspot).
 - PTT in all 10 languages over the air: needs the laptop speakers (they were set to Bluetooth earbuds).
 - Rotation while recording, speaking, or playing an alert (not attempted).
@@ -147,16 +160,13 @@ The badge's CPU/RAM figures agree with `adb shell dumpsys meminfo` (PSS 303–31
 ```bash
 adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 adb push models/. /sdcard/Android/data/org.itantra.app/files/models/
-python work/tap.py HOST                       # tap a button by its label
 adb forward tcp:26173 tcp:26173
 python work/fake_peer.py rx-test              # pings, 10 languages, bad CRC, alerts
 python work/fake_peer.py speech --langs en,en,hi,hi,ta,ta
 python work/fake_peer.py listen --secs 15     # print what the phone sends (PTT)
-SERIAL=<device> python work/lang_switch_test.py   # 10 languages x2, memory after each switch
-SERIAL=<device> python work/ptt_langs_test.py     # PTT per language, laptop speaker -> phone mic
 ```
 
-`SERIAL` picks the phone when more than one is connected (`adb devices`).
+`SERIAL=<device>` picks the phone when more than one is connected (`adb devices`). The UI-automation helpers used for these tests (`devui.py`, `tap.py`, `lang_switch_test.py`, `ptt_langs_test.py`) were removed from the tree to keep the repo lean; they're in git history.
 
 Phone timings are in `adb logcat -s iTantra:I`. **Keep those logs out of git:** in continuous mode they contain transcripts of whatever the phone heard (`device_test/` is gitignored).
 

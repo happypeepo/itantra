@@ -6,7 +6,7 @@
 
 | By | You deliver | To |
 |---|---|---|
-| H1 | `manifest.json` + `android/SpeechFactory.kt` + `android/TextSanitizer.kt` | P1 (they can start coding against these before models exist) |
+| H1 | `manifest.json` + `SpeechFactory.kt` + `TextSanitizer.kt` (now in the app) | P1 (they can start coding against these before models exist) |
 | H1 | the `wire_id` for each language (in `manifest.json`) | P3 (it's the language byte in their message frame) |
 | H6 | all 10 languages passing `verify_models.py` on the laptop | everyone (this is gate **M0**) |
 | H14 | Hindi STT + TTS working inside the app | everyone (gate **M1**) |
@@ -71,18 +71,13 @@ p2-models/
   scripts/
     common.py            shared helpers
     patch_stt.py         makes Hindi/Odia STT loadable + makes the INT8 copy
-    quantize_int4.py     makes an INT4 copy (MatMul only) from a full-size model
     verify_models.py     tests every language on the laptop (text → speech → text)
     benchmark.py         measures size, RAM, speed, latency, accuracy per model
-    pipeline_demo.py     the whole two-phone pipeline on one laptop, over a real socket
     frame.py             the link message format + compact Indic text encoding
     render_alerts.py     makes the 50 alert WAV files
-  android/
-    SpeechFactory.kt     reads manifest.json, creates STT/TTS in the app
-    TextSanitizer.kt     cleans text right before TTS
 ```
 
-The measuring and demo tools (`benchmark.py`, `pipeline_demo.py`, `frame.py`, `quantize_int4.py`) are explained in §15.
+The measuring tools (`benchmark.py`, `frame.py`) are explained in §15. The Kotlin loaders (`SpeechFactory.kt`, `TextSanitizer.kt`) now live in the app: `android/app/src/main/java/org/itantra/app/speech/`.
 
 **What's been tested:** `patch_stt.py` was run on a test model with the same shape as IndicConformer; sherpa-onnx refused the unpatched version and loaded the patched one. `verify_models.py` and `render_alerts.py` were run end to end on the real English STT and TTS models (round-trip error 0.03 — a pass). Both Kotlin files compile against the real sherpa-onnx v1.13.8 Kotlin API, and `TextSanitizer.kt` gives identical output to the Python version. **Not tested:** the Indic models themselves (I couldn't download from Hugging Face in my environment). That's what your H1–H6 is for.
 
@@ -96,11 +91,11 @@ Later test runs on a public mirror of IndicConformer, plus a comparison with Met
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
-pip install "sherpa-onnx==1.13.8" onnx onnxruntime onnx_ir soundfile numpy huggingface_hub
+pip install "sherpa-onnx==1.13.8" onnx onnxruntime soundfile numpy huggingface_hub
 python -c "import sherpa_onnx; print(sherpa_onnx.__version__)"
 ```
 
-The team uses **sherpa-onnx 1.13.8** in both Python and the Android AAR, so what you test is what ships. (1.13.5 is the minimum, because the rasa model needs it.) `onnx_ir` is only needed by `quantize_int4.py`.
+The team uses **sherpa-onnx 1.13.8** in both Python and the Android AAR, so what you test is what ships. (1.13.5 is the minimum, because the rasa model needs it.)
 
 **On Windows:** the commands here are for bash. Use Git Bash or WSL, or adapt them to PowerShell.
 
@@ -281,7 +276,7 @@ With both phones plugged in, add `-s <serial>` (from `adb devices`) to each comm
 
 ## 10. Helping P1 plug it in
 
-`android/SpeechFactory.kt` does the loading. How P1 uses it:
+`android/app/src/main/java/org/itantra/app/speech/SpeechFactory.kt` does the loading. How P1 uses it:
 
 ```kotlin
 val m = Manifest(File(context.getExternalFilesDir(null), "models"))
@@ -300,7 +295,7 @@ val audio = voices.speak("ta", incomingText)        // null if nothing speakable
 - **The first sentence after loading is slower.** Right after connecting, call `voices.preload(lang)` and speak one throwaway word, so the first real message (the one being timed) isn't slow.
 - **`espeak-ng-data` must be a real folder on disk**, not inside APK assets. The adb push above already does this.
 - **The rasa speaking style is passed through `GenerationConfig.extra["emotion_id"]`.** `SpeechFactory.kt` already does it; this is the confirmed API in sherpa-onnx v1.13.8.
-- **Continuous mode: keep ~0.3 s of audio from before each VAD segment ("pre-roll").** The VAD only starts a segment once it's sure someone is talking, so without pre-roll **the first word gets clipped**. Keep a small ring buffer of the last 0.3 s of mic audio and put it in front of each segment before STT. `pipeline_demo.py` does exactly this (`--pre-roll 0.3`), so copy its logic.
+- **Continuous mode: keep ~0.3 s of audio from before each VAD segment ("pre-roll").** The VAD only starts a segment once it's sure someone is talking, so without pre-roll **the first word gets clipped**. Keep a small ring buffer of the last 0.3 s of mic audio and put it in front of each segment before STT. The app does this in `android/app/src/main/java/org/itantra/app/audio/VadSegmenter.kt`.
 - **Continuous mode: the VAD only closes a segment after enough silence** (`min_silence_duration`, 0.5 s in our scripts). That wait is part of the end-to-end latency, so count it.
 
 **On-phone check:** once STT and TTS are in the app, test each language with the same alert phrase you tested on the laptop. It should sound identical.
@@ -394,21 +389,6 @@ It scores two kinds of clips. **Round-trip** clips are made by TTS from known te
 
 Output: `bench_out/results_<tag>.json`. **Numbers only hold for the machine they ran on.** Always write down the CPU and `--threads` next to them.
 
-### `pipeline_demo.py` — two "phones" on one laptop
-
-Runs the whole chain, **wav → VAD → STT → frame → real TCP socket → frame → TTS → wav**, and times every stage. Use it to prove the models work together before the app exists.
-
-```bash
-# push-to-talk: the whole file is one message
-python scripts/pipeline_demo.py --models models --wav real_audio/te/clip.wav --lang te --mode ptt
-# continuous: VAD cuts the file into sentences and sends each one
-python scripts/pipeline_demo.py --models models --wav clip.wav --lang en --mode continuous
-# alert sent from a Hindi phone, heard on a Tamil phone (run render_alerts.py first)
-python scripts/pipeline_demo.py --models models --alert evacuate --lang hi --recv-lang ta --alerts-dir alerts
-```
-
-Per message it prints `endpoint` (how long the VAD waited in silence, continuous mode only), `stt`, `link` (localhost, so a real link adds its own delay), `tts_first`, and **`e2e`** = their sum = "stopped talking" → "other phone starts speaking". It also prints the frame size and bits per second, both compact and UTF-8. Received audio goes to `pipeline_out/`. Useful options: `--pre-roll` (default 0.3 s), `--min-silence` (default 0.5 s), `--threads`.
-
 ### `frame.py` — the link message format
 
 The exact bytes P3's Kotlin code must match:
@@ -420,14 +400,6 @@ CRC = CRC-16/CCITT-FALSE over everything before it; all numbers big-endian
 ```
 
 **Packed text** makes Indic text about 3× smaller, losslessly. Each Indic script sits in its own 128-character Unicode block, and the language byte already says which one, so each letter fits in 1 byte: `0x00–0x7F` is plain ASCII, and `0x80–0xFF` is `(letter − start of the script's block) + 0x80`. If any character doesn't fit (e.g. a ZWJ, or a danda from another block), the sender uses UTF-8 for that message. A frame with a bad CRC or length is dropped, never spoken.
-
-### `quantize_int4.py` — INT4 copy
-
-```bash
-python scripts/quantize_int4.py --model dl/ovos-hi/model.sherpa.onnx --out model.int4.onnx
-```
-
-Stores MatMul weights in 4 bits instead of 8 (ONNX Runtime's `MatMulNBits` operator, which the Android ONNX Runtime also runs). Conv layers are left alone. **The input must be the full-size model with metadata** (the `.sherpa.onnx` file from `patch_stt.py`), not an INT8 one. The sherpa-onnx metadata is copied across. Always compare it against INT8 with `benchmark.py` before switching: it's smaller, but can be slower and less accurate (see §16).
 
 ### `work/build_models_v2.py` and `work/make_pack.py`: smaller models, per-phone packs
 
@@ -462,4 +434,4 @@ We tested **Meta Omnilingual ASR 300M** (one model for every language, Apache-2.
 Also from those runs:
 - **The Conv INT8 risk is real but not certain.** That mirror had 54 `ConvInteger` nodes (Conv quantized) and still worked. So Conv INT8 *can* break Conformer models, but doesn't always. `verify_models.py` is what tells you.
 - **MMS TTS is the latency bottleneck.** RTF 0.58–0.66 and 1.2–1.9 s to first audio, vs Piper 0.10–0.13 and ~0.25 s. Telugu push-to-talk end to end was 4.77 s, 3.48 s of it MMS.
-- **rasa does not fix that.** Measured later on an Apple M4 (2 threads, sherpa-onnx 1.13.8, `work/t4_rasa.py`), rasa was *slightly slower* than MMS on the same machine: RTF 0.58–0.65 vs MMS 0.45–0.53, with a similar ~1.1–1.6 s average to first audio. rasa's real advantages are the **licence** (CC-BY vs non-commercial) and **one 118 MB model for six languages** instead of six ~109 MB MMS models, not speed. Only Piper is fast (RTF ~0.1).
+- **rasa does not fix that.** Measured later on an Apple M4 (2 threads, sherpa-onnx 1.13.8), rasa was *slightly slower* than MMS on the same machine: RTF 0.58–0.65 vs MMS 0.45–0.53, with a similar ~1.1–1.6 s average to first audio. rasa's real advantages are the **licence** (CC-BY vs non-commercial) and **one 118 MB model for six languages** instead of six ~109 MB MMS models, not speed. Only Piper is fast (RTF ~0.1).

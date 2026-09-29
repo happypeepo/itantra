@@ -107,6 +107,11 @@ class MainActivity : AppCompatActivity() {
     @Volatile private var footprintParts: List<AppFootprint.Part> = emptyList()
     @Volatile private var footprintUsage: AppFootprint.Usage? = null
     private var footprintRows: LinearLayout? = null
+    // Speech-language picker and on-demand model download
+    private lateinit var downloader: ModelDownloader
+    private var pickerLangs: List<LanguageEntry> = emptyList()
+    private val downloading = java.util.concurrent.atomic.AtomicBoolean(false)
+    @Volatile private var downloadCancel: java.util.concurrent.atomic.AtomicBoolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,24 +154,21 @@ class MainActivity : AppCompatActivity() {
         bluetoothLink = BluetoothLink(bluetoothAdapter, { linkStatus(it, true) }, { if (useBluetooth) received(it) })
         try {
             val root = File(getExternalFilesDir(null), "models").apply { mkdirs() }
-            manifest = org.itantra.app.speech.Manifest(root,
-                File(root, "manifest.json").takeIf { it.isFile } ?: File(cacheDir, "manifest.json").apply {
-                    writeText(assets.open("manifest.json").bufferedReader().use { it.readText() })
-                })
-            voices = TtsPool(manifest)
-            // Language packs: a phone only needs STT for the languages its user speaks, but every
-            // voice (incoming speech is spoken in the sender's language). Offer only installed STT.
-            val all = manifest.languages.values.sortedBy { it.wireId }
-            val installed = all.filter { l ->
-                listOf(l.stt.model, l.stt.tokens, l.stt.encoder, l.stt.decoder).filter { it.isNotEmpty() }.all { File(it).isFile }
+            val manifestFile = File(root, "manifest.json").takeIf { it.isFile } ?: File(cacheDir, "manifest.json").apply {
+                writeText(assets.open("manifest.json").bufferedReader().use { it.readText() })
             }
-            val langs = installed.ifEmpty { all } // Nothing installed yet: show all, and loading explains what to push.
-            val first = langs.firstOrNull { it.code == "en" } ?: langs.first()
-            picker.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, langs.map { it.name }))
-            picker.setText(first.name, false)
-            picker.setOnItemClickListener { _, _, position, _ -> loadLanguage(langs[position].code) }
+            manifest = org.itantra.app.speech.Manifest(root, manifestFile)
+            downloader = ModelDownloader(root, manifestFile)
+            voices = TtsPool(manifest)
+            // All 10 languages are offered. A phone ships with STT for Hindi + English + one Indic
+            // language (plus every voice); picking any other language downloads its STT model once.
+            pickerLangs = manifest.languages.values.sortedBy { it.wireId }
+            refreshPicker()
+            picker.setOnItemClickListener { _, _, position, _ -> chooseLanguage(pickerLangs[position].code) }
+            val first = pickerLangs.firstOrNull { it.code == "en" && installed(it) } ?: pickerLangs.firstOrNull { installed(it) } ?: pickerLangs.first()
+            picker.setText(pickerLabel(first), false)
             loadLanguage(first.code)
-            message("Models: ${root.absolutePath} · speech languages installed: ${installed.size}/${all.size}")
+            message("Models: ${root.absolutePath} · speech languages installed: ${pickerLangs.count { installed(it) }}/${pickerLangs.size}")
         } catch (e: Exception) { message("Setup failed: ${e.message}") }
     }
 
@@ -603,6 +605,106 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+    private fun neededFiles(l: LanguageEntry): List<String> {
+        val e = manifest.engines.getValue(l.tts.engine)
+        return listOf(l.stt.model, l.stt.tokens, l.stt.encoder, l.stt.decoder, e.model, e.tokens).filter { it.isNotEmpty() }
+    }
+    private fun installed(l: LanguageEntry) = neededFiles(l).all { File(it).isFile }
+    private fun pickerLabel(l: LanguageEntry): String {
+        if (installed(l)) return l.name
+        val plan = downloader.plan(neededFiles(l)) ?: return "${l.name} · not installed"
+        return "${l.name} · download ${AppFootprint.mb(plan.sumOf { it.bytes })}"
+    }
+    private fun refreshPicker() {
+        picker.setAdapter(ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, pickerLangs.map { pickerLabel(it) }))
+        manifest.languages[language]?.let { picker.setText(pickerLabel(it), false) }
+    }
+    private fun restorePicker() { manifest.languages[language]?.let { picker.setText(pickerLabel(it), false) } }
+
+    /** Picked in the dropdown: load it, or offer to download its missing model first. */
+    private fun chooseLanguage(code: String) {
+        val l = manifest.languages.getValue(code)
+        val plan = downloader.plan(neededFiles(l))
+        when {
+            plan == null -> {
+                restorePicker()
+                MaterialAlertDialogBuilder(this).setTitle("${l.name} isn't installed")
+                    .setMessage("This phone has no ${l.name} speech model, and this build can't download it. Copy it to the phone by cable (see models/README.md).")
+                    .setPositiveButton("OK", null).show()
+            }
+            plan.isEmpty() -> loadLanguage(code)
+            else -> confirmDownload(l, plan)
+        }
+    }
+
+    private fun confirmDownload(l: LanguageEntry, plan: List<ModelDownloader.RemoteFile>) {
+        val total = plan.sumOf { it.bytes }
+        restorePicker()
+        if (downloading.get()) { message("A download is already running"); return }
+        if (downloader.freeBytes() < total + 50_000_000L) {
+            MaterialAlertDialogBuilder(this).setTitle("Not enough space")
+                .setMessage("${l.name} needs ${AppFootprint.mb(total)} but the phone has only ${AppFootprint.mb(downloader.freeBytes())} free.")
+                .setPositiveButton("OK", null).show()
+            return
+        }
+        MaterialAlertDialogBuilder(this).setTitle("Download ${l.name}?")
+            .setMessage("${l.name} speech recognition isn't on this phone yet. Download it now (${AppFootprint.mb(total)})?\n\nInternet is needed once; after that it works offline.")
+            .setPositiveButton("Download") { _, _ -> startDownload(l, plan) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun startDownload(l: LanguageEntry, plan: List<ModelDownloader.RemoteFile>) {
+        val total = plan.sumOf { it.bytes }
+        val cancel = java.util.concurrent.atomic.AtomicBoolean(false)
+        downloadCancel = cancel; downloading.set(true)
+        val bar = com.google.android.material.progressindicator.LinearProgressIndicator(this).apply { max = 1000; isIndeterminate = false }
+        val info = MaterialTextView(this).apply { text = "Connecting…"; setPadding(0, 24, 0, 0) }
+        val box = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(64, 24, 64, 8); addView(bar); addView(info) }
+        val dialog = MaterialAlertDialogBuilder(this).setTitle("Downloading ${l.name}").setView(box).setCancelable(false)
+            .setNegativeButton("Cancel") { _, _ -> cancel.set(true) }.show()
+        val started = SystemClock.elapsedRealtime()
+        var lastUi = 0L
+        Thread {
+            try {
+                downloader.download(plan, cancel) { done, all ->
+                    val t = SystemClock.elapsedRealtime()
+                    if (t - lastUi >= 200 || done == all) {
+                        lastUi = t
+                        val rate = done / 1e6 / ((t - started).coerceAtLeast(1) / 1000.0)
+                        runOnUiThread {
+                            if (!destroyed) {
+                                bar.progress = (1000 * done / all.coerceAtLeast(1)).toInt()
+                                info.text = "${AppFootprint.mb(done)} of ${AppFootprint.mb(all)} · %.1f MB/s".format(rate)
+                            }
+                        }
+                    }
+                }
+                val secs = (SystemClock.elapsedRealtime() - started) / 1000.0
+                runOnUiThread {
+                    if (destroyed) return@runOnUiThread
+                    dialog.dismiss()
+                    message("Downloaded ${l.name} (${AppFootprint.mb(total)} in %.0f s), size and checksum verified".format(secs))
+                    refreshPicker(); picker.setText(pickerLabel(l), false)
+                    loadLanguage(l.code)
+                    footprint.refresh { p -> footprintParts = p; runOnUiThread { renderFootprint() } }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    if (destroyed) return@runOnUiThread
+                    dialog.dismiss(); restorePicker()
+                    message("${l.name} download stopped: ${e.message}")
+                    if (!cancel.get()) {
+                        val offline = e is java.net.UnknownHostException || e is java.net.ConnectException || e is java.net.SocketTimeoutException
+                        MaterialAlertDialogBuilder(this).setTitle("Download failed")
+                            .setMessage(if (offline) "No internet connection. Connect once to download ${l.name}, or copy it to the phone by cable." else "${e.message}\n\nNothing was installed; try again.")
+                            .setPositiveButton("OK", null).show()
+                    }
+                }
+            } finally { downloading.set(false); downloadCancel = null }
+        }.apply { name = "itantra-download"; isDaemon = true; start() }
+    }
+
     /** Badge: total size, CPU and RAM. Dialog (when open): every part and live usage. */
     private fun renderFootprint() {
         if (destroyed || !::footprintBadge.isInitialized) return
@@ -660,7 +762,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onPause() { active = false; footprint.stop(); if (::discovery.isInitialized) discovery.pause(); if (::bluetoothDiscovery.isInitialized) bluetoothDiscovery.stop(); speechEpoch.incrementAndGet(); stopCapture(); if (::player.isInitialized) player.clearSpeech(); super.onPause() }
     override fun onDestroy() {
-        destroyed = true; active = false; footprint.stop(); loadEpoch.incrementAndGet(); speechEpoch.incrementAndGet(); stopCapture()
+        destroyed = true; active = false; footprint.stop(); downloadCancel?.set(true); loadEpoch.incrementAndGet(); speechEpoch.incrementAndGet(); stopCapture()
         discovery.close(); bluetoothDiscovery.stop(); wifiLink.close(); bluetoothLink.close(); player.close()
         capture.queue.clear()
         submit(capture) { vad?.release(); vad = null }; capture.shutdown()

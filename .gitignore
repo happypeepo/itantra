@@ -1,48 +1,52 @@
-# --- Python
+# Python
 .venv/
 __pycache__/
 *.pyc
 
-# --- Models and downloads (GBs; rebuild with p2-models/README.md §4-§5)
+# Models, downloads, packs, release uploads (GBs; rebuild per models/README.md)
 dl/
 models/*
 !models/README.md
+packs/
+release_assets/
 *.onnx
 *.onnx_data
 *.tar.bz2
 
-# --- Generated audio (regenerate with the scripts; keep the JSON results)
+# Generated audio and logs (the result JSONs are kept)
 *.wav
 *.m4a
 *.mp3
-scratch/
-bench_out/_*.json
-work/t5/bench/_*.json
 *.log
+bench_out/*
+!bench_out/results_final.json
+verify_out/*
+!verify_out/report.json
+phone_out/*
+!phone_out/phone_results.json
+size_out/
+scratch/
+alerts_draft/
 
-# --- Real recordings are people's voices: kept local by default (the .txt transcripts are fine)
+# On-device test logs can contain transcripts of real room speech
+device_test/
+# Real recordings are people's voices (the .txt transcripts are fine)
 real_audio/**/*.wav
 
-# --- Android / Gradle
+# Android / Gradle
 android/**/build/
 android/.gradle/
+android/.kotlin/
 android/local.properties
 android/**/*.iml
 android/.idea/
+android/app/libs/*.aar
 *.apk
 *.aab
 *.keystore
 *.jks
 
-# --- OS / editors
+# OS / editors
 .DS_Store
 .vscode/
 .idea/
-android/app/libs/*.aar
-alerts_draft/
-
-# --- On-device test logs: may contain transcripts of real room speech. Keep local.
-device_test/
-size_out/
-models_v2/
-packs/

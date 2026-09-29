@@ -53,6 +53,102 @@
     }
   },
 
+  "downloads": {
+    "_about": "Where the app downloads a missing speech-recognition model (STT) when the user picks a language that isn't installed. Every file is checked against its size and sha256 before use. Hosted as a GitHub Release (MIT licence, see LICENSE-MODELS.md there).",
+    "base_url": "https://github.com/happypeepo/itantra/releases/download/models-v2/",
+    "files": {
+      "stt/hi/model.int8.onnx": {
+        "asset": "stt-hi-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "7f10a9049a5e99b4a0e1847968761ba98976592f81a25622cebdcc2b38494bb0"
+      },
+      "stt/hi/tokens.txt": {
+        "asset": "stt-hi-tokens.txt",
+        "bytes": 2700,
+        "sha256": "152e58dc9469feb8f74fb006245616ad7cd91b3f7a5ace72ec53f970db10c981"
+      },
+      "stt/bn/model.int8.onnx": {
+        "asset": "stt-bn-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "a33dfe4b8cb123b68ff660f6c473d3212a7b9866dd20f0f12b20e15532ffc428"
+      },
+      "stt/bn/tokens.txt": {
+        "asset": "stt-bn-tokens.txt",
+        "bytes": 2727,
+        "sha256": "0d9b40979a36302b1e673fe45d90c81bc3f0a82882988b32ae004b866e30290a"
+      },
+      "stt/gu/model.int8.onnx": {
+        "asset": "stt-gu-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "1604fcda9a3fc1ebf06cbaccde36958026b275b76896088056bd49dd5e5e7acd"
+      },
+      "stt/gu/tokens.txt": {
+        "asset": "stt-gu-tokens.txt",
+        "bytes": 2742,
+        "sha256": "9cee681162ec8fad9a5c359f2fb62e8f48b8a59917c3630b007cc84e2d9f5d0d"
+      },
+      "stt/kn/model.int8.onnx": {
+        "asset": "stt-kn-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "9397bc3dad27868d69057cad125baa7e42e708aa4b91b18a9d3471f393db9a61"
+      },
+      "stt/kn/tokens.txt": {
+        "asset": "stt-kn-tokens.txt",
+        "bytes": 2814,
+        "sha256": "824b76f9295353912cc416dbf3c85d111ab397a2813108c7c171e9d75233b4cf"
+      },
+      "stt/ml/model.int8.onnx": {
+        "asset": "stt-ml-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "09b11d35104d4e3c8e9f303a5d0a94ccf3839f7accc077c6c4f52f5f014fdea6"
+      },
+      "stt/ml/tokens.txt": {
+        "asset": "stt-ml-tokens.txt",
+        "bytes": 2823,
+        "sha256": "6b025c3055708763a952d21b73556ed02c9abd88cc706ff42e3cb94a984bdb88"
+      },
+      "stt/mr/model.int8.onnx": {
+        "asset": "stt-mr-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "33f4810c9e984bcec633646966b9f6d46222d628931af5777910d7b7c977c802"
+      },
+      "stt/mr/tokens.txt": {
+        "asset": "stt-mr-tokens.txt",
+        "bytes": 2721,
+        "sha256": "1fa2b1c57360011169a4c47d987b41662ab1187c11fcbfa2af2bd827560b2f65"
+      },
+      "stt/or/model.int8.onnx": {
+        "asset": "stt-or-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "c8cd7396d8b6de7ba9fa023f4ce74a21078821de2c9b3c92f001d3793c1fae80"
+      },
+      "stt/or/tokens.txt": {
+        "asset": "stt-or-tokens.txt",
+        "bytes": 2757,
+        "sha256": "5d0dd452e34581c34f5636ed1860c2ef086988bc837570e0805045101cef9130"
+      },
+      "stt/ta/model.int8.onnx": {
+        "asset": "stt-ta-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "9d59af6217554223a40f0da55f0cbd7abfd78b94aa2f4423d01205c4a04e4e04"
+      },
+      "stt/ta/tokens.txt": {
+        "asset": "stt-ta-tokens.txt",
+        "bytes": 3042,
+        "sha256": "f5a7955261f7eb7156521eecaf17a89521a507d2b740a3a60a2e6f6fb9b3ad36"
+      },
+      "stt/te/model.int8.onnx": {
+        "asset": "stt-te-model.int8.onnx",
+        "bytes": 153264647,
+        "sha256": "cb11a119e38c6591379b298d8a7df663de4021c77c88efc81a7c91c5bfccfaad"
+      },
+      "stt/te/tokens.txt": {
+        "asset": "stt-te-tokens.txt",
+        "bytes": 2706,
+        "sha256": "dc0b7bbb9eca8d3c8aebf1eb86e3144c90d692b4008cf5a32d46437b942b23ac"
+      }
+    }
+  },
   "languages": {
     "hi": {
       "name": "Hindi", "script": "Devanagari", "wire_id": 0,

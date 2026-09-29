@@ -3,11 +3,11 @@
 Benchmark every model ON THE PHONE, using sherpa-onnx's official Android arm64
 command-line tools (v1.13.8, android-aarch64-termux-static) run over adb.
 
-Expects on the phone (see work/README.md):
+Expects on the phone (setup: README.md, "Phone benchmark"):
     /data/local/tmp/itantra/bin/      sherpa-onnx tools + libc++_shared.so (from the NDK)
     /data/local/tmp/itantra/models/   the models/ folder
     /data/local/tmp/itantra/int4/     INT4 STT copies (hi, ta)
-    /data/local/tmp/itantra/audio/    bench_out/tts/<lang>_<engine>/*.wav (same clips as the laptop T7 run)
+    /data/local/tmp/itantra/audio/    bench_out/tts/<lang>_<engine>/*.wav (made by p2-models/scripts/benchmark.py run)
 
 Measures:
     STT  per language: batch RTF (6 clips), single-utterance decode time on the longest clip,

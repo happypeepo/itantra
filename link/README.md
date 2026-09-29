@@ -39,4 +39,4 @@ Generated from `frame.py`. Your Kotlin encoder must produce these exact hex stri
 | Receiver | frame received → first sound (ms), TTS RTF |
 | Both | ping round-trip time |
 
-**End-to-end** = sender time + ½ ping RTT + receiver time-to-first-sound. That way the two phone clocks never need to agree. `p2-models/scripts/pipeline_demo.py` computes the same breakdown on one laptop, for comparison.
+**End-to-end** = sender time + ½ ping RTT + receiver time-to-first-sound. That way the two phone clocks never need to agree.

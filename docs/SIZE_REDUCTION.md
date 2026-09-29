@@ -9,7 +9,7 @@ Everything below was measured (2026-09-30): sizes from the files, speed and accu
 
 All five changes are in. **Models:** `models/` is now the smaller set (built by `work/build_models_v2.py`); the old full-size set and the original downloads were removed on 2026-09-30. To rebuild them, download the originals (`p2-models/README.md` §4–5), then run `work/build_models_v2.py`. **App:** the picker lists only installed speech languages (`MainActivity`), and the unused libraries are excluded (`app/build.gradle.kts`, already in P1's `e968ad4`). **Packs:** `work/make_pack.py`.
 
-Before/after on the **same Nothing Phone (3a)**, same 6 clips per language, same settings (STT 2 threads, TTS 4 threads), official sherpa-onnx 1.13.8 CLI (`work/phone_bench.py`, compared by `work/compare_phone.py`). The laptop check is `work/compare_v1_v2.py`. Raw data is in `docs/size/`.
+Before/after on the **same Nothing Phone (3a)**, same 6 clips per language, same settings (STT 2 threads, TTS 4 threads), official sherpa-onnx 1.13.8 CLI (`work/phone_bench.py`). The comparison scripts are in git history; their raw output is in `docs/size/`.
 
 ### Size
 
@@ -113,7 +113,7 @@ FP16 storage saves disk and download size, not RAM: the weights are float32 agai
 ```bash
 python work/fp16_storage.py --model models/tts/rasa/model.onnx --out rasa.fp16.onnx
 python work/fp16_storage.py --model models/stt/hi/model.int8.onnx --out hi.int8.fp16.onnx
-python work/size_tts_quant.py      # the INT8-voice experiment (sizes, speed, CER, WAVs)
+# (the INT8-voice experiment script is in git history; results: docs/size/tts_quant.json)
 ```
 
 **Why FP16 storage keeps the speed:** each float16 weight gets a `Cast` to float32 in front of it. When ONNX Runtime loads the model, constant folding runs those Casts once, so inference is ordinary float32. Peak memory while loading was ~10–20 MB higher on the phone. RAM once loaded is the same as today, so this saves disk and download size, not RAM.

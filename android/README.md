@@ -3,7 +3,6 @@
 Material 3 interface with a teal light/dark theme, grouped connection/talk/alert/activity cards, an exposed language dropdown, and a large push-to-talk control.
 
 Native Kotlin app, package **`org.itantra.app`**, Android 8+ (API 26), arm64.
-The implementation plan is [P1_PLAN.md](P1_PLAN.md).
 
 ## Build
 
@@ -71,6 +70,10 @@ If the list stays empty, open iTantra and tap **Host** on the other phone, confi
 **Test microphone** displays an RMS level meter without requiring models or a peer. It does not transcribe, save or transmit the samples. Stop it with the same button; playback, backgrounding and language changes stop it too. Returning to the app does not restart a local mic test.
 
 Playback requests Android’s low-latency performance mode and logs the actual mode, which the device may downgrade. No latency reduction is claimed until the new build is measured. The APK excludes the standalone sherpa C/C++ API libraries; the JNI runtime and ONNX runtime remain packaged.
+
+## Speech languages and on-demand download
+
+The Speech language dropdown lists all 10 languages. Installed ones show their name; missing ones show "· download 153 MB". Picking a missing one asks to download it, shows progress (MB and MB/s, with Cancel), and fetches the files listed in the manifest's `downloads` section (the GitHub release `models-v2`). Each file is saved as `.part`, checked against its exact size and SHA-256, then moved into place, so a cut-off or tampered download never installs. The language then loads. With no internet, the app says so and suggests copying the model by cable. Code: `speech/ModelDownloader.kt` (5 unit tests in `ModelDownloaderTest`).
 
 ## App size and usage badge
 

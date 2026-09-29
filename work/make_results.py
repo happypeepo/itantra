@@ -184,7 +184,6 @@ def main() -> int:
     out = ROOT / "docs/RESULTS.md"
     out.write_text("\n".join(o) + "\n", encoding="utf-8")
     print(f"wrote {out} ({len(o)} lines)")
-    json.dump(rows, open(ROOT / "docs/results_table.json", "w"), ensure_ascii=False, indent=1, default=float)
     return 0
 
 
