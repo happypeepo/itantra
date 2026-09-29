@@ -1,0 +1,151 @@
+{
+ "tag": "int8_betterflow",
+ "threads": 2,
+ "languages": {
+  "hi": {
+   "name": "Hindi",
+   "tts": {
+    "engine": "piper_hi",
+    "sample_rate": 22050,
+    "model_mb": 62.9,
+    "total_mb": 62.9,
+    "data_dir_mb": 18.0,
+    "load_s": 0.56,
+    "ram_model_mb": 157.7,
+    "peak_rss_mb": 319.5,
+    "rows": [
+     {
+      "name": "emergency",
+      "text": "आपातकालीन चेतावनी",
+      "wav": "work/t5/bench/tts/hi_piper_hi/00_emergency.wav",
+      "dur_s": 1.787,
+      "gen_s": 0.141,
+      "first_audio_s": 0.141,
+      "rtf": 0.079
+     },
+     {
+      "name": "evacuate",
+      "text": "तुरंत इलाका खाली करें",
+      "wav": "work/t5/bench/tts/hi_piper_hi/01_evacuate.wav",
+      "dur_s": 1.483,
+      "gen_s": 0.11,
+      "first_audio_s": 0.11,
+      "rtf": 0.074
+     },
+     {
+      "name": "medical",
+      "text": "चिकित्सा सहायता चाहिए",
+      "wav": "work/t5/bench/tts/hi_piper_hi/02_medical.wav",
+      "dur_s": 1.693,
+      "gen_s": 0.113,
+      "first_audio_s": 0.113,
+      "rtf": 0.067
+     },
+     {
+      "name": "all_clear",
+      "text": "सब ठीक है, खतरा टल गया है",
+      "wav": "work/t5/bench/tts/hi_piper_hi/03_all_clear.wav",
+      "dur_s": 2.03,
+      "gen_s": 0.15,
+      "first_audio_s": 0.15,
+      "rtf": 0.074
+     },
+     {
+      "name": "return_to_base",
+      "text": "तुरंत बेस पर लौटें",
+      "wav": "work/t5/bench/tts/hi_piper_hi/04_return_to_base.wav",
+      "dur_s": 1.384,
+      "gen_s": 0.101,
+      "first_audio_s": 0.101,
+      "rtf": 0.073
+     },
+     {
+      "name": "road_blocked",
+      "text": "पुल के पास सड़क बंद है, कृपया स्कूल में बचाव दल भेजें",
+      "wav": "work/t5/bench/tts/hi_piper_hi/05_road_blocked.wav",
+      "dur_s": 3.948,
+      "gen_s": 0.322,
+      "first_audio_s": 0.322,
+      "rtf": 0.082
+     }
+    ]
+   },
+   "stt": {
+    "lang": "hi",
+    "type": "nemo_ctc",
+    "model_mb": 140.4,
+    "load_s": 0.73,
+    "ram_model_mb": 370.0,
+    "peak_rss_mb": 455.4,
+    "rows": [
+     {
+      "kind": "roundtrip",
+      "wav": "work/t5/bench/tts/hi_piper_hi/00_emergency.wav",
+      "dur_s": 1.788,
+      "decode_s": 0.16,
+      "rtf": 0.089,
+      "hyp": "आपातकालीन चेतावनी",
+      "ref": "आपातकालीन चेतावनी",
+      "cer": 0.0,
+      "wer": 0.0
+     },
+     {
+      "kind": "roundtrip",
+      "wav": "work/t5/bench/tts/hi_piper_hi/01_evacuate.wav",
+      "dur_s": 1.483,
+      "decode_s": 0.131,
+      "rtf": 0.088,
+      "hyp": "तुरंत इलाका खाली करें",
+      "ref": "तुरंत इलाका खाली करें",
+      "cer": 0.0,
+      "wer": 0.0
+     },
+     {
+      "kind": "roundtrip",
+      "wav": "work/t5/bench/tts/hi_piper_hi/02_medical.wav",
+      "dur_s": 1.693,
+      "decode_s": 0.152,
+      "rtf": 0.09,
+      "hyp": "चिकित्सा सहायता चाहिए",
+      "ref": "चिकित्सा सहायता चाहिए",
+      "cer": 0.0,
+      "wer": 0.0
+     },
+     {
+      "kind": "roundtrip",
+      "wav": "work/t5/bench/tts/hi_piper_hi/03_all_clear.wav",
+      "dur_s": 2.03,
+      "decode_s": 0.172,
+      "rtf": 0.085,
+      "hyp": "सब ठीक है खतरा टल गया है",
+      "ref": "सब ठीक है, खतरा टल गया है",
+      "cer": 0.0,
+      "wer": 0.0
+     },
+     {
+      "kind": "roundtrip",
+      "wav": "work/t5/bench/tts/hi_piper_hi/04_return_to_base.wav",
+      "dur_s": 1.384,
+      "decode_s": 0.123,
+      "rtf": 0.089,
+      "hyp": "तुरंत बेस पर लौटें",
+      "ref": "तुरंत बेस पर लौटें",
+      "cer": 0.0,
+      "wer": 0.0
+     },
+     {
+      "kind": "roundtrip",
+      "wav": "work/t5/bench/tts/hi_piper_hi/05_road_blocked.wav",
+      "dur_s": 3.948,
+      "decode_s": 0.328,
+      "rtf": 0.083,
+      "hyp": "पुल के पास सड़क बंद है कृपया स्कूल में बचाव दल भेजें",
+      "ref": "पुल के पास सड़क बंद है, कृपया स्कूल में बचाव दल भेजें",
+      "cer": 0.0,
+      "wer": 0.0
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "engine": "mms_or",
+ "sample_rate": 16000,
+ "model_mb": 114.0,
+ "total_mb": 114.0,
+ "data_dir_mb": 0.0,
+ "load_s": 0.41,
+ "ram_model_mb": 251.2,
+ "peak_rss_mb": 410.4,
+ "rows": [
+  {
+   "name": "emergency",
+   "text": "ଜରୁରୀକାଳୀନ ସତର୍କତା",
+   "wav": "bench_out/tts/or_mms_or/00_emergency.wav",
+   "dur_s": 1.384,
+   "gen_s": 0.738,
+   "first_audio_s": 0.738,
+   "rtf": 0.533
+  },
+  {
+   "name": "evacuate",
+   "text": "ତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କରନ୍ତୁ",
+   "wav": "bench_out/tts/or_mms_or/01_evacuate.wav",
+   "dur_s": 2.44,
+   "gen_s": 1.005,
+   "first_audio_s": 1.005,
+   "rtf": 0.412
+  },
+  {
+   "name": "medical",
+   "text": "ଚିକିତ୍ସା ସହାୟତା ଦରକାର",
+   "wav": "bench_out/tts/or_mms_or/02_medical.wav",
+   "dur_s": 1.534,
+   "gen_s": 0.81,
+   "first_audio_s": 0.81,
+   "rtf": 0.528
+  },
+  {
+   "name": "all_clear",
+   "text": "ସବୁ ସୁରକ୍ଷିତ, ବିପଦ ଟଳିଗଲା",
+   "wav": "bench_out/tts/or_mms_or/03_all_clear.wav",
+   "dur_s": 1.994,
+   "gen_s": 0.984,
+   "first_audio_s": 0.984,
+   "rtf": 0.494
+  },
+  {
+   "name": "return_to_base",
+   "text": "ତୁରନ୍ତ ଘାଟିକୁ ଫେରନ୍ତୁ",
+   "wav": "bench_out/tts/or_mms_or/04_return_to_base.wav",
+   "dur_s": 1.534,
+   "gen_s": 0.664,
+   "first_audio_s": 0.664,
+   "rtf": 0.433
+  },
+  {
+   "name": "road_blocked",
+   "text": "ପୋଲ ପାଖରେ ରାସ୍ତା ବନ୍ଦ ଅଛି, ଦୟାକରି ସ୍କୁଲକୁ ଉଦ୍ଧାରକାରୀ ଦଳ ପଠାନ୍ତୁ",
+   "wav": "bench_out/tts/or_mms_or/05_road_blocked.wav",
+   "dur_s": 4.605,
+   "gen_s": 2.114,
+   "first_audio_s": 2.114,
+   "rtf": 0.459
+  }
+ ]
+}

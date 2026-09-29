@@ -1,0 +1,74 @@
+{
+ "_about": "Generated from p2-models/scripts/frame.py. The Kotlin Frame.kt must produce and accept exactly these bytes. CRC = CRC-16/CCITT-FALSE (poly 0x1021, init 0xFFFF, no reflect, no xorout) over all bytes before it; integers big-endian.",
+ "crc16_check": {
+  "input_ascii": "123456789",
+  "crc_hex": "0x29b1"
+ },
+ "vectors": [
+  {
+   "what": "speech, English",
+   "lang": "en",
+   "wire_id": 1,
+   "seq": 1,
+   "text": "Evacuate the area now",
+   "utf8_payload_bytes": 21,
+   "frame_type": "0x01",
+   "frame_bytes": 29,
+   "hex": "0101000100154576616375617465207468652061726561206e6f77380d"
+  },
+  {
+   "what": "speech, Hindi",
+   "lang": "hi",
+   "wire_id": 0,
+   "seq": 2,
+   "text": "तुरंत इलाका खाली करें",
+   "utf8_payload_bytes": 57,
+   "frame_type": "0x11",
+   "frame_bytes": 29,
+   "hex": "110000020015a4c1b082a42087b2be95be2096beb2c02095b0c782ceb1"
+  },
+  {
+   "what": "speech, Tamil",
+   "lang": "ta",
+   "wire_id": 8,
+   "seq": 3,
+   "text": "உடனடியாக இந்த பகுதியை விட்டு வெளியேறுங்கள்",
+   "utf8_payload_bytes": 118,
+   "frame_type": "0x11",
+   "frame_bytes": 50,
+   "hex": "11080003002a899fa99fbfafbe952087a8cda420aa95c1a4bfafc820b5bf9fcd9fc120b5c6b3bfafc7b1c199cd95b3cdb65a"
+  },
+  {
+   "what": "speech, Bengali",
+   "lang": "bn",
+   "wire_id": 2,
+   "seq": 65535,
+   "text": "সব ঠিক আছে",
+   "utf8_payload_bytes": 26,
+   "frame_type": "0x11",
+   "frame_bytes": 18,
+   "hex": "1102ffff000ab8ac20a0bf9520869bc7ff0b"
+  },
+  {
+   "what": "alert 'evacuate' (id 2) sent from a Hindi phone",
+   "wire_id": 0,
+   "seq": 4,
+   "alert_id": 2,
+   "frame_type": "0x02",
+   "frame_bytes": 9,
+   "hex": "0200000400010248af"
+  },
+  {
+   "what": "ping, empty payload",
+   "seq": 5,
+   "frame_type": "0x03",
+   "frame_bytes": 8,
+   "hex": "0300000500002b00"
+  },
+  {
+   "what": "alert frame with one payload bit flipped: receiver must DROP it",
+   "hex": "0200000400010348af",
+   "expected": "CRC mismatch - dropped"
+  }
+ ]
+}

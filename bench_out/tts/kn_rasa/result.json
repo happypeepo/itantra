@@ -1,0 +1,66 @@
+{
+ "engine": "rasa",
+ "sample_rate": 24000,
+ "model_mb": 123.3,
+ "total_mb": 123.3,
+ "data_dir_mb": 0.0,
+ "load_s": 0.42,
+ "ram_model_mb": 271.0,
+ "peak_rss_mb": 484.7,
+ "rows": [
+  {
+   "name": "emergency",
+   "text": "ತುರ್ತು ಎಚ್ಚರಿಕೆ",
+   "wav": "bench_out/tts/kn_rasa/00_emergency.wav",
+   "dur_s": 1.195,
+   "gen_s": 0.812,
+   "first_audio_s": 0.812,
+   "rtf": 0.68
+  },
+  {
+   "name": "evacuate",
+   "text": "ತಕ್ಷಣ ಈ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+   "wav": "bench_out/tts/kn_rasa/01_evacuate.wav",
+   "dur_s": 2.379,
+   "gen_s": 1.703,
+   "first_audio_s": 1.703,
+   "rtf": 0.716
+  },
+  {
+   "name": "medical",
+   "text": "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+   "wav": "bench_out/tts/kn_rasa/02_medical.wav",
+   "dur_s": 1.835,
+   "gen_s": 1.591,
+   "first_audio_s": 1.591,
+   "rtf": 0.867
+  },
+  {
+   "name": "all_clear",
+   "text": "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ, ಅಪಾಯ ತಪ್ಪಿದೆ",
+   "wav": "bench_out/tts/kn_rasa/03_all_clear.wav",
+   "dur_s": 2.485,
+   "gen_s": 1.816,
+   "first_audio_s": 1.816,
+   "rtf": 0.731
+  },
+  {
+   "name": "return_to_base",
+   "text": "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+   "wav": "bench_out/tts/kn_rasa/04_return_to_base.wav",
+   "dur_s": 1.856,
+   "gen_s": 1.261,
+   "first_audio_s": 1.261,
+   "rtf": 0.679
+  },
+  {
+   "name": "road_blocked",
+   "text": "ಸೇತುವೆಯ ಬಳಿ ರಸ್ತೆ ಮುಚ್ಚಿದೆ, ದಯವಿಟ್ಟು ಶಾಲೆಗೆ ರಕ್ಷಣಾ ತಂಡವನ್ನು ಕಳುಹಿಸಿ",
+   "wav": "bench_out/tts/kn_rasa/05_road_blocked.wav",
+   "dur_s": 4.931,
+   "gen_s": 3.147,
+   "first_audio_s": 3.147,
+   "rtf": 0.638
+  }
+ ]
+}

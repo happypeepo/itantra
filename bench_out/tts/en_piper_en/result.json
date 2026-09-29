@@ -1,0 +1,66 @@
+{
+ "engine": "piper_en",
+ "sample_rate": 22050,
+ "model_mb": 63.5,
+ "total_mb": 63.5,
+ "data_dir_mb": 18.0,
+ "load_s": 0.86,
+ "ram_model_mb": 166.6,
+ "peak_rss_mb": 327.3,
+ "rows": [
+  {
+   "name": "emergency",
+   "text": "Emergency alert",
+   "wav": "bench_out/tts/en_piper_en/00_emergency.wav",
+   "dur_s": 1.347,
+   "gen_s": 0.093,
+   "first_audio_s": 0.093,
+   "rtf": 0.069
+  },
+  {
+   "name": "evacuate",
+   "text": "Evacuate the area now",
+   "wav": "bench_out/tts/en_piper_en/01_evacuate.wav",
+   "dur_s": 1.858,
+   "gen_s": 0.099,
+   "first_audio_s": 0.099,
+   "rtf": 0.053
+  },
+  {
+   "name": "medical",
+   "text": "Medical help needed",
+   "wav": "bench_out/tts/en_piper_en/02_medical.wav",
+   "dur_s": 1.382,
+   "gen_s": 0.074,
+   "first_audio_s": 0.074,
+   "rtf": 0.054
+  },
+  {
+   "name": "all_clear",
+   "text": "All clear, the danger has passed",
+   "wav": "bench_out/tts/en_piper_en/03_all_clear.wav",
+   "dur_s": 2.426,
+   "gen_s": 0.127,
+   "first_audio_s": 0.127,
+   "rtf": 0.052
+  },
+  {
+   "name": "return_to_base",
+   "text": "Return to base immediately",
+   "wav": "bench_out/tts/en_piper_en/04_return_to_base.wav",
+   "dur_s": 1.741,
+   "gen_s": 0.092,
+   "first_audio_s": 0.092,
+   "rtf": 0.053
+  },
+  {
+   "name": "road_blocked",
+   "text": "The road near the bridge is blocked, please send a rescue team to the school",
+   "wav": "bench_out/tts/en_piper_en/05_road_blocked.wav",
+   "dur_s": 4.325,
+   "gen_s": 0.273,
+   "first_audio_s": 0.273,
+   "rtf": 0.063
+  }
+ ]
+}

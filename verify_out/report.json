@@ -1,0 +1,462 @@
+{
+  "hi": {
+    "status": "PASS",
+    "avg_cer": 0.033,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "आपातकालीन चेतावनी",
+        "hyp": "आपात का लीन चेतावनी",
+        "cer": 0.118,
+        "dur_s": 1.77,
+        "stt_rtf_laptop": 0.031
+      },
+      {
+        "alert": "evacuate",
+        "ref": "तुरंत इलाका खाली करें",
+        "hyp": "तुरंत इलाका़ खाली करें",
+        "cer": 0.048,
+        "dur_s": 1.54,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "medical",
+        "ref": "चिकित्सा सहायता चाहिए",
+        "hyp": "चिकित्सा सहायता चाहिए",
+        "cer": 0.0,
+        "dur_s": 1.65,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "all_clear",
+        "ref": "सब ठीक है, खतरा टल गया है",
+        "hyp": "सब ठीक है खतरा टल गया है",
+        "cer": 0.0,
+        "dur_s": 1.9,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "तुरंत बेस पर लौटें",
+        "hyp": "तुरंत बेस पर लौटें",
+        "cer": 0.0,
+        "dur_s": 1.49,
+        "stt_rtf_laptop": 0.029
+      }
+    ]
+  },
+  "en": {
+    "status": "PASS",
+    "avg_cer": 0.0,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "Emergency alert",
+        "hyp": "emergency alert",
+        "cer": 0.0,
+        "dur_s": 1.27,
+        "stt_rtf_laptop": 0.028
+      },
+      {
+        "alert": "evacuate",
+        "ref": "Evacuate the area now",
+        "hyp": "evacuate the area now",
+        "cer": 0.0,
+        "dur_s": 1.79,
+        "stt_rtf_laptop": 0.025
+      },
+      {
+        "alert": "medical",
+        "ref": "Medical help needed",
+        "hyp": "medical help needed",
+        "cer": 0.0,
+        "dur_s": 1.36,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "all_clear",
+        "ref": "All clear, the danger has passed",
+        "hyp": "all clear the danger has passed",
+        "cer": 0.0,
+        "dur_s": 2.42,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "Return to base immediately",
+        "hyp": "return to base immediately",
+        "cer": 0.0,
+        "dur_s": 1.85,
+        "stt_rtf_laptop": 0.029
+      }
+    ]
+  },
+  "bn": {
+    "status": "PASS",
+    "avg_cer": 0.008,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "জরুরি সতর্কতা",
+        "hyp": "জরুরি সতর্কতা",
+        "cer": 0.0,
+        "dur_s": 1.38,
+        "stt_rtf_laptop": 0.034
+      },
+      {
+        "alert": "evacuate",
+        "ref": "এখনই এলাকা খালি করুন",
+        "hyp": "এখনই এলাকা খালি করুন",
+        "cer": 0.0,
+        "dur_s": 1.78,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "medical",
+        "ref": "চিকিৎসা সহায়তা প্রয়োজন",
+        "hyp": "চিকৎসা সহায়তা প্রয়োজন",
+        "cer": 0.042,
+        "dur_s": 1.92,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "all_clear",
+        "ref": "সব ঠিক আছে, বিপদ কেটে গেছে",
+        "hyp": "সব ঠিক আছে বিপদ কেটে গেছে",
+        "cer": 0.0,
+        "dur_s": 2.12,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+        "hyp": "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+        "cer": 0.0,
+        "dur_s": 2.05,
+        "stt_rtf_laptop": 0.029
+      }
+    ]
+  },
+  "gu": {
+    "status": "PASS",
+    "avg_cer": 0.175,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "કટોકટી ચેતવણી",
+        "hyp": "ખાટો ઈ ચેતવણી",
+        "cer": 0.385,
+        "dur_s": 1.26,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "evacuate",
+        "ref": "તરત જ વિસ્તાર ખાલી કરો",
+        "hyp": "સત જ વિસ્તાર ખાલી કરો",
+        "cer": 0.091,
+        "dur_s": 1.7,
+        "stt_rtf_laptop": 0.028
+      },
+      {
+        "alert": "medical",
+        "ref": "તબીબી મદદની જરૂર છે",
+        "hyp": "તે તબીબી મદદની જરૂર છે",
+        "cer": 0.158,
+        "dur_s": 1.65,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "all_clear",
+        "ref": "બધું સુરક્ષિત છે, જોખમ ટળી ગયું છે",
+        "hyp": "રમત દૂત સુરક્ષિત છે જોખમ તળી ગયું છે",
+        "cer": 0.242,
+        "dur_s": 2.6,
+        "stt_rtf_laptop": 0.032
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "તરત જ બેઝ પર પાછા ફરો",
+        "hyp": "તરત જ બેઝ પર પાછા ફરો",
+        "cer": 0.0,
+        "dur_s": 1.79,
+        "stt_rtf_laptop": 0.027
+      }
+    ]
+  },
+  "kn": {
+    "status": "PASS",
+    "avg_cer": 0.0,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "ತುರ್ತು ಎಚ್ಚರಿಕೆ",
+        "hyp": "ತುರ್ತು ಎಚ್ಚರಿಕೆ",
+        "cer": 0.0,
+        "dur_s": 1.14,
+        "stt_rtf_laptop": 0.036
+      },
+      {
+        "alert": "evacuate",
+        "ref": "ತಕ್ಷಣ ಈ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+        "hyp": "ತಕ್ಷಣ ಈ ಪ್ರದೇಶವನ್ನು ಖಾಲಿ ಮಾಡಿ",
+        "cer": 0.0,
+        "dur_s": 2.43,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "medical",
+        "ref": "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+        "hyp": "ವೈದ್ಯಕೀಯ ಸಹಾಯ ಬೇಕು",
+        "cer": 0.0,
+        "dur_s": 1.58,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "all_clear",
+        "ref": "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ, ಅಪಾಯ ತಪ್ಪಿದೆ",
+        "hyp": "ಎಲ್ಲವೂ ಸುರಕ್ಷಿತ ಅಪಾಯ ತಪ್ಪಿದೆ",
+        "cer": 0.0,
+        "dur_s": 2.34,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+        "hyp": "ತಕ್ಷಣ ನೆಲೆಗೆ ಹಿಂತಿರುಗಿ",
+        "cer": 0.0,
+        "dur_s": 1.7,
+        "stt_rtf_laptop": 0.029
+      }
+    ]
+  },
+  "ml": {
+    "status": "PASS",
+    "avg_cer": 0.058,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "അടിയന്തര മുന്നറിയിപ്പ്",
+        "hyp": "അടിയന്തര മുന്നറിയിബ്",
+        "cer": 0.136,
+        "dur_s": 1.22,
+        "stt_rtf_laptop": 0.034
+      },
+      {
+        "alert": "evacuate",
+        "ref": "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴിയുക",
+        "hyp": "ഉടൻ തന്നെ ഈ പ്രദേശം ഒഴുകുക",
+        "cer": 0.077,
+        "dur_s": 2.05,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "medical",
+        "ref": "വൈദ്യസഹായം ആവശ്യമാണ്",
+        "hyp": "വൈദ്യസഹായം ആവശ്യമാണ്",
+        "cer": 0.0,
+        "dur_s": 1.77,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "all_clear",
+        "ref": "എല്ലാം സുരക്ഷിതമാണ്, അപകടം ഒഴിഞ്ഞു",
+        "hyp": "എല്ലാം സുരക്ഷിതമാണ് അപകടം ഒഴിഞ്ഞു",
+        "cer": 0.0,
+        "dur_s": 2.39,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "ഉടൻ താവളത്തിലേക്ക് മടങ്ങുക",
+        "hyp": "ഉടൻ താവളത്തിലേക്ക് മടങ്ങൂ",
+        "cer": 0.077,
+        "dur_s": 2.01,
+        "stt_rtf_laptop": 0.028
+      }
+    ]
+  },
+  "mr": {
+    "status": "PASS",
+    "avg_cer": 0.053,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "आपत्कालीन इशारा",
+        "hyp": "आपत्कालीन इशारा",
+        "cer": 0.0,
+        "dur_s": 1.26,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "evacuate",
+        "ref": "ताबडतोब परिसर रिकामा करा",
+        "hyp": "आवडतो परिसर रिकामा करा",
+        "cer": 0.167,
+        "dur_s": 1.69,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "medical",
+        "ref": "वैद्यकीय मदत हवी आहे",
+        "hyp": "वैद्यकीय मदत हवी आहे",
+        "cer": 0.0,
+        "dur_s": 1.42,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "all_clear",
+        "ref": "सर्व सुरक्षित आहे, धोका टळला आहे",
+        "hyp": "सर्व सुरक्षित आहे धोका टळला आहे",
+        "cer": 0.0,
+        "dur_s": 2.42,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "ताबडतोब तळावर परत या",
+        "hyp": "आबडतोब तळावर परत या",
+        "cer": 0.1,
+        "dur_s": 1.79,
+        "stt_rtf_laptop": 0.028
+      }
+    ]
+  },
+  "or": {
+    "status": "PASS",
+    "avg_cer": 0.118,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "ଜରୁରୀକାଳୀନ ସତର୍କତା",
+        "hyp": "ଜରୁରୀକାଳୀିନ ସକତା",
+        "cer": 0.222,
+        "dur_s": 1.31,
+        "stt_rtf_laptop": 0.036
+      },
+      {
+        "alert": "evacuate",
+        "ref": "ତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କରନ୍ତୁ",
+        "hyp": "ତତୁରନ୍ତ ଏହି ଅଞ୍ଚଳ ଖାଲି କରନ୍ତୁ",
+        "cer": 0.036,
+        "dur_s": 2.33,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "medical",
+        "ref": "ଚିକିତ୍ସା ସହାୟତା ଦରକାର",
+        "hyp": "କି କି ସେ ସହାୟତା ଦରକାର",
+        "cer": 0.238,
+        "dur_s": 1.46,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "all_clear",
+        "ref": "ସବୁ ସୁରକ୍ଷିତ, ବିପଦ ଟଳିଗଲା",
+        "hyp": "ସବୁ ସୁରକ୍ଷିତ ବିପଦ ଟଳିଗଲା",
+        "cer": 0.0,
+        "dur_s": 2.05,
+        "stt_rtf_laptop": 0.032
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "ତୁରନ୍ତ ଘାଟିକୁ ଫେରନ୍ତୁ",
+        "hyp": "ଓ ତୁରନ୍ତ ଘାଟିକୁ ଫେରନ୍ତୁ",
+        "cer": 0.095,
+        "dur_s": 1.6,
+        "stt_rtf_laptop": 0.031
+      }
+    ]
+  },
+  "ta": {
+    "status": "PASS",
+    "avg_cer": 0.076,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "அவசர எச்சரிக்கை",
+        "hyp": "அவசர எச்சரிக்கை",
+        "cer": 0.0,
+        "dur_s": 0.89,
+        "stt_rtf_laptop": 0.037
+      },
+      {
+        "alert": "evacuate",
+        "ref": "உடனடியாக இந்தப் பகுதியை விட்டு வெளியேறுங்கள்",
+        "hyp": "உடனடியாக இந்த பகுதியை விட்டு வெளியேறுங்கள்",
+        "cer": 0.045,
+        "dur_s": 2.36,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "medical",
+        "ref": "மருத்துவ உதவி தேவை",
+        "hyp": "மருத்துவ உதவி தேவை",
+        "cer": 0.0,
+        "dur_s": 1.21,
+        "stt_rtf_laptop": 0.034
+      },
+      {
+        "alert": "all_clear",
+        "ref": "எல்லாம் பாதுகாப்பாக உள்ளது, ஆபத்து நீங்கிவிட்டது",
+        "hyp": "எல்லாம் பாதுகாப்பாக உள்ளது ஆபத்து நீங்கி விட்டது",
+        "cer": 0.021,
+        "dur_s": 2.83,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "உடனடியாக தளத்திற்குத் திரும்புங்கள்",
+        "hyp": "தளத்திற்கு திரும்புங்கள்",
+        "cer": 0.314,
+        "dur_s": 1.93,
+        "stt_rtf_laptop": 0.029
+      }
+    ]
+  },
+  "te": {
+    "status": "PASS",
+    "avg_cer": 0.006,
+    "rows": [
+      {
+        "alert": "emergency",
+        "ref": "అత్యవసర హెచ్చరిక",
+        "hyp": "అత్యవసర హెచ్చరిక",
+        "cer": 0.0,
+        "dur_s": 1.27,
+        "stt_rtf_laptop": 0.029
+      },
+      {
+        "alert": "evacuate",
+        "ref": "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+        "hyp": "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+        "cer": 0.0,
+        "dur_s": 2.42,
+        "stt_rtf_laptop": 0.027
+      },
+      {
+        "alert": "medical",
+        "ref": "వైద్య సహాయం కావాలి",
+        "hyp": "వైద్య సహాయం కావాలి",
+        "cer": 0.0,
+        "dur_s": 1.53,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "all_clear",
+        "ref": "అంతా సురక్షితం, ప్రమాదం తప్పింది",
+        "hyp": "అంత సురక్షితం ప్రమాదం తప్పింది",
+        "cer": 0.032,
+        "dur_s": 2.49,
+        "stt_rtf_laptop": 0.03
+      },
+      {
+        "alert": "return_to_base",
+        "ref": "వెంటనే స్థావరానికి తిరిగి రండి",
+        "hyp": "వెంటనే స్థావరానికి తిరిగి రండి",
+        "cer": 0.0,
+        "dur_s": 1.88,
+        "stt_rtf_laptop": 0.028
+      }
+    ]
+  }
+}

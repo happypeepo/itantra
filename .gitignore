@@ -1,0 +1,40 @@
+# --- Python
+.venv/
+__pycache__/
+*.pyc
+
+# --- Models and downloads (GBs; rebuild with p2-models/README.md §4-§5)
+dl/
+models/*
+!models/README.md
+*.onnx
+*.onnx_data
+*.tar.bz2
+
+# --- Generated audio (regenerate with the scripts; keep the JSON results)
+*.wav
+*.m4a
+*.mp3
+scratch/
+bench_out/_*.json
+work/t5/bench/_*.json
+*.log
+
+# --- Real recordings are people's voices: kept local by default (the .txt transcripts are fine)
+real_audio/**/*.wav
+
+# --- Android / Gradle
+android/**/build/
+android/.gradle/
+android/local.properties
+android/**/*.iml
+android/.idea/
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# --- OS / editors
+.DS_Store
+.vscode/
+.idea/

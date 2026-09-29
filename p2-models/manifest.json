@@ -1,0 +1,117 @@
+{
+  "_readme": "One file that says which model every language uses. P2 owns it. The app (P1) and the scripts both read it. Paths are relative to the models/ folder on the laptop and on the phone. wire_id is the language byte in P3's message frame.",
+  "sherpa_onnx_min_version": "1.13.5",
+
+  "vad": { "model": "vad/silero_vad.onnx" },
+
+  "tts_engines": {
+    "rasa": {
+      "model": "tts/rasa/model.onnx",
+      "tokens": "tts/rasa/tokens.txt",
+      "data_dir": "",
+      "frontend": "characters",
+      "sample_rate": 24000,
+      "licence": "CC-BY-4.0",
+      "source": "MatiasLin/sherpa-onnx-vits-rasa-13 (weights: ai4bharat/vits_rasa_13)"
+    },
+    "piper_hi": {
+      "model": "tts/piper-hi/model.onnx",
+      "tokens": "tts/piper-hi/tokens.txt",
+      "data_dir": "tts/espeak-ng-data",
+      "frontend": "phonemes",
+      "sample_rate": 22050,
+      "licence": "IITM Indic TTS licence - read iitm.ac.in/donlab/indictts/downloads/license.pdf",
+      "source": "sherpa-onnx tts-models release: vits-piper-hi_IN-rohan-medium (male). Alternatives priyamvada (female) and pratham (male) are CC-BY-NC-SA-4.0"
+    },
+    "piper_en": {
+      "model": "tts/piper-en/model.onnx",
+      "tokens": "tts/piper-en/tokens.txt",
+      "data_dir": "tts/espeak-ng-data",
+      "frontend": "phonemes",
+      "sample_rate": 22050,
+      "licence": "public domain (LJSpeech dataset)",
+      "source": "sherpa-onnx tts-models release: vits-piper-en_US-ljspeech-medium"
+    },
+    "mms_gu": {
+      "model": "tts/mms-gu/model.onnx",
+      "tokens": "tts/mms-gu/tokens.txt",
+      "data_dir": "",
+      "frontend": "characters",
+      "sample_rate": 16000,
+      "licence": "CC-BY-NC-4.0",
+      "source": "willwade/mms-tts-multilingual-models-onnx/guj"
+    },
+    "mms_or": {
+      "model": "tts/mms-or/model.onnx",
+      "tokens": "tts/mms-or/tokens.txt",
+      "data_dir": "",
+      "frontend": "characters",
+      "sample_rate": 16000,
+      "licence": "CC-BY-NC-4.0",
+      "source": "willwade/mms-tts-multilingual-models-onnx/ory"
+    }
+  },
+
+  "languages": {
+    "hi": {
+      "name": "Hindi", "script": "Devanagari", "wire_id": 0,
+      "stt": { "type": "nemo_ctc", "model": "stt/hi/model.int8.onnx", "tokens": "stt/hi/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-hi-onnx, patched with patch_stt.py" },
+      "tts": { "engine": "piper_hi", "sid": 0, "speed": 1.0 }
+    },
+    "en": {
+      "name": "English", "script": "Latin", "wire_id": 1,
+      "stt": { "type": "nemo_ctc", "model": "stt/en/model.int8.onnx", "tokens": "stt/en/tokens.txt",
+               "source": "sherpa-onnx asr-models release: sherpa-onnx-nemo-ctc-en-conformer-medium (small and large also exist)" },
+      "tts": { "engine": "piper_en", "sid": 0, "speed": 1.0 }
+    },
+    "bn": {
+      "name": "Bengali", "script": "Bengali", "wire_id": 2,
+      "stt": { "type": "nemo_ctc", "model": "stt/bn/model.int8.onnx", "tokens": "stt/bn/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-bn-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/bn (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "rasa", "sid": 2, "emotion_id": 0, "speed": 1.0, "_voice": "BEN_F" }
+    },
+    "gu": {
+      "name": "Gujarati", "script": "Gujarati", "wire_id": 3,
+      "stt": { "type": "nemo_ctc", "model": "stt/gu/model.int8.onnx", "tokens": "stt/gu/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-gu-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/gu (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "mms_gu", "sid": 0, "speed": 1.0 }
+    },
+    "kn": {
+      "name": "Kannada", "script": "Kannada", "wire_id": 4,
+      "stt": { "type": "nemo_ctc", "model": "stt/kn/model.int8.onnx", "tokens": "stt/kn/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-kn-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/kn (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "rasa", "sid": 8, "emotion_id": 0, "speed": 1.0, "_voice": "KAN_F" }
+    },
+    "ml": {
+      "name": "Malayalam", "script": "Malayalam", "wire_id": 5,
+      "stt": { "type": "nemo_ctc", "model": "stt/ml/model.int8.onnx", "tokens": "stt/ml/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-ml-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/ml (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "rasa", "sid": 11, "emotion_id": 0, "speed": 1.0, "_voice": "MAL_F" }
+    },
+    "mr": {
+      "name": "Marathi", "script": "Devanagari", "wire_id": 6,
+      "stt": { "type": "nemo_ctc", "model": "stt/mr/model.int8.onnx", "tokens": "stt/mr/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-mr-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/mr (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "rasa", "sid": 12, "emotion_id": 0, "speed": 1.0, "_voice": "MAR_F" }
+    },
+    "or": {
+      "name": "Odia", "script": "Oriya", "wire_id": 7,
+      "stt": { "type": "nemo_ctc", "model": "stt/or/model.int8.onnx", "tokens": "stt/or/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-or-onnx, patched with patch_stt.py" },
+      "tts": { "engine": "mms_or", "sid": 0, "speed": 1.0 }
+    },
+    "ta": {
+      "name": "Tamil", "script": "Tamil", "wire_id": 8,
+      "stt": { "type": "nemo_ctc", "model": "stt/ta/model.int8.onnx", "tokens": "stt/ta/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-ta-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/ta (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "rasa", "sid": 18, "emotion_id": 0, "speed": 1.0, "_voice": "TAM_F" }
+    },
+    "te": {
+      "name": "Telugu", "script": "Telugu", "wire_id": 9,
+      "stt": { "type": "nemo_ctc", "model": "stt/te/model.int8.onnx", "tokens": "stt/te/tokens.txt",
+               "source": "OpenVoiceOS/ai4bharat-indicconformer-te-onnx fp32, patched with patch_stt.py (MatMul-only INT8). Fallback: mobilebytesensei/betterflow-indicconformer-ctc/te (Conv INT8, ~3x slower)" },
+      "tts": { "engine": "rasa", "sid": 19, "emotion_id": 0, "speed": 1.0, "_voice": "TEL_F" }
+    }
+  }
+}

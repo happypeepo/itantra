@@ -1,0 +1,66 @@
+{
+ "engine": "mms_gu",
+ "sample_rate": 16000,
+ "model_mb": 114.0,
+ "total_mb": 114.0,
+ "data_dir_mb": 0.0,
+ "load_s": 0.41,
+ "ram_model_mb": 251.0,
+ "peak_rss_mb": 388.5,
+ "rows": [
+  {
+   "name": "emergency",
+   "text": "કટોકટી ચેતવણી",
+   "wav": "bench_out/tts/gu_mms_gu/00_emergency.wav",
+   "dur_s": 1.312,
+   "gen_s": 0.512,
+   "first_audio_s": 0.512,
+   "rtf": 0.391
+  },
+  {
+   "name": "evacuate",
+   "text": "તરત જ વિસ્તાર ખાલી કરો",
+   "wav": "bench_out/tts/gu_mms_gu/01_evacuate.wav",
+   "dur_s": 1.616,
+   "gen_s": 0.616,
+   "first_audio_s": 0.616,
+   "rtf": 0.381
+  },
+  {
+   "name": "medical",
+   "text": "તબીબી મદદની જરૂર છે",
+   "wav": "bench_out/tts/gu_mms_gu/02_medical.wav",
+   "dur_s": 1.648,
+   "gen_s": 0.626,
+   "first_audio_s": 0.626,
+   "rtf": 0.38
+  },
+  {
+   "name": "all_clear",
+   "text": "બધું સુરક્ષિત છે, જોખમ ટળી ગયું છે",
+   "wav": "bench_out/tts/gu_mms_gu/03_all_clear.wav",
+   "dur_s": 2.569,
+   "gen_s": 1.092,
+   "first_audio_s": 1.092,
+   "rtf": 0.425
+  },
+  {
+   "name": "return_to_base",
+   "text": "તરત જ બેઝ પર પાછા ફરો",
+   "wav": "bench_out/tts/gu_mms_gu/04_return_to_base.wav",
+   "dur_s": 1.84,
+   "gen_s": 0.698,
+   "first_audio_s": 0.698,
+   "rtf": 0.379
+  },
+  {
+   "name": "road_blocked",
+   "text": "પુલ પાસેનો રસ્તો બંધ છે, કૃપા કરીને શાળામાં બચાવ ટીમ મોકલો",
+   "wav": "bench_out/tts/gu_mms_gu/05_road_blocked.wav",
+   "dur_s": 4.101,
+   "gen_s": 1.676,
+   "first_audio_s": 1.676,
+   "rtf": 0.409
+  }
+ ]
+}

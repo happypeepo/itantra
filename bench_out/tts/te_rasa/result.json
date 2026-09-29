@@ -1,0 +1,66 @@
+{
+ "engine": "rasa",
+ "sample_rate": 24000,
+ "model_mb": 123.3,
+ "total_mb": 123.3,
+ "data_dir_mb": 0.0,
+ "load_s": 0.43,
+ "ram_model_mb": 271.1,
+ "peak_rss_mb": 479.9,
+ "rows": [
+  {
+   "name": "emergency",
+   "text": "అత్యవసర హెచ్చరిక",
+   "wav": "bench_out/tts/te_rasa/00_emergency.wav",
+   "dur_s": 1.355,
+   "gen_s": 0.765,
+   "first_audio_s": 0.765,
+   "rtf": 0.565
+  },
+  {
+   "name": "evacuate",
+   "text": "వెంటనే ఈ ప్రాంతాన్ని ఖాళీ చేయండి",
+   "wav": "bench_out/tts/te_rasa/01_evacuate.wav",
+   "dur_s": 2.016,
+   "gen_s": 1.126,
+   "first_audio_s": 1.126,
+   "rtf": 0.559
+  },
+  {
+   "name": "medical",
+   "text": "వైద్య సహాయం కావాలి",
+   "wav": "bench_out/tts/te_rasa/02_medical.wav",
+   "dur_s": 1.472,
+   "gen_s": 0.821,
+   "first_audio_s": 0.821,
+   "rtf": 0.558
+  },
+  {
+   "name": "all_clear",
+   "text": "అంతా సురక్షితం, ప్రమాదం తప్పింది",
+   "wav": "bench_out/tts/te_rasa/03_all_clear.wav",
+   "dur_s": 2.304,
+   "gen_s": 1.276,
+   "first_audio_s": 1.276,
+   "rtf": 0.554
+  },
+  {
+   "name": "return_to_base",
+   "text": "వెంటనే స్థావరానికి తిరిగి రండి",
+   "wav": "bench_out/tts/te_rasa/04_return_to_base.wav",
+   "dur_s": 2.197,
+   "gen_s": 1.225,
+   "first_audio_s": 1.225,
+   "rtf": 0.557
+  },
+  {
+   "name": "road_blocked",
+   "text": "వంతెన దగ్గర రోడ్డు మూసుకుపోయింది, దయచేసి పాఠశాలకు సహాయక బృందాన్ని పంపండి",
+   "wav": "bench_out/tts/te_rasa/05_road_blocked.wav",
+   "dur_s": 4.983,
+   "gen_s": 3.088,
+   "first_audio_s": 3.088,
+   "rtf": 0.62
+  }
+ ]
+}

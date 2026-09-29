@@ -1,0 +1,66 @@
+{
+ "engine": "rasa",
+ "sample_rate": 24000,
+ "model_mb": 123.3,
+ "total_mb": 123.3,
+ "data_dir_mb": 0.0,
+ "load_s": 0.43,
+ "ram_model_mb": 271.2,
+ "peak_rss_mb": 484.8,
+ "rows": [
+  {
+   "name": "emergency",
+   "text": "জরুরি সতর্কতা",
+   "wav": "bench_out/tts/bn_rasa/00_emergency.wav",
+   "dur_s": 1.248,
+   "gen_s": 0.721,
+   "first_audio_s": 0.721,
+   "rtf": 0.578
+  },
+  {
+   "name": "evacuate",
+   "text": "এখনই এলাকা খালি করুন",
+   "wav": "bench_out/tts/bn_rasa/01_evacuate.wav",
+   "dur_s": 1.707,
+   "gen_s": 0.994,
+   "first_audio_s": 0.994,
+   "rtf": 0.583
+  },
+  {
+   "name": "medical",
+   "text": "চিকিৎসা সহায়তা প্রয়োজন",
+   "wav": "bench_out/tts/bn_rasa/02_medical.wav",
+   "dur_s": 1.6,
+   "gen_s": 0.93,
+   "first_audio_s": 0.93,
+   "rtf": 0.581
+  },
+  {
+   "name": "all_clear",
+   "text": "সব ঠিক আছে, বিপদ কেটে গেছে",
+   "wav": "bench_out/tts/bn_rasa/03_all_clear.wav",
+   "dur_s": 2.312,
+   "gen_s": 1.616,
+   "first_audio_s": 1.616,
+   "rtf": 0.699
+  },
+  {
+   "name": "return_to_base",
+   "text": "অবিলম্বে ঘাঁটিতে ফিরে আসুন",
+   "wav": "bench_out/tts/bn_rasa/04_return_to_base.wav",
+   "dur_s": 1.984,
+   "gen_s": 1.16,
+   "first_audio_s": 1.16,
+   "rtf": 0.585
+  },
+  {
+   "name": "road_blocked",
+   "text": "সেতুর কাছে রাস্তা বন্ধ, দয়া করে স্কুলে উদ্ধারকারী দল পাঠান",
+   "wav": "bench_out/tts/bn_rasa/05_road_blocked.wav",
+   "dur_s": 4.993,
+   "gen_s": 3.117,
+   "first_audio_s": 3.117,
+   "rtf": 0.624
+  }
+ ]
+}
