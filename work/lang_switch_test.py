@@ -16,28 +16,11 @@ import subprocess
 import sys
 import time
 
-ADB = ["/Users/bhoumiksangle/Downloads/platform-tools/adb"] + (["-s", os.environ["SERIAL"]] if os.environ.get("SERIAL") else [])
-PKG = "org.itantra.app"
-NAMES = ["Hindi", "English", "Bengali", "Gujarati", "Kannada", "Malayalam", "Marathi", "Odia", "Tamil", "Telugu"]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import devui  # noqa: E402
 
-
-def sh(cmd: str) -> str:
-    return subprocess.run(ADB + ["shell", cmd], capture_output=True, text=True).stdout
-
-
-def ui() -> str:
-    sh("uiautomator dump /sdcard/ui.xml")
-    return sh("cat /sdcard/ui.xml")
-
-
-def tap_text(text: str, xml: str | None = None) -> bool:
-    xml = xml or ui()
-    m = re.search(r'text="%s"[^>]*?bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"' % re.escape(text), xml)
-    if not m:
-        return False
-    x1, y1, x2, y2 = map(int, m.groups())
-    sh(f"input tap {(x1 + x2) // 2} {(y1 + y2) // 2}")
-    return True
+ADB, PKG, sh, ui = devui.ADB, devui.PKG, devui.sh, devui.ui
+NAMES = devui.ORDER
 
 
 def pss_mb() -> float:
@@ -46,15 +29,12 @@ def pss_mb() -> float:
 
 
 def select(name: str) -> dict:
-    xml = ui()
-    spinner = re.search(r'class="android.widget.Spinner"[^>]*bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', xml)
-    x1, y1, x2, y2 = map(int, spinner.groups())
     subprocess.run(ADB + ["logcat", "-c"])
-    sh(f"input tap {(x1 + x2) // 2} {(y1 + y2) // 2}")
-    time.sleep(0.8)
-    if not tap_text(name):
-        return {"lang": name, "error": "not in picker"}
-    t0 = time.time()
+    t0 = time.time()                      # start timing before the switch (selecting takes a few seconds)
+    try:
+        devui.select_language(name)
+    except RuntimeError as ex:
+        return {"lang": name, "error": str(ex)}
     ready = None
     while time.time() - t0 < 30:
         log = subprocess.run(ADB + ["logcat", "-d", "-s", "iTantra:I"], capture_output=True, text=True).stdout

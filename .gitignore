@@ -43,3 +43,4 @@ alerts_draft/
 
 # --- On-device test logs: may contain transcripts of real room speech. Keep local.
 device_test/
+size_out/

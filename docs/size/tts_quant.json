@@ -1,0 +1,135 @@
+{
+ "machine": "Apple M4, 2 threads, onnxruntime 1.30.0",
+ "voices": {
+  "rasa": {
+   "fp32": {
+    "size_mb": 123.3,
+    "rtf": 0.576,
+    "cer": 0.084,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 165
+   },
+   "int8_matmul": {
+    "size_mb": 121.1,
+    "rtf": 0.62,
+    "cer": 0.127,
+    "ConvInteger": 0,
+    "MatMulInteger": 24,
+    "Conv_left": 165
+   },
+   "int8_all": {
+    "size_mb": 40.7,
+    "rtf": 2.161,
+    "cer": 0.026,
+    "ConvInteger": 165,
+    "MatMulInteger": 24,
+    "Conv_left": 0
+   }
+  },
+  "piper_hi": {
+   "fp32": {
+    "size_mb": 62.9,
+    "rtf": 0.075,
+    "cer": 0.0,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 129
+   },
+   "int8_matmul": {
+    "size_mb": 62.9,
+    "rtf": 0.083,
+    "cer": 0.0,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 129
+   },
+   "int8_all": {
+    "size_mb": 18.3,
+    "rtf": 0.324,
+    "cer": 0.011,
+    "ConvInteger": 129,
+    "MatMulInteger": 0,
+    "Conv_left": 0
+   }
+  },
+  "piper_en": {
+   "fp32": {
+    "size_mb": 63.5,
+    "rtf": 0.061,
+    "cer": 0.013,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 129
+   },
+   "int8_matmul": {
+    "size_mb": 63.9,
+    "rtf": 0.059,
+    "cer": 0.074,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 129
+   },
+   "int8_all": {
+    "size_mb": 19.3,
+    "rtf": 0.288,
+    "cer": 0.0,
+    "ConvInteger": 129,
+    "MatMulInteger": 0,
+    "Conv_left": 0
+   }
+  },
+  "mms_gu": {
+   "fp32": {
+    "size_mb": 114.0,
+    "rtf": 0.4,
+    "cer": 0.206,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 183
+   },
+   "int8_matmul": {
+    "size_mb": 114.4,
+    "rtf": 0.398,
+    "cer": 0.225,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 183
+   },
+   "int8_all": {
+    "size_mb": 38.0,
+    "rtf": 1.424,
+    "cer": 0.147,
+    "ConvInteger": 183,
+    "MatMulInteger": 0,
+    "Conv_left": 0
+   }
+  },
+  "mms_or": {
+   "fp32": {
+    "size_mb": 114.0,
+    "rtf": 0.475,
+    "cer": 0.063,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 183
+   },
+   "int8_matmul": {
+    "size_mb": 114.4,
+    "rtf": 0.5,
+    "cer": 0.108,
+    "ConvInteger": 0,
+    "MatMulInteger": 0,
+    "Conv_left": 183
+   },
+   "int8_all": {
+    "size_mb": 38.0,
+    "rtf": 1.691,
+    "cer": 0.09,
+    "ConvInteger": 183,
+    "MatMulInteger": 0,
+    "Conv_left": 0
+   }
+  }
+ }
+}

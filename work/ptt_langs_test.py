@@ -45,9 +45,8 @@ def main() -> int:
             print(code, "not ready:", r); continue
         clip = ROOT / "bench_out/tts" / f"{code}_{L['tts']['engine']}" / "05_road_blocked.wav"
         dur = sf.info(str(clip)).duration
-        xml = ls.ui()
-        m = re.search(r'text="HOLD TO TALK"[^>]*?bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', xml)
-        x, y = (int(m.group(1)) + int(m.group(3))) // 2, (int(m.group(2)) + int(m.group(4))) // 2
+        btn = ls.devui.find("Hold to talk")
+        x, y = btn["x"], btn["y"]
         n_before = len(peer.rx)
         hold_ms = int((dur + 1.6) * 1000)
         subprocess.Popen(ls.ADB + ["shell", f"input swipe {x} {y} {x} {y} {hold_ms}"])

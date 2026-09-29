@@ -71,10 +71,39 @@ On this phone rasa runs at RTF ~0.55 (4 threads), vs ~0.8 on the Nothing Phone (
 6. **The Continuous listening switch turns on with the mic denied**, with no warning. Suggest keeping it off and showing the permission message.
 7. **Recording needs a connection** ("Wait for models and connection"). That's reasonable, but it means you can't test the mic alone. Consider a local "mic test" meter.
 
+## New build: Material 3 UI (commit `6362974`), both phones, two-phone link over Wi-Fi
+
+**Build:** 7/7 unit tests pass and lint has 0 errors. **APK 38.7 MB** (was 33.0). Note: `LinkServiceTest` binds the fixed port 26173 on the build machine, so it fails if anything else (e.g. an `adb forward`) is using that port. A random free port would make it robust.
+
+**Phones:** realme RMX3031 (192.168.1.13) and Nothing Phone (3a) (192.168.1.6), both over wireless adb, on the same home Wi-Fi. **The router allowed phone-to-phone traffic.**
+
+| Test | Result |
+|---|---|
+| Install as an update (models kept), launch | ✅ both phones, "English ready" |
+| **Two real phones connect over Wi-Fi** (realme Host, Nothing Join by IP) | ✅ both show Connected |
+| **Ping over Wi-Fi** | ✅ Nothing → realme 8–20 ms; realme → Nothing 20–270 ms (first ping slowest) |
+| **Cross-language alert over Wi-Fi:** Nothing set to Hindi taps Evacuate → realme set to Tamil | ✅ realme: "Alert: evacuate [ta]" |
+| **Speech A → B over Wi-Fi, over the air:** realme plays its test alert, the Nothing's mic picks it up (PTT), and the realme speaks it | ✅ Nothing TX "emergency alert" (STT 214 ms); realme RX, first playback 509 ms |
+| **Speech B → A** (realme in continuous mode) | ✅ realme TX "emergency alert" (STT 96 ms); Nothing RX, first playback 347 ms |
+| Disconnect, then reconnect (Host + Join again) | ✅ both sides; ping OK afterwards |
+| Other phone's app force-stopped mid-connection | ✅ the Nothing shows Disconnected, no crash |
+| Wrong IP (192.168.1.250) | ✅ fails cleanly after the 5 s timeout, then a correct Join works |
+| Receive test on the new UI (laptop peer): 10 languages, CRC drop, alerts in the receiver's language | ✅ all pass |
+| Alarm volume during an alert | ✅ 6 → 16 → back to 6 |
+| Language switching × 20 (realme) | ✅ memory flat: Indic 466–500 MB, Hindi ~430, English ~277, no growth in round 2 |
+
+Latencies between the two phones can't be combined across devices, because their clocks aren't synced. Each phone's own numbers are valid (STT time, receive → first playback).
+
+**Small UX issues:** a normal disconnect shows "Disconnected: null", and a wrong IP shows the raw Java error (`EHOSTUNREACH (No route to host)…`). Suggest friendly text.
+
+**Test-harness notes** (not app bugs, but they cost time):
+- The language dropdown opens in a popup that the plain `uiautomator dump` can't see. `work/devui.py` uses `uiautomator dump --windows` (Android 14+) or the keyboard (older Android).
+- A scroll gesture that crosses the "Continuous listening" switch toggles it. `devui.scroll` now swipes along the page margin.
+
 ## Not verified yet
 
 - **PTT in all 10 languages over the air:** the first attempt played the test sentences into the Mac's Bluetooth earbuds instead of its speakers, so the phone heard silence. Re-run `work/ptt_langs_test.py` with the Mac's built-in speakers selected. (English PTT on the realme was already exact.)
-- **Two real phones over Wi-Fi/hotspot** (host/join, both directions, ping over Wi-Fi, disconnect/reconnect, wrong IP): the realme's Wi-Fi was off.
+- Two phones over a **phone hotspot** (only home Wi-Fi was tested; the demo plan uses a hotspot).
 - Rotation while recording, speaking, or playing an alert (not attempted).
 - Alerts with native-checked text (the WAVs used here are drafts).
 

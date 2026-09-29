@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "p2-models/scripts"))
 import frame as fr  # noqa: E402
 
-ADB = "/Users/bhoumiksangle/Downloads/platform-tools/adb"
+ADB = (__import__("os").environ.get("ADB") or __import__("shutil").which("adb") or "/Users/bhoumiksangle/Downloads/platform-tools/adb") + (f" -s {__import__('os').environ['SERIAL']}" if __import__("os").environ.get("SERIAL") else "")
 MAN = json.loads((ROOT / "p2-models/manifest.json").read_text(encoding="utf-8"))["languages"]
 SCRIPT_OF = {L["wire_id"]: L["script"] for L in MAN.values()}
 CODE_OF = {L["wire_id"]: c for c, L in MAN.items()}
@@ -36,7 +36,7 @@ SENTS = json.loads((ROOT / "p2-models/test_sentences.json").read_text(encoding="
 
 
 def alarm_volume() -> str:
-    out = subprocess.run([ADB, "shell", "dumpsys audio"], capture_output=True, text=True).stdout
+    out = subprocess.run(ADB.split() + ["shell", "dumpsys audio"], capture_output=True, text=True).stdout
     m = re.search(r"- STREAM_ALARM:.*?Current: ([^\n]*)", out, re.S)
     return m.group(1).strip()[:80] if m else "?"
 

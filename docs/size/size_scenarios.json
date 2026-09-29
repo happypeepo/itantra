@@ -1,0 +1,78 @@
+{
+ "rows": [
+  [
+   "Today: all 10 languages",
+   2238.1264499999997,
+   38.7,
+   2276.8264499999996
+  ],
+  [
+   "All 10 + trim espeak",
+   2221.107035,
+   38.7,
+   2259.807035
+  ],
+  [
+   "All 10 + trim espeak + FP16-store voices",
+   1984.775962,
+   38.7,
+   2023.475962
+  ],
+  [
+   "All 10 + all of the above + FP16-store STT",
+   1690.2452919999998,
+   33.800000000000004,
+   1724.0452919999998
+  ],
+  [
+   "Pack: Hindi STT + all voices (as today)",
+   682.537549,
+   38.7,
+   721.2375490000001
+  ],
+  [
+   "Pack: Hindi STT + all voices, all savings",
+   396.46143099999995,
+   33.800000000000004,
+   430.26143099999996
+  ],
+  [
+   "Pack: Tamil STT + all voices (as today)",
+   682.5378910000001,
+   38.7,
+   721.2378910000001
+  ],
+  [
+   "Pack: Tamil STT + all voices, all savings",
+   396.461773,
+   33.800000000000004,
+   430.261773
+  ],
+  [
+   "Pack: English STT + all voices (as today)",
+   564.188925,
+   38.7,
+   602.8889250000001
+  ],
+  [
+   "Pack: English STT + all voices, all savings",
+   310.838437,
+   33.800000000000004,
+   344.638437
+  ],
+  [
+   "Pack: Hindi+English STT + all voices, all savings",
+   464.10578399999997,
+   33.800000000000004,
+   497.905784
+  ]
+ ],
+ "voices_mb": [
+  477.909067,
+  241.577994
+ ],
+ "stt_indic_mb": [
+  185.992977,
+  153.267347
+ ]
+}
