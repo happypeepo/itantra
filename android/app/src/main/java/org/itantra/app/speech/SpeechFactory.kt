@@ -27,7 +27,8 @@ import java.io.File
  *   val audio = voices.speak("ta", text)      // for each incoming message
  *   // play audio.samples at audio.sampleRate (it differs per voice!)
  *
- * Call everything from ONE background thread. Never on the UI thread.
+ * Confine each recognizer to the STT executor and TtsPool to the TTS executor.
+ * Never invoke native inference on the UI thread.
  */
 
 data class SttEntry(
@@ -144,7 +145,7 @@ fun OfflineRecognizer.transcribe(samples: FloatArray, sampleRate: Int = 16000): 
  * [numThreads]: TTS is the latency bottleneck. Measured on a Snapdragon 7s Gen 3
  * (5 s Tamil sentence, rasa): RTF 0.98 at 2 threads, 0.77 at 4, 0.55 at 6.
  */
-class TtsPool(private val m: Manifest, private val maxLoaded: Int = 1, private val numThreads: Int = 4) {
+class TtsPool(private val m: Manifest, private val maxLoaded: Int = 2, private val numThreads: Int = 4) {
     private class Loaded(val tts: OfflineTts, val sanitizer: TextSanitizer)
     private val loaded = LinkedHashMap<String, Loaded>(4, 0.75f, true) // access order = LRU
 

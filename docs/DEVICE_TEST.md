@@ -95,3 +95,36 @@ SERIAL=<device> python work/ptt_langs_test.py     # PTT per language, laptop spe
 `SERIAL` picks the phone when more than one is connected (`adb devices`).
 
 Phone timings are in `adb logcat -s iTantra:I`. **Keep those logs out of git:** in continuous mode they contain transcripts of whatever the phone heard (`device_test/` is gitignored).
+
+
+## P1 follow-up implementation (after `56b0e04`)
+
+The measurements above remain results for `303ed26`; they are not measurements of these changes.
+
+| Suggestion | Change made | Verification / remaining check |
+|---|---|---|
+| 1. Cold voice switching | Cache up to two TTS engines and retain them across selected-language changes; keep selected-voice warm-up. | Revisiting either cached engine avoids reloading. First-ever loads and evicted engines remain cold. Measure memory and alternating-language latency again. |
+| 2. Playback startup | Build AudioTrack with `PERFORMANCE_MODE_LOW_LATENCY`; log the actual granted mode and sample rate. | Compiles for API 26+. Re-measure ready-to-playback delay; the OS may decline the requested mode. |
+| 3. STT behind TTS | Separate bounded STT and TTS executors, with each native object confined to its owner. | A regression test blocks TTS and verifies STT still completes while the next TTS task remains queued. CPU contention still needs device measurement. |
+| 4. Unused libraries | Exclude `libsherpa-onnx-c-api.so` and `libsherpa-onnx-cxx-api.so`. | Inspected ELF `DT_NEEDED` in both the AAR and resulting APK: JNI needs ONNX Runtime, not either removed library. APK contains only those two required native libraries. Removes 4,905,856 uncompressed native bytes. Device startup/STT/TTS/VAD smoke test still required. |
+| 5. Permission recovery | Check permission before model/link readiness; request on user action, provide rationale/retry and an app Settings shortcut when requests are blocked. | Retest deny once, deny again, grant in Settings, return and press PTT. No automatic recording after permission grant. |
+| 6. Continuous switch | Immediately return the switch to off if permission is missing and explain how to grant it. | Retest first launch, denial and later grant. |
+| 7. Local mic test | Add start/stop RMS meter independent of models and link. No transcription, stored audio or network sending. Stop on playback/background/language switch. | Unit-tested silence, -60/-30 dBFS, full scale, clipping and invalid input. Device capture/UI still needs a check. |
+
+Validation here: `assembleDebug`, `testDebugUnitTest` (9 tests), and `lintDebug` all pass; lint has 0 errors. Debug APK is approximately 38.7 MB including the newer Material 3 UI dependencies, so it is not directly comparable to the old 33 MB pre-Material build. No phone was attached during this follow-up. Retest rotation and the two real phones over hotspot as already listed above.
+
+
+### Device picker follow-up
+
+Manual address entry is replaced by Android DNS-SD discovery (`_itantra._tcp`). Tap **Host** on phone A, then **Scan for devices** and select A on phone B. The app resolves the address and port; no user entry is needed. The existing fixed host port remains compatible with laptop test tools.
+
+Additional regression checklist (pending real phones): verify discovery both directions over hotspot; identify two hosts with the same model by their distinct suffixes; remove a host while scanning; select a host that has gone away; rescan; background/foreground both peers; confirm a connected host is no longer advertised. On isolated/multicast-blocked Wi-Fi the app should show the empty/error guidance. A JVM socket test verifies that joining uses the discovered port instead of assuming 26173. Build, lint (0 errors), and all 10 JVM tests pass for this update; radio discovery still requires the real-phone checks above.
+
+
+### Bluetooth option follow-up
+
+A Wi-Fi/Bluetooth selector now routes the same speech, alert and ping frames over either TCP or secure RFCOMM. Bluetooth has paired/nearby-device selection, Nearby devices permission handling (legacy Location permission for scanning), enable/discoverability system prompts, and a 30-second connection timeout. The host advertises the iTantra RFCOMM UUID; Android handles pairing. Switching transports closes the old link and cancels pending normal speech. No phone is attached, so Bluetooth radio/pairing behavior is not claimed as verified.
+
+Required two-phone regression: select Bluetooth on both, Host/approve discoverability, Scan/select/pair; exchange speech and alerts both ways; ping; repeat with already-paired devices; cancel pairing; deny/regrant permissions; turn Bluetooth off during scan/connect/playback; select a non-iTantra device; let discoverability expire then re-host; switch back to Wi-Fi while inference is queued. Check Android 8–11 scan behavior with Location services off and on, and Android 12+ Nearby devices denial. Shared stream tests cover fragmented speech/alert/ping packets, truncated input and CRC rejection followed by a valid message; these do not substitute for Bluetooth hardware tests.
+
+Bluetooth follow-up automated validation: debug APK build succeeds, all 13 JVM tests pass, and lint reports 0 errors. Physical Bluetooth and Wi-Fi discovery tests remain pending.

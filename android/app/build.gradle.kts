@@ -10,6 +10,8 @@ android {
         versionName = "0.1.0"
         ndk { abiFilters += "arm64-v8a" }
     }
+    // The Kotlin JNI library depends on libonnxruntime, not the standalone C/C++ APIs.
+    packaging { jniLibs { excludes += setOf("**/libsherpa-onnx-c-api.so", "**/libsherpa-onnx-cxx-api.so") } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     sourceSets["main"].assets.srcDir(layout.buildDirectory.dir("generated/modelAssets"))
     sourceSets["test"].resources.srcDir("../../link")

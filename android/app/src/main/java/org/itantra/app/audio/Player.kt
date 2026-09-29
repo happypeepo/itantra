@@ -53,7 +53,10 @@ class Player(context: Context, private val busy: (Boolean) -> Unit, private val 
                 .setEncoding(AudioFormat.ENCODING_PCM_FLOAT).build()
             val minimum = AudioTrack.getMinBufferSize(pcm.rate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_FLOAT)
             check(minimum > 0)
-            val out = AudioTrack(attrs, format, maxOf(minimum, 4096), AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE)
+            val out = AudioTrack.Builder().setAudioAttributes(attrs).setAudioFormat(format)
+                .setBufferSizeInBytes(maxOf(minimum, 4096)).setTransferMode(AudioTrack.MODE_STREAM)
+                .setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY).build()
+            android.util.Log.i("iTantra", "AudioTrack requested low latency; actual mode=${out.performanceMode}, rate=${pcm.rate}")
             output = out; track = out
             check(out.state == AudioTrack.STATE_INITIALIZED)
             out.play()

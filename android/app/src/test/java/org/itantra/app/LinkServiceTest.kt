@@ -10,6 +10,23 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.LinkedBlockingQueue
 
 class LinkServiceTest {
+    @Test fun joinUsesDiscoveredPortInsteadOfDefaultPort() {
+        val connected = CountDownLatch(1)
+        val received = LinkedBlockingQueue<Frame>()
+        val service = LinkService({ if (it.startsWith("Connected")) connected.countDown() }, { received.offer(it) })
+        try {
+            java.net.ServerSocket(0).use { host ->
+                host.soTimeout = 5000
+                service.connect("127.0.0.1", host.localPort)
+                host.accept().use { peer ->
+                    assertTrue(connected.await(5, TimeUnit.SECONDS))
+                    peer.getOutputStream().write(Frame.speech("Discovered peer", 1, 77).encode())
+                    assertEquals("Discovered peer", received.poll(5, TimeUnit.SECONDS)?.text())
+                }
+            }
+        } finally { service.close() }
+    }
+
     @Test fun tcpHandlesFragmentationCrcDropAndDisconnect() {
         val hosted = CountDownLatch(1)
         val connected = CountDownLatch(1)

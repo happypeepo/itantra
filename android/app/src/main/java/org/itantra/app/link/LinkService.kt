@@ -12,13 +12,15 @@ import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicInteger
 
 /** Minimal P3 integration transport. One connection, bounded frames, serialized writes. */
-class LinkService(private val status: (String) -> Unit, private val receive: (Frame) -> Unit) {
+class LinkService(private val status: (String) -> Unit, private val receive: (Frame) -> Unit) : PeerLink {
     private val generation = AtomicInteger()
     private val writer = ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, ArrayBlockingQueue<Runnable>(32))
     @Volatile private var server: ServerSocket? = null
     @Volatile private var socket: Socket? = null
-    val connected get() = socket?.let { it.isConnected && !it.isClosed } == true
-    fun connect(host: String?) {
+    override val connected get() = socket?.let { it.isConnected && !it.isClosed } == true
+    override val listening get() = server?.let { !it.isClosed } == true
+    fun connect(host: String?, port: Int = PORT) {
+        require(port in 1..65535) { "Invalid port" }
         disconnect()
         val epoch = generation.get()
         Thread {
@@ -38,7 +40,7 @@ class LinkService(private val status: (String) -> Unit, private val receive: (Fr
                             socket = it
                         }
                         status("Connecting to $host")
-                        it.connect(InetSocketAddress(host, PORT), 5000)
+                        it.connect(InetSocketAddress(host, port), 5000)
                     }
                 }
                 synchronized(this) {
@@ -49,12 +51,7 @@ class LinkService(private val status: (String) -> Unit, private val receive: (Fr
                 status("Connected to ${peer.inetAddress.hostAddress}")
                 val input = DataInputStream(peer.getInputStream())
                 while (epoch == generation.get()) {
-                    val header = ByteArray(6)
-                    input.readFully(header)
-                    val n = ((header[4].toInt() and 255) shl 8) or (header[5].toInt() and 255)
-                    val rest = ByteArray(n + 2)
-                    input.readFully(rest)
-                    try { receive(Frame.decode(header + rest)) }
+                    try { receive(Frame.decode(FrameStream.read(input))) }
                     catch (e: IllegalArgumentException) { status("Dropped: ${e.message}") }
                 }
             } catch (e: Exception) {
@@ -62,7 +59,7 @@ class LinkService(private val status: (String) -> Unit, private val receive: (Fr
             }
         }.apply { name = "itantra-link"; isDaemon = true; start() }
     }
-    fun send(frame: Frame, done: (Int) -> Unit = {}) {
+    override fun send(frame: Frame, done: (Int) -> Unit) {
         val peer = socket
         val bytes = frame.encode()
         try { writer.execute {
@@ -73,12 +70,12 @@ class LinkService(private val status: (String) -> Unit, private val receive: (Fr
             } catch (e: Exception) { status("Send failed: ${e.message}") }
         } } catch (_: RejectedExecutionException) { status("Send queue unavailable; message dropped") }
     }
-    @Synchronized fun disconnect() {
+    @Synchronized override fun disconnect() {
         generation.incrementAndGet()
         runCatching { server?.close() }; server = null
         runCatching { socket?.close() }; socket = null
     }
-    fun close() { disconnect(); writer.shutdownNow() }
+    override fun close() { disconnect(); writer.shutdownNow() }
     companion object {
         const val PORT = 26173
         fun addresses(): String = runCatching {
