@@ -100,7 +100,10 @@ class MainActivity : AppCompatActivity() {
     private var pingSequence: Int? = null
     private var pingStarted = 0L
     private val alertNames = mutableMapOf<Int, String>()
+    private val alertTexts = mutableMapOf<Int, JSONObject>() // alert id -> its phrase per language code
     private val messages = ArrayDeque<String>()
+    private lateinit var conversation: Conversation
+    private val bluetoothButtons = HashMap<String, MaterialButton>() // address -> its row in nearbyDevices
     // Top-right size/CPU/RAM badge and its breakdown dialog
     private val footprint by lazy { AppFootprint(this) { if (::manifest.isInitialized) manifest else null } }
     private lateinit var footprintBadge: MaterialButton
@@ -195,12 +198,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
+
     private fun buildUi() {
-        fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
         val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), dp(24), dp(20), dp(32)) }
         val scroll = ScrollView(this).apply { addView(body); isFillViewport = true }
-        setContentView(scroll)
-        ViewCompat.setOnApplyWindowInsetsListener(scroll) { view, insets ->
+        // The caption bar sits below the scrolling page, so the latest message is always readable.
+        conversation = Conversation(this, ::dp)
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f)); addView(conversation.bar)
+        }
+        setContentView(root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
@@ -210,7 +220,7 @@ class MainActivity : AppCompatActivity() {
             this.text = text; textSize = size
             section.addView(this, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
         }
-        fun card(title: String, subtitle: String) {
+        fun card(title: String, subtitle: String): MaterialCardView {
             val card = MaterialCardView(this).apply {
                 radius = dp(24).toFloat(); cardElevation = 0f; strokeWidth = 0
                 setCardBackgroundColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorSurfaceContainerLow))
@@ -219,6 +229,7 @@ class MainActivity : AppCompatActivity() {
             section = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(20), dp(20), dp(20), dp(16)) }
             card.addView(section)
             label(title, 22f); label(subtitle, 14f)
+            return card
         }
         fun button(parent: LinearLayout, title: String, filled: Boolean = false, action: () -> Unit) = MaterialButton(this).apply {
             text = title; isAllCaps = false; minHeight = dp(48)
@@ -245,8 +256,10 @@ class MainActivity : AppCompatActivity() {
         label("OFFLINE  ·  10 LANGUAGES", 12f)
         card("Connect a phone", "Choose Wi-Fi on the same network, or Bluetooth nearby.")
         val transport = MaterialButtonToggleGroup(this).apply { isSingleSelection = true; isSelectionRequired = true }
-        val wifiChoice = MaterialButton(this).apply { id = View.generateViewId(); text = "Wi-Fi"; isCheckable = true }
-        val bluetoothChoice = MaterialButton(this).apply { id = View.generateViewId(); text = "Bluetooth"; isCheckable = true }
+        // Outlined style: in a toggle group the checked segment gets a tonal fill, so the chosen transport is visible.
+        val segment = com.google.android.material.R.attr.materialButtonOutlinedStyle
+        val wifiChoice = MaterialButton(this, null, segment).apply { id = View.generateViewId(); text = "Wi-Fi"; isCheckable = true }
+        val bluetoothChoice = MaterialButton(this, null, segment).apply { id = View.generateViewId(); text = "Bluetooth"; isCheckable = true }
         transport.addView(wifiChoice, LinearLayout.LayoutParams(0, -2, 1f))
         transport.addView(bluetoothChoice, LinearLayout.LayoutParams(0, -2, 1f))
         section.addView(transport)
@@ -319,13 +332,24 @@ class MainActivity : AppCompatActivity() {
         }
         micHint = label("Test your mic without models or a connection. No audio is saved or sent.", 14f)
         button(section, "Reload language") { if (::manifest.isInitialized) loadLanguage(language) }
+        button(section, "Manage languages") { if (::manifest.isInitialized) manageLanguages() }
+        val conversationCard = card("Conversation", "Everything you say and hear, as text. The newest message also stays pinned at the bottom of the screen.")
+        section.addView(conversation.panel)
+        conversation.onBarClick = { scroll.smoothScrollTo(0, conversationCard.top) }
         card("Priority alerts", "Plays in the receiving phone’s language at full alarm volume.")
         val alerts = JSONObject(assets.open("alerts.json").bufferedReader().use { it.readText() }).getJSONObject("alerts")
-        alerts.keys().forEach { name -> alertNames[alerts.getJSONObject(name).getInt("id")] = name }
+        alerts.keys().forEach { name ->
+            val a = alerts.getJSONObject(name)
+            alertNames[a.getInt("id")] = name; alertTexts[a.getInt("id")] = a.getJSONObject("texts")
+        }
         alertNames.toSortedMap().forEach { (id, name) ->
             button(section, name.replace('_', ' ').replaceFirstChar { it.titlecase() }) {
-                if (link.connected && ::manifest.isInitialized) link.send(Frame(2, manifest.languages.getValue(language).wireId, sequence.getAndIncrement(), byteArrayOf(id.toByte())))
-                else message("Connect first to send an alert")
+                if (link.connected && ::manifest.isInitialized) {
+                    val sent = conversation.add(Conversation.Kind.SENT, "You · alert", alertText(id, language), "Sending…")
+                    link.send(Frame(2, manifest.languages.getValue(language).wireId, sequence.getAndIncrement(), byteArrayOf(id.toByte()))) { bytes ->
+                        sent.update(status = "Sent · $bytes bytes")
+                    }
+                } else message("Connect first to send an alert")
             }
         }
         button(section, "Test alert on this phone") { playAlert(alertNames.keys.minOrNull() ?: 1) }
@@ -337,7 +361,7 @@ class MainActivity : AppCompatActivity() {
         hosting = false; pingSequence = null; speechEpoch.incrementAndGet(); stopCapture(); player.clearSpeech()
         discovery.pause(); bluetoothDiscovery.stop()
         wifiLink.disconnect(); bluetoothLink.disconnect()
-        nearbyDevices.removeAllViews(); status.text = "Not connected"
+        nearbyDevices.removeAllViews(); bluetoothButtons.clear(); status.text = "Not connected"
     }
 
     private fun switchTransport(bluetooth: Boolean) {
@@ -372,23 +396,25 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    /** Updates rows in place (one per address) instead of rebuilding the list on every scan result. */
     @SuppressLint("MissingPermission")
-    private fun showBluetoothDevices(devices: List<BluetoothDevice>) {
+    private fun showBluetoothDevices(devices: List<Pair<BluetoothDevice, String>>) {
         if (destroyed || !useBluetooth) return
-        nearbyDevices.removeAllViews()
-        devices.forEach { device ->
-            val name = runCatching { device.name }.getOrNull() ?: "Bluetooth device"
-            val suffix = runCatching { device.address.takeLast(5) }.getOrDefault("")
-            nearbyDevices.addView(MaterialButton(this).apply {
-                text = "$name · $suffix"; isAllCaps = false
-                contentDescription = "Connect to $name over Bluetooth"
+        if (devices.isEmpty()) { nearbyDevices.removeAllViews(); bluetoothButtons.clear(); return }
+        devices.forEach { (device, name) ->
+            val row = bluetoothButtons[device.address]?.takeIf { it.parent === nearbyDevices } ?: MaterialButton(this).apply {
+                isAllCaps = false
                 setOnClickListener {
                     if (ensureBluetooth(scan = false)) {
                         bluetoothDiscovery.stop(); hosting = false; pingSequence = null
                         bluetoothLink.connect(device)
                     }
                 }
-            }, LinearLayout.LayoutParams(-1, -2))
+                nearbyDevices.addView(this, LinearLayout.LayoutParams(-1, -2))
+                bluetoothButtons[device.address] = this
+            }
+            row.text = "$name · ${device.address.takeLast(5)}"
+            row.contentDescription = "Connect to $name over Bluetooth"
         }
     }
 
@@ -541,17 +567,23 @@ class MainActivity : AppCompatActivity() {
     }
     private fun transcribe(samples: FloatArray, code: String, ended: Long, epoch: Int) {
         val outgoingLink = link
+        val who = "You · ${languageName(code)}"
+        // Push-to-talk shows a caption while recognition runs. Continuous mode waits for text, so
+        // background noise that VAD passes on doesn't flash empty captions.
+        val caption = if (continuous) null else conversation.add(Conversation.Kind.SENT, who, "…", "Recognising speech…")
         submit(inference) {
-            if (epoch != speechEpoch.get() || code != recognizerCode) return@submit
+            if (epoch != speechEpoch.get() || code != recognizerCode) { caption?.remove(); return@submit }
             val start = now()
             val text = recognizer?.transcribe(samples).orEmpty()
             val finished = now()
             if (text.isNotBlank() && epoch == speechEpoch.get() && active) {
                 val frame = Frame.speech(text, manifest.languages.getValue(code).wireId, sequence.getAndIncrement())
+                val sent = caption?.apply { update(text = text, status = "Sending…") } ?: conversation.add(Conversation.Kind.SENT, who, text, "Sending…")
                 outgoingLink.send(frame) { bytes ->
+                    sent.update(status = "Sent · $bytes bytes")
                     message("TX #${frame.sequence and 65535} [$code] $text\nSTT ${finished - start} ms · end→STT ${finished - ended} ms · RTF ${"%.3f".format((finished - start) / (samples.size / 16.0))} · $bytes bytes")
                 }
-            }
+            } else caption?.update(text = if (text.isBlank()) "(no speech recognised)" else text, status = "Not sent")
         }
     }
     private fun received(frame: Frame) {
@@ -568,17 +600,22 @@ class MainActivity : AppCompatActivity() {
                 if (!::manifest.isInitialized || !::voices.isInitialized) return
                 val code = manifest.byWireId(frame.language)?.code ?: return
                 message("RX #${frame.sequence} [$code] ${frame.text()}")
+                // The text is on screen before any audio: deaf users don't wait for (or depend on) the voice.
+                val caption = conversation.add(Conversation.Kind.HEARD, languageName(code), frame.text(), "Received")
                 submit(synthesis) {
-                    if (!active || epoch != speechEpoch.get()) return@submit
+                    if (!active || epoch != speechEpoch.get()) { caption.update(status = "Not spoken"); return@submit }
                     val parts = frame.text().split(Regex("[,，;؛\\n]+" )).filter { it.isNotBlank() }
                     parts.forEachIndexed { index, part ->
-                        if (!active || epoch != speechEpoch.get()) return@submit
+                        if (!active || epoch != speechEpoch.get()) { caption.update(status = "Interrupted"); return@submit }
                         val start = now()
                         val audio = voices.speak(code, part) ?: return@forEachIndexed
                         val took = now() - start
-                        if (epoch == speechEpoch.get()) player.speech(Pcm(audio.samples, audio.sampleRate)) {
+                        if (epoch == speechEpoch.get()) player.speech(Pcm(audio.samples, audio.sampleRate), first = {
+                            caption.update(status = if (parts.size > 1) "Speaking ${index + 1} of ${parts.size}" else "Speaking…")
                             message("RX #${frame.sequence} part ${index + 1} · first playback ${now() - receivedAt} ms · TTS $took ms · RTF ${"%.3f".format(took / (audio.samples.size * 1000.0 / audio.sampleRate))}")
-                        }
+                        }, done = { complete ->
+                            if (!complete) caption.update(status = "Interrupted") else if (index == parts.lastIndex) caption.update(status = "Spoken")
+                        })
                     }
                 }
             }
@@ -589,6 +626,7 @@ class MainActivity : AppCompatActivity() {
         val code = language
         speechEpoch.incrementAndGet()
         player.clearSpeech()
+        conversation.add(Conversation.Kind.ALERT, "Alert · ${languageName(code)}", alertText(id, code), "Full-volume alert")
         player.alert {
             val local = File(getExternalFilesDir(null), "alerts/$code/$name.wav")
             val bytes = if (local.isFile) local.readBytes() else assets.open("alerts/$code/$name.wav").use { it.readBytes() }
@@ -620,6 +658,76 @@ class MainActivity : AppCompatActivity() {
         manifest.languages[language]?.let { picker.setText(pickerLabel(it), false) }
     }
     private fun restorePicker() { manifest.languages[language]?.let { picker.setText(pickerLabel(it), false) } }
+    private fun languageName(code: String) = if (::manifest.isInitialized) manifest.languages[code]?.name ?: code else code
+    private fun alertText(id: Int, code: String) =
+        alertTexts[id]?.optString(code)?.takeIf { it.isNotBlank() } ?: alertNames[id]?.replace('_', ' ') ?: "Alert $id"
+
+    /** Every speech language with its state; download what's missing, delete what can be downloaded again. */
+    private fun manageLanguages() {
+        val rows = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(24), dp(4), dp(24), dp(8)) }
+        lateinit var dialog: androidx.appcompat.app.AlertDialog
+        fun render() {
+            rows.removeAllViews()
+            rows.addView(MaterialTextView(this).apply {
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium)
+                text = "Deleting a language only removes its speech recognition. All voices stay, so you still hear messages in every language."
+                setPadding(0, 0, 0, dp(8))
+            })
+            pickerLangs.forEach { l ->
+                val isInstalled = installed(l)
+                val removable = if (isInstalled) downloader.removable(neededFiles(l)) else emptyList()
+                val plan = if (isInstalled) null else downloader.plan(neededFiles(l))
+                val state = when {
+                    !isInstalled && plan != null -> "${AppFootprint.mb(plan.sumOf { it.bytes })} to download"
+                    !isInstalled -> "Not installed · copy by cable"
+                    removable.isEmpty() -> "Built in"
+                    else -> "Installed · ${AppFootprint.mb(removable.sumOf { it.length() })}"
+                } + if (isInstalled && l.code == language) " · in use" else ""
+                val line = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL; gravity = android.view.Gravity.CENTER_VERTICAL
+                    minimumHeight = dp(64); setPadding(0, dp(4), 0, dp(4))
+                }
+                line.addView(LinearLayout(this).apply {
+                    orientation = LinearLayout.VERTICAL
+                    addView(MaterialTextView(context).apply { setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleMedium); text = l.name })
+                    addView(MaterialTextView(context).apply {
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyMedium); text = state
+                        setTextColor(MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurfaceVariant))
+                    })
+                }, LinearLayout.LayoutParams(0, -2, 1f))
+                fun action(title: String, destructive: Boolean, onClick: () -> Unit) = line.addView(
+                    MaterialButton(this, null, androidx.appcompat.R.attr.borderlessButtonStyle).apply {
+                        text = title; contentDescription = "$title ${l.name}"
+                        if (destructive) setTextColor(MaterialColors.getColor(this, androidx.appcompat.R.attr.colorError))
+                        setOnClickListener { onClick() }
+                    })
+                when {
+                    removable.isNotEmpty() && l.code != language -> action("Delete", true) { confirmDelete(l, removable) { render() } }
+                    plan != null -> action("Download", false) { dialog.dismiss(); confirmDownload(l, plan) }
+                }
+                rows.addView(line)
+            }
+        }
+        render()
+        dialog = MaterialAlertDialogBuilder(this).setTitle("Speech languages")
+            .setView(ScrollView(this).apply { addView(rows) })
+            .setPositiveButton("Done", null).show()
+    }
+
+    private fun confirmDelete(l: LanguageEntry, files: List<File>, deleted: () -> Unit) {
+        val size = AppFootprint.mb(files.sumOf { it.length() })
+        MaterialAlertDialogBuilder(this).setTitle("Delete ${l.name}?")
+            .setMessage("This frees $size. You won't be able to speak in ${l.name} until you download it again (internet needed once). Incoming ${l.name} messages still play.")
+            .setPositiveButton("Delete") { _, _ ->
+                if (l.code == language || downloading.get()) { message("${l.name} is in use; switch language first"); return@setPositiveButton }
+                val freed = downloader.delete(files)
+                message("Deleted ${l.name} speech recognition, freed ${AppFootprint.mb(freed)}")
+                refreshPicker()
+                footprint.refresh { p -> footprintParts = p; runOnUiThread { renderFootprint() } }
+                deleted()
+            }
+            .setNegativeButton("Cancel", null).show()
+    }
 
     /** Picked in the dropdown: load it, or offer to download its missing model first. */
     private fun chooseLanguage(code: String) {
@@ -697,7 +805,12 @@ class MainActivity : AppCompatActivity() {
                     if (!cancel.get()) {
                         val offline = e is java.net.UnknownHostException || e is java.net.ConnectException || e is java.net.SocketTimeoutException
                         MaterialAlertDialogBuilder(this).setTitle("Download failed")
-                            .setMessage(if (offline) "No internet connection. Connect once to download ${l.name}, or copy it to the phone by cable." else "${e.message}\n\nNothing was installed; try again.")
+                            .setMessage(when {
+                                offline -> "No internet connection. Connect once to download ${l.name}, or copy it to the phone by cable."
+                                // e.g. college/hotel Wi-Fi that answers for github.com with its own certificate
+                                e is javax.net.ssl.SSLException -> "This network intercepted the secure connection (a login page or firewall, common on college and hotel Wi-Fi). Sign in to the network, or use mobile data or a hotspot, then try again.\n\nNothing was installed."
+                                else -> "${e.message}\n\nNothing was installed; try again."
+                            })
                             .setPositiveButton("OK", null).show()
                     }
                 }
