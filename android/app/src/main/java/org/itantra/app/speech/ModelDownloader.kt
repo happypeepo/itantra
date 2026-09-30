@@ -40,6 +40,18 @@ class ModelDownloader(private val root: File, manifestFile: File) {
 
     fun freeBytes(): Long = root.apply { mkdirs() }.usableSpace
 
+    /** Installed files among [needed] that can be downloaded again, so deleting them is reversible.
+     *  Anything not in the downloads list (English STT, voices, VAD) is never offered for deletion. */
+    fun removable(needed: List<String>): List<File> =
+        needed.filter { it.isNotEmpty() && File(it).isFile && files.containsKey(relative(it)) }.map(::File)
+
+    /** Deletes [targets] (and any leftover .part files); returns the bytes freed. */
+    fun delete(targets: List<File>): Long = targets.sumOf { f ->
+        File(f.path + ".part").delete()
+        val size = f.length()
+        if (f.delete()) size else 0L
+    }
+
     /** Fetch everything in [plan]; progress(doneBytes, totalBytes). Throws IOException on any failure or cancel. */
     fun download(plan: List<RemoteFile>, cancelled: AtomicBoolean, progress: (Long, Long) -> Unit) {
         val total = plan.sumOf { it.bytes }

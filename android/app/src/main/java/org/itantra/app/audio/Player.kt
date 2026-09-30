@@ -7,7 +7,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 /** FIFO speech, priority alerts. A playing alert is never preempted by app messages. */
 class Player(context: Context, private val busy: (Boolean) -> Unit, private val error: (String) -> Unit) {
-    private data class Item(val load: () -> Pcm, val alert: Boolean, val first: () -> Unit, val epoch: Long)
+    /** [done] reports whether the item played to the end (false: interrupted, cleared or failed). */
+    private data class Item(val load: () -> Pcm, val alert: Boolean, val first: () -> Unit, val epoch: Long, val done: (Boolean) -> Unit = {})
     private val audio = context.getSystemService(AudioManager::class.java)
     private val queue = LinkedBlockingDeque<Item>(32)
     private val interruptSpeech = AtomicLong()
@@ -17,16 +18,17 @@ class Player(context: Context, private val busy: (Boolean) -> Unit, private val 
         while (!closed) {
             val item = try { queue.take() } catch (_: InterruptedException) { break }
             val epoch = item.epoch
-            if (!item.alert && epoch != interruptSpeech.get()) { if (queue.isEmpty()) busy(false); continue }
+            if (!item.alert && epoch != interruptSpeech.get()) { item.done(false); if (queue.isEmpty()) busy(false); continue }
             try {
                 busy(true) // Must synchronously stop the recorder before any sound.
                 play(item, epoch)
-            } catch (e: Exception) { if (!closed) error("Playback: ${e.message}") }
+                item.done(!closed && (item.alert || epoch == interruptSpeech.get()))
+            } catch (e: Exception) { item.done(false); if (!closed) error("Playback: ${e.message}") }
             finally { if (queue.isEmpty() || closed) busy(false) }
         }
     }.apply { name = "itantra-player"; start() }
-    fun speech(pcm: Pcm, first: () -> Unit = {}) {
-        if (!closed && !queue.offerLast(Item({ pcm }, false, first, interruptSpeech.get()))) error("Playback queue full; speech dropped")
+    fun speech(pcm: Pcm, first: () -> Unit = {}, done: (Boolean) -> Unit = {}) {
+        if (!closed && !queue.offerLast(Item({ pcm }, false, first, interruptSpeech.get(), done))) { error("Playback queue full; speech dropped"); done(false) }
     }
     fun alert(load: () -> Pcm) {
         if (closed) return
@@ -81,7 +83,7 @@ class Player(context: Context, private val busy: (Boolean) -> Unit, private val 
             audio.abandonAudioFocusRequest(focus)
         }
     }
-    fun clearSpeech() { queue.removeIf { !it.alert }; interruptSpeech.incrementAndGet() }
+    fun clearSpeech() { queue.filter { !it.alert }.forEach { if (queue.remove(it)) it.done(false) }; interruptSpeech.incrementAndGet() }
     fun close() {
         closed = true; queue.clear(); interruptSpeech.incrementAndGet()
         runCatching { track?.pause() }; worker.interrupt(); worker.join(1500)

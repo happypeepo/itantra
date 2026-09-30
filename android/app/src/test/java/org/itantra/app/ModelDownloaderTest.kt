@@ -83,6 +83,18 @@ class ModelDownloaderTest {
         assertNull(d.plan(listOf(File(root, "stt/gu/model.int8.onnx").path)))
     }
 
+    @Test fun deletesOnlyReDownloadableFiles() {
+        val d = downloader("ok.bin")
+        d.download(d.plan(listOf(target.path))!!, AtomicBoolean(false)) { _, _ -> }
+        val builtIn = File(root, "stt/en/model.int8.onnx").apply { parentFile!!.mkdirs(); writeText("not downloadable") }
+        val removable = d.removable(listOf(target.path, builtIn.path, ""))
+        assertEquals(listOf(target), removable)
+        assertEquals(body.size.toLong(), d.delete(removable))
+        assertFalse(target.exists()); assertTrue(builtIn.exists())
+        assertEquals(1, d.plan(listOf(target.path))!!.size) // can be downloaded again
+        assertTrue(d.removable(listOf(target.path)).isEmpty())
+    }
+
     @Test fun cancelLeavesNothingBehind() {
         val d = downloader("ok.bin")
         try { d.download(d.plan(listOf(target.path))!!, AtomicBoolean(true)) { _, _ -> }; fail("ignored cancel") }
